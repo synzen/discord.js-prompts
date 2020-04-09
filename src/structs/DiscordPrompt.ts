@@ -9,6 +9,7 @@ export type BaseData = {
 }
 
 export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
+  duration = 90000
   static inactivityFormat: MessageFormat = {
     text: 'Menu has been closed due to inactivity.'
   }
