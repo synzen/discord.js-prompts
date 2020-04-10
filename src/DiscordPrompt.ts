@@ -3,7 +3,7 @@ import { Prompt, PromptCollector, Rejection } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
 import { MessageFormat } from "./formats/MessageFormat";
-import { MenuEmbedFormat } from './formats/MenuFormat';
+import { MenuFormat } from './formats/MenuFormat';
 import { MenuEmbed } from './MenuEmbed';
 
 export type BaseData = {
@@ -51,9 +51,9 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     if (message.content === 'exit') {
       return emitter.emit('exit', message)
     }
-    // Check if MenuEmbedFormat for special handling
+    // Check if MenuFormat for special handling
     const format = this.getVisual(data)
-    if (format instanceof MenuEmbedFormat) {
+    if (format instanceof MenuFormat) {
       this.handleMenuMessage(message, format.menu, emitter)
     } else {
       emitter.emit('message', message)

@@ -1,7 +1,7 @@
 import { TextChannel, MessageOptions } from "discord.js";
 import { ChannelInterface, MessageInterface } from "prompt-anything";
 import { DiscordMessageFormat } from "./DiscordMessageFormat";
-import { MenuEmbedFormat } from "./formats/MenuFormat";
+import { MenuFormat } from "./formats/MenuFormat";
 import { MessageFormat } from "./formats/MessageFormat";
 
 export class DiscordChannel implements ChannelInterface {
@@ -11,7 +11,7 @@ export class DiscordChannel implements ChannelInterface {
     this.channel = channel
   }
 
-  async sendMenuFormat (format: MenuEmbedFormat) {
+  async sendMenuFormat (format: MenuFormat) {
     let options: MessageOptions
     if (format.options) {
       options = {
@@ -26,7 +26,7 @@ export class DiscordChannel implements ChannelInterface {
   }
 
   async send (format: DiscordMessageFormat): Promise<MessageInterface> {
-    if (format instanceof MenuEmbedFormat) {
+    if (format instanceof MenuFormat) {
       return this.sendMenuFormat(format)
     } else {
       return this.sendMessageFormat(format)

@@ -2,7 +2,7 @@ import { MessageOptions } from 'discord.js'
 import { VisualInterface } from "prompt-anything";
 import { MenuEmbed } from "../MenuEmbed";
 
-export class MenuEmbedFormat implements VisualInterface {
+export class MenuFormat implements VisualInterface {
   text = ''
   menu: MenuEmbed
   options?: MessageOptions
