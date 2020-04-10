@@ -18,7 +18,7 @@ export class DiscordChannel implements ChannelInterface {
         ...format.options
       }
     }
-    return this.channel.send(format.text, format.menu?.embed)
+    return this.channel.send(format.text, format.menu?.getEmbedOfPage(0))
   }
 
   sendMessageFormat (format: MessageFormat) {

@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js'
+import { MessageEmbed, Message } from 'discord.js'
 
 type MenuEmbedSettings = {
   maxPerPage: number
@@ -101,33 +101,50 @@ export class MenuEmbed {
   }
 
   /**
-   * Increment the current page if it's not the last page
+   * Increment the page and update the message if the
+   * current page is not the last
    */
-  nextPage () {
-    if (!this.isOnLastPage()) {
-      ++this.page
+  async nextPage (message: Message) {
+    if (this.isOnLastPage()) {
+      return this
     }
+    ++this.page
+    await this.setMessage(message)
     return this
   }
 
   /**
-   * Decrement the current page if it's not the first page
+   * Decrement the page and update the message if the
+   * current page is not the first
    */
-  prevPage () {
-    if (!this.isOnFirstPage()) {
-      --this.page
+  async prevPage (message: Message) {
+    if (this.isOnFirstPage()) {
+      return this
     }
+    --this.page
+    await this.setMessage(message)
     return this
+  }
+  
+  /**
+   * Edit a message to show the current page
+   * 
+   * @param message Message to update
+   */
+  async setMessage (message: Message) {
+    await message.edit(this.getEmbedOfPage(this.page))
   }
 
   /**
-   * Get the fields of the embed that corresponds to a page
-   * number
+   * Get the embed that corresponds to a page number
    * 
    * @param page
    */
-  getFieldsOfPage (page: number) {
-    const begin = page * this.maxPerPage
-    return this.embed.fields.slice(begin, begin + this.maxPerPage)
+  getEmbedOfPage (page: number) {
+    const embed = new MessageEmbed(this.embed)
+    const startField = page * this.maxPerPage
+    const fields = this.embed.fields.slice(startField, startField + this.maxPerPage)
+    embed.fields = fields
+    return embed
   }
 }
