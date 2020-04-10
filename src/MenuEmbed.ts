@@ -5,7 +5,6 @@ type MenuEmbedSettings = {
 }
 
 export class MenuEmbed {
-  text = ''
   embed: MessageEmbed = new MessageEmbed()
   /**
    * Maximum number of fields per page
