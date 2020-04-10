@@ -1,6 +1,6 @@
 export * from 'prompt-anything'
 export * from './DiscordChannel'
-export * from './DiscordMenu'
+export * from './DiscordInteraction'
 export * from './DiscordPrompt'
 export * from './formats/MessageFormat'
 export * from './formats/MenuFormat'

@@ -2,7 +2,7 @@ import { PromptRunner, Prompt } from 'prompt-anything'
 import { User, TextChannel } from 'discord.js'
 import { DiscordChannel } from './DiscordChannel'
 
-export class DiscordMenu<T> extends PromptRunner<T> {
+export class DiscordInteraction<T> extends PromptRunner<T> {
   constructor(author: User, data: T) {
     super({
       ...data,
@@ -10,7 +10,7 @@ export class DiscordMenu<T> extends PromptRunner<T> {
     })
   }
 
-  run (phase: Prompt<T>, channel: TextChannel): Promise<void> {
+  run (phase: Prompt<T>, channel: TextChannel): Promise<T> {
     const compatibleChannel = new DiscordChannel(channel)
     return super.run(phase, compatibleChannel)
   }
