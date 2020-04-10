@@ -4,7 +4,11 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "tsc",
+    "lint": "eslint ./src/**/*",
+    "test": "jest ./src",
+    "test-coverage": "jest ./src --coverage",
+    "test-watch": "jest --watch"
   },
   "author": "synzen",
   "license": "MIT",
