@@ -1,4 +1,4 @@
-import { MessageEmbed, Message, TextChannel, MessageReaction } from 'discord.js'
+import { MessageEmbed, Message, MessageReaction } from 'discord.js'
 
 type MenuEmbedSettings = {
   maxPerPage: number

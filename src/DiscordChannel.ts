@@ -1,8 +1,8 @@
 import { TextChannel, MessageOptions } from "discord.js";
 import { ChannelInterface, MessageInterface } from "prompt-anything";
-import { DiscordMessageFormat } from "./DiscordMessageFormat";
-import { MenuFormat } from "./formats/MenuFormat";
-import { MessageFormat } from "./formats/MessageFormat";
+import { DiscordVisual } from "./visuals/DiscordVisual";
+import { MenuVisual } from "./visuals/MenuVisual";
+import { MessageVisual } from "./visuals/MessageVisual";
 
 export class DiscordChannel implements ChannelInterface {
   channel: TextChannel;
@@ -11,28 +11,28 @@ export class DiscordChannel implements ChannelInterface {
     this.channel = channel
   }
 
-  async sendMenuFormat (format: MenuFormat) {
+  async sendMenuVisual (visual: MenuVisual) {
     let options: MessageOptions = {}
-    if (format.options) {
+    if (visual.options) {
       options = {
-        ...format.options
+        ...visual.options
       }
     }
-    options.embed = format.menu.embed
+    options.embed = visual.menu.embed
     const sent = await this.channel.send('', options)
-    await format.menu.setUpPagination(sent)
+    await visual.menu.setUpPagination(sent)
     return sent
   }
 
-  async sendMessageFormat (format: MessageFormat) {
-    return this.channel.send(format.text, format.options)
+  async sendMessageVisual (visual: MessageVisual) {
+    return this.channel.send(visual.text, visual.options)
   }
 
-  async send (format: DiscordMessageFormat): Promise<MessageInterface> {
-    if (format instanceof MenuFormat) {
-      return this.sendMenuFormat(format)
+  async send (visual: DiscordVisual): Promise<MessageInterface> {
+    if (visual instanceof MenuVisual) {
+      return this.sendMenuVisual(visual)
     } else {
-      return this.sendMessageFormat(format)
+      return this.sendMessageVisual(visual)
     }
   }
   

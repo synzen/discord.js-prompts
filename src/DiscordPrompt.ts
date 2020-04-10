@@ -2,8 +2,8 @@ import { Message } from 'discord.js'
 import { Prompt, PromptCollector, Rejection } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
-import { MessageFormat } from "./formats/MessageFormat";
-import { MenuFormat } from './formats/MenuFormat';
+import { MessageVisual } from "./visuals/MessageVisual";
+import { MenuVisual } from './visuals/MenuVisual';
 import { MenuEmbed } from './MenuEmbed';
 
 export type BaseData = {
@@ -12,25 +12,25 @@ export type BaseData = {
 
 export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
   duration = 90000
-  static inactivityFormat: MessageFormat = {
+  static inactivityVisual: MessageVisual = {
     text: 'Menu has been closed due to inactivity.'
   }
-  static exitFormat: MessageFormat = {
+  static exitVisual: MessageVisual = {
     text: 'Menu closed.'
   }
-  static getRejectFormat (error: Rejection): MessageFormat {
+  static getRejectVisual (error: Rejection): MessageVisual {
     return {
       text: error.message
     }
   }
   async onReject(message: Message, error: Rejection, channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.getRejectFormat(error), channel)
+    await this.sendMessage(DiscordPrompt.getRejectVisual(error), channel)
   }
   async onInactivity(channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.inactivityFormat, channel)
+    await this.sendMessage(DiscordPrompt.inactivityVisual, channel)
   }
   async onExit(message: Message, channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.exitFormat, channel)
+    await this.sendMessage(DiscordPrompt.exitVisual, channel)
   }
 
   createCollector(channel: DiscordChannel, data: T): PromptCollector<T> {
@@ -51,10 +51,10 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     if (message.content === 'exit') {
       return emitter.emit('exit', message)
     }
-    // Check if MenuFormat for special handling
-    const format = this.getVisual(data)
-    if (format instanceof MenuFormat) {
-      this.handleMenuMessage(message, format.menu, emitter)
+    // Check if MenuVisual for special handling
+    const visual = this.getVisual(data)
+    if (visual instanceof MenuVisual) {
+      this.handleMenuMessage(message, visual.menu, emitter)
     } else {
       emitter.emit('message', message)
     }
