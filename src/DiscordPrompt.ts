@@ -52,7 +52,7 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
       return emitter.emit('exit', message)
     }
     // Check if MenuEmbedFormat for special handling
-    const format = this.getFormat(data)
+    const format = this.getVisual(data)
     if (format instanceof MenuEmbedFormat) {
       this.handleMenuMessage(message, format.menu, emitter)
     } else {
