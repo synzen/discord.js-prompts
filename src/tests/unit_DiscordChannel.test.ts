@@ -9,7 +9,7 @@ jest.mock('../MenuEmbed')
 jest.mock('../visuals/MessageVisual')
 jest.mock('../visuals/MenuVisual')
 
-describe('DiscordChannel', () => {
+describe('Unit::DiscordChannel', () => {
   describe('constructor', () => {
     it('initializes the channel', () => {
       const textChannel = {
