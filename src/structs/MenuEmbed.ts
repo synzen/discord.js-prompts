@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js'
+import { MessageEmbed, Message, TextChannel, MessageReaction } from 'discord.js'
 
 type MenuEmbedSettings = {
   maxPerPage: number
@@ -41,6 +41,9 @@ export class MenuEmbed {
    * @param number Option number
    */
   isInvalidOption (number: number) {
+    if (isNaN(number)) {
+      return true
+    }
     return number > this.embed.fields.length || number <= 0
   }
 
@@ -136,6 +139,41 @@ export class MenuEmbed {
   }
 
   /**
+   * Send this menu to a channel
+   * 
+   * @param channel Channel to send to
+   */
+  async sendTo (channel: TextChannel) {
+    const sent = await channel.send('', this.getEmbedOfPage(0))
+    if (this.spansMultiplePages()) {
+      await sent.react('◀')
+      await sent.react('▶')
+      this.createReactionCollector(sent)
+    }
+    return sent
+  }
+
+  /**
+   * Collect reactions for pagination for this menu
+   * 
+   * @param message Message to collect reactions on
+   */
+  createReactionCollector (message: Message) {
+    const filter = (r: MessageReaction) => r.emoji.name === '◀' || r.emoji.name === '▶'
+    const collector = message.createReactionCollector(filter, {
+      time: 90000
+    })
+    collector.on('collect', (reaction) => {
+      const name = reaction.emoji.name
+      if (name === '◀') {
+        this.prevPage(message)
+      } else {
+        this.nextPage(message)
+      }
+    })
+  }
+
+  /**
    * Get the embed that corresponds to a page number
    * 
    * @param page
@@ -149,5 +187,15 @@ export class MenuEmbed {
     const fields = this.embed.fields.slice(startField, startField + this.maxPerPage)
     embed.fields = fields
     return embed
+  }
+
+  /**
+   * Check if the number of fields spans across multiple pages
+   */
+  spansMultiplePages () {
+    if (!this.maxPerPage) {
+      return false
+    }
+    return this.embed.fields.length / this.maxPerPage > 1
   }
 }
