@@ -46,10 +46,11 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     return emitter
   }
 
-  handleMessage (message: Message, data: T, emitter: PromptCollector<T>) {
+  handleMessage (message: Message, data: T, emitter: PromptCollector<T>): void {
     // Exit
     if (message.content === 'exit') {
-      return emitter.emit('exit', message)
+      emitter.emit('exit', message)
+      return
     }
     // Check if MenuVisual for special handling
     const visual = this.getVisual(data)
@@ -60,7 +61,7 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     }
   }
   
-  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<T>) {
+  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<T>): void {
     if (menu.isInvalidOption(Number(message.content))) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {

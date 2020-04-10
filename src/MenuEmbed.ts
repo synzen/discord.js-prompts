@@ -29,7 +29,7 @@ export class MenuEmbed {
    * @param name Name of option
    * @param description Description of optino
    */
-  addOption (name: string, description: string) {
+  addOption (name: string, description: string): this {
     const count = this.embed.fields.length
     this.embed.addField(`${count + 1}) ${name}`, description)
     return this
@@ -41,7 +41,7 @@ export class MenuEmbed {
    * 
    * @param number Option number
    */
-  isInvalidOption (number: number) {
+  isInvalidOption (number: number): boolean {
     if (isNaN(number)) {
       return true
     }
@@ -53,7 +53,7 @@ export class MenuEmbed {
    * 
    * @param title 
    */
-  setTitle (title: string) {
+  setTitle (title: string): this {
     this.embed.setTitle(title)
     return this
   }
@@ -65,7 +65,7 @@ export class MenuEmbed {
    * @param icon 
    * @param url 
    */
-  setAuthor (name: string, icon?: string, url?: string) {
+  setAuthor (name: string, icon?: string, url?: string): this {
     this.embed.setAuthor(name, icon, url)
     return this
   }
@@ -75,7 +75,7 @@ export class MenuEmbed {
    * 
    * @param description 
    */
-  setDescription (description: string) {
+  setDescription (description: string): this {
     this.embed.setDescription(description)
     return this
   }
@@ -85,7 +85,7 @@ export class MenuEmbed {
    * 
    * @param color Integer color
    */
-  setColor (color: number) {
+  setColor (color: number): this {
     this.embed.setColor(color)
     return this
   }
@@ -93,14 +93,14 @@ export class MenuEmbed {
   /**
    * Check if the current page is the last page
    */
-  isOnLastPage () {
+  isOnLastPage (): boolean {
     return this.maxPerPage * this.page >= this.embed.fields.length
   }
 
   /**
    * Check if the current page is the first page
    */
-  isOnFirstPage () {
+  isOnFirstPage (): boolean {
     return this.page === 0
   }
 
@@ -108,7 +108,7 @@ export class MenuEmbed {
    * Increment the page and update the message if the
    * current page is not the last
    */
-  async nextPage (message: Message) {
+  async nextPage (message: Message): Promise<this> {
     if (this.isOnLastPage()) {
       return this
     }
@@ -121,7 +121,7 @@ export class MenuEmbed {
    * Decrement the page and update the message if the
    * current page is not the first
    */
-  async prevPage (message: Message) {
+  async prevPage (message: Message): Promise<this> {
     if (this.isOnFirstPage()) {
       return this
     }
@@ -135,7 +135,7 @@ export class MenuEmbed {
    * 
    * @param message Message to update
    */
-  async setMessage (message: Message) {
+  async setMessage (message: Message): Promise<void> {
     await message.edit(this.getEmbedOfPage(this.page))
   }
 
@@ -144,13 +144,12 @@ export class MenuEmbed {
    * 
    * @param message Channel to send to
    */
-  async setUpPagination (message: Message) {
+  async setUpPagination (message: Message): Promise<void> {
     if (this.spansMultiplePages()) {
       await message.react('◀')
       await message.react('▶')
       this.createReactionCollector(message)
     }
-    return message
   }
 
   /**
@@ -158,8 +157,8 @@ export class MenuEmbed {
    * 
    * @param message Message to collect reactions on
    */
-  createReactionCollector (message: Message) {
-    const filter = (r: MessageReaction) => r.emoji.name === '◀' || r.emoji.name === '▶'
+  createReactionCollector (message: Message): void {
+    const filter = (r: MessageReaction): boolean => r.emoji.name === '◀' || r.emoji.name === '▶'
     const collector = message.createReactionCollector(filter, {
       time: 90000
     })
@@ -178,7 +177,7 @@ export class MenuEmbed {
    * 
    * @param page
    */
-  getEmbedOfPage (page: number) {
+  getEmbedOfPage (page: number): MessageEmbed {
     if (!this.maxPerPage) {
       return this.embed
     }
@@ -192,7 +191,7 @@ export class MenuEmbed {
   /**
    * Check if the number of fields spans across multiple pages
    */
-  spansMultiplePages () {
+  spansMultiplePages (): boolean {
     if (!this.maxPerPage) {
       return false
     }
