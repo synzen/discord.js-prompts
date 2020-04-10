@@ -166,9 +166,9 @@ export class MenuEmbed {
     collector.on('collect', (reaction) => {
       const name = reaction.emoji.name
       if (name === '◀') {
-        this.prevPage(message)
-      } else {
-        this.nextPage(message)
+        this.prevPage(message).catch(console.error)
+      } else if (name === '▶') {
+        this.nextPage(message).catch(console.error)
       }
     })
   }
