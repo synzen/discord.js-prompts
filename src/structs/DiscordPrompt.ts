@@ -3,6 +3,8 @@ import { Prompt, PromptCollector, Rejection } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
 import { MessageFormat } from "./formats/MessageFormat";
+import { MenuEmbedFormat } from './formats/MenuFormat';
+import { MenuEmbed } from './MenuEmbed';
 
 export type BaseData = {
   authorID?: string;
@@ -36,15 +38,33 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     const emitter: PromptCollector<T> = new EventEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.authorID);
     collector.on('collect', async (message: Message) => {
-      if (message.content === 'exit') {
-        emitter.emit('exit', message)
-      } else {
-        emitter.emit('message', message)
-      }
+      this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {
       collector.stop()
     })
     return emitter
-  }  
+  }
+
+  handleMessage (message: Message, data: T, emitter: PromptCollector<T>) {
+    // Exit
+    if (message.content === 'exit') {
+      return emitter.emit('exit', message)
+    }
+    // Check if MenuEmbedFormat for special handling
+    const format = this.getFormat(data)
+    if (format instanceof MenuEmbedFormat) {
+      this.handleMenuMessage(message, format.menu, emitter)
+    } else {
+      emitter.emit('message', message)
+    }
+  }
+  
+  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<T>) {
+    if (menu.isInvalidOption(Number(message.content))) {
+      emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
+    } else {
+      emitter.emit('message', message)
+    }
+  }
 }

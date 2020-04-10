@@ -11,21 +11,21 @@ export class DiscordChannel implements ChannelInterface {
     this.channel = channel
   }
 
-  sendMenuFormat (format: MenuEmbedFormat) {
+  async sendMenuFormat (format: MenuEmbedFormat) {
     let options: MessageOptions
     if (format.options) {
       options = {
         ...format.options
       }
     }
-    return this.channel.send(format.text, format.menu?.getEmbedOfPage(0))
+    return format.menu.sendTo(this.channel)
   }
 
-  sendMessageFormat (format: MessageFormat) {
+  async sendMessageFormat (format: MessageFormat) {
     return this.channel.send(format.text, format.options)
   }
 
-  send (format: DiscordMessageFormat): Promise<MessageInterface> {
+  async send (format: DiscordMessageFormat): Promise<MessageInterface> {
     if (format instanceof MenuEmbedFormat) {
       return this.sendMenuFormat(format)
     } else {
