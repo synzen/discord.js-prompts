@@ -23,13 +23,13 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
       text: error.message
     }
   }
-  async onReject(message: Message, error: Rejection, channel: DiscordChannel, data: T): Promise<void> {
+  async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
   }
-  async onInactivity(channel: DiscordChannel, data: T): Promise<void> {
+  async onInactivity(channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.inactivityVisual, channel)
   }
-  async onExit(message: Message, channel: DiscordChannel, data: T): Promise<void> {
+  async onExit(message: Message, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.exitVisual, channel)
   }
 
