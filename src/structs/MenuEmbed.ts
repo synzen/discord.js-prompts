@@ -141,6 +141,9 @@ export class MenuEmbed {
    * @param page
    */
   getEmbedOfPage (page: number) {
+    if (!this.maxPerPage) {
+      return this.embed
+    }
     const embed = new MessageEmbed(this.embed)
     const startField = page * this.maxPerPage
     const fields = this.embed.fields.slice(startField, startField + this.maxPerPage)
