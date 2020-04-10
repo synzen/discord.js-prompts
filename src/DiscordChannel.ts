@@ -12,13 +12,16 @@ export class DiscordChannel implements ChannelInterface {
   }
 
   async sendMenuFormat (format: MenuFormat) {
-    let options: MessageOptions
+    let options: MessageOptions = {}
     if (format.options) {
       options = {
         ...format.options
       }
     }
-    return format.menu.sendTo(this.channel)
+    options.embed = format.menu.embed
+    const sent = await this.channel.send('', options)
+    await format.menu.setUpPagination(sent)
+    return sent
   }
 
   async sendMessageFormat (format: MessageFormat) {

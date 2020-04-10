@@ -140,18 +140,17 @@ export class MenuEmbed {
   }
 
   /**
-   * Send this menu to a channel
+   * Sets up pagination on a message
    * 
-   * @param channel Channel to send to
+   * @param message Channel to send to
    */
-  async sendTo (channel: TextChannel) {
-    const sent = await channel.send('', this.getEmbedOfPage(0))
+  async setUpPagination (message: Message) {
     if (this.spansMultiplePages()) {
-      await sent.react('◀')
-      await sent.react('▶')
-      this.createReactionCollector(sent)
+      await message.react('◀')
+      await message.react('▶')
+      this.createReactionCollector(message)
     }
-    return sent
+    return message
   }
 
   /**
