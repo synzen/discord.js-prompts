@@ -6,7 +6,7 @@ type MenuEmbedSettings = {
 
 export class MenuEmbed {
   text = ''
-  embed: MessageEmbed
+  embed: MessageEmbed = new MessageEmbed()
   /**
    * Maximum number of fields per page
    */
@@ -16,8 +16,10 @@ export class MenuEmbed {
    */
   page = 0
 
-  constructor (embed = new MessageEmbed(), settings?: MenuEmbedSettings) {
-    this.embed = embed
+  constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
+    if (embed) {
+      this.embed = embed
+    }
     if (settings?.maxPerPage) {
       this.maxPerPage = settings?.maxPerPage
     }
