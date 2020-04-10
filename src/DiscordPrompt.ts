@@ -24,13 +24,13 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     }
   }
   async onReject(message: Message, error: Rejection, channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.getRejectVisual(error), channel)
+    await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
   }
   async onInactivity(channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.inactivityVisual, channel)
+    await this.sendVisual(DiscordPrompt.inactivityVisual, channel)
   }
   async onExit(message: Message, channel: DiscordChannel, data: T): Promise<void> {
-    await this.sendMessage(DiscordPrompt.exitVisual, channel)
+    await this.sendVisual(DiscordPrompt.exitVisual, channel)
   }
 
   createCollector(channel: DiscordChannel, data: T): PromptCollector<T> {
