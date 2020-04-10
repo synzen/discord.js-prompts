@@ -2,7 +2,7 @@ import { Message } from 'discord.js'
 import { Prompt, PromptCollector, Rejection } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
-import { MessageFormat } from "./MessageFormat";
+import { MessageFormat } from "./formats/MessageFormat";
 
 export type BaseData = {
   authorID?: string;
