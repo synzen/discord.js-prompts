@@ -1,5 +1,5 @@
-import { TextChannel, MessageOptions } from "discord.js";
-import { ChannelInterface, MessageInterface } from "prompt-anything";
+import { TextChannel, MessageOptions, Message } from "discord.js";
+import { ChannelInterface } from "prompt-anything";
 import { DiscordVisual } from "./visuals/DiscordVisual";
 import { MenuVisual } from "./visuals/MenuVisual";
 import { MessageVisual } from "./visuals/MessageVisual";
@@ -11,7 +11,7 @@ export class DiscordChannel implements ChannelInterface {
     this.channel = channel
   }
 
-  async sendMenuVisual (visual: MenuVisual) {
+  async sendMenuVisual (visual: MenuVisual): Promise<Message> {
     let options: MessageOptions = {}
     if (visual.options) {
       options = {
@@ -24,11 +24,11 @@ export class DiscordChannel implements ChannelInterface {
     return sent
   }
 
-  async sendMessageVisual (visual: MessageVisual) {
+  async sendMessageVisual (visual: MessageVisual): Promise<Message> {
     return this.channel.send(visual.text, visual.options)
   }
 
-  async send (visual: DiscordVisual): Promise<MessageInterface> {
+  async send (visual: DiscordVisual): Promise<Message> {
     if (visual instanceof MenuVisual) {
       return this.sendMenuVisual(visual)
     } else {
