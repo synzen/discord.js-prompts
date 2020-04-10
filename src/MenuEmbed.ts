@@ -1,7 +1,7 @@
 import { MessageEmbed, Message, MessageReaction } from 'discord.js'
 
 type MenuEmbedSettings = {
-  maxPerPage: number
+  maxPerPage: number;
 }
 
 export class MenuEmbed {
