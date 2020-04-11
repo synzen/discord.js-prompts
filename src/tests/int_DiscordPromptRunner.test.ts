@@ -1,5 +1,5 @@
 import { DiscordPrompt } from "../DiscordPrompt"
-import { PromptFunction, PromptCollector, Rejection } from "prompt-anything"
+import { PromptFunction, PromptCollector, Rejection, PromptNode } from "prompt-anything"
 import { DiscordPromptRunner } from '../DiscordPromptRunner'
 import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
@@ -94,9 +94,9 @@ describe('E2E tests', () => {
     const askName = new DiscordPrompt<PromptData>({
       text: `What's your name?`
     }, askNameFn)
-    
+    const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(askName, textChannel)
+    runner.runDiscord(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     // Simulate unauthorized user input
@@ -119,8 +119,9 @@ describe('E2E tests', () => {
     const askName = new DiscordPrompt<PromptData>({
       text: `What's your name?`
     }, askNameFn)
+    const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(askName, textChannel)
+    runner.runDiscord(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     const exitMessage = createMockMessage(authorID, 'exit')
@@ -142,8 +143,9 @@ describe('E2E tests', () => {
       .addOption('a', 'b')
     const menuVisual = new MenuVisual(menu)
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
+    const selectOptionNode = new PromptNode(selectOption)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(selectOption, textChannel)
+    runner.runDiscord(selectOptionNode, textChannel)
     await flushPromises()
     // Invalid option selection
     const invalidMessage = createMockMessage(authorID, '4')
@@ -176,6 +178,7 @@ describe('E2E tests', () => {
     const nextPage = jest.spyOn(menu, 'nextPage')
     const menuVisual = new MenuVisual(menu)
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
+    const selectOptionNode = new PromptNode(selectOption)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
 
     // Create mocks
@@ -194,7 +197,7 @@ describe('E2E tests', () => {
     textChannelSend.mockResolvedValue(reactableMessage)
 
     // Run
-    runner.runDiscord(selectOption, textChannel)
+    runner.runDiscord(selectOptionNode, textChannel)
     await flushPromises()
 
     // React
