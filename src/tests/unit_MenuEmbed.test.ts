@@ -40,10 +40,15 @@ describe('Unit::MenuEmbed', () => {
     })
   })
   describe('addOption', () => {
+    beforeEach(() => {
+      jest.spyOn(menuEmbed, 'numberOfOptions')
+        .mockReturnValue(-1)
+    })
     it('adds the field correctly', () => {
+      jest.spyOn(menuEmbed, 'numberOfOptions')
+        .mockReturnValue(2)
       const embed = {
-        addField: jest.fn(),
-        fields: [1, 2]
+        addField: jest.fn()
       } as unknown as MessageEmbed
       menuEmbed.embed = embed
       const title = 'aedsg'
@@ -55,9 +60,8 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('isInvalidOption', () => {
     it('returns correctly', () => {
-      menuEmbed.embed = {
-        fields: [1, 1]
-      } as unknown as MessageEmbed
+      jest.spyOn(menuEmbed, 'numberOfOptions')
+        .mockReturnValue(2)
       expect(menuEmbed.isInvalidOption(0))
         .toEqual(true)
       expect(menuEmbed.isInvalidOption(1))
@@ -135,10 +139,8 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('isOnLastPage', () => {
     it('returns correctly', () => {
-      const embed = {
-        fields: [1, 2, 3]
-      } as unknown as MessageEmbed
-      menuEmbed.embed = embed
+      jest.spyOn(menuEmbed, 'numberOfOptions')
+        .mockReturnValue(3)
       menuEmbed.maxPerPage = 2
       menuEmbed.page = 1
       expect(menuEmbed.isOnLastPage())
@@ -438,11 +440,8 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('spansMultiplePages', () => {
     it('returns correctly', () => {
-      const embed = {
-        title: 'foo',
-        fields: [1,2,3,4,5,6,7,8,9,10,11]
-      } as unknown as MessageEmbed
-      menuEmbed.embed = embed
+      jest.spyOn(menuEmbed, 'numberOfOptions')
+        .mockReturnValue(11)
       menuEmbed.maxPerPage = 3
       expect(menuEmbed.spansMultiplePages())
         .toEqual(true)

@@ -48,9 +48,16 @@ export class MenuEmbed {
    * @param description Description of optino
    */
   addOption (name: string, description: string): this {
-    const count = this.embed.fields.length
+    const count = this.numberOfOptions()
     this.embed.addField(`${count + 1}) ${name}`, description)
     return this
+  }
+
+  /**
+   * Return the number of options this embed has
+   */
+  numberOfOptions (): number {
+    return this.embed.fields.length
   }
 
   /**
@@ -63,7 +70,7 @@ export class MenuEmbed {
     if (isNaN(number)) {
       return true
     }
-    return number > this.embed.fields.length || number <= 0
+    return number > this.numberOfOptions() || number <= 0
   }
 
   /**
@@ -112,7 +119,7 @@ export class MenuEmbed {
    * Check if the current page is the last page
    */
   isOnLastPage (): boolean {
-    return this.maxPerPage * this.page >= this.embed.fields.length
+    return this.maxPerPage * this.page >= this.numberOfOptions()
   }
 
   /**
@@ -228,6 +235,6 @@ export class MenuEmbed {
     if (!this.maxPerPage) {
       return false
     }
-    return this.embed.fields.length / this.maxPerPage > 1
+    return this.numberOfOptions() / this.maxPerPage > 1
   }
 }
