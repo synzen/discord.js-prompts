@@ -219,11 +219,8 @@ export class MenuEmbed  {
     const collector = message.createReactionCollector(filter, {
       time: 90000
     })
-    collector.on('collect', (reaction, user) => {
+    collector.on('collect', (reaction) => {
       const name = reaction.emoji.name
-      if (user.client) {
-        return
-      }
       if (name === '◀') {
         this.prevPage(message).catch(this.paginationErrorHandler)
       } else if (name === '▶') {
