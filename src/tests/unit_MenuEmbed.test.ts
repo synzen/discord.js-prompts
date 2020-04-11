@@ -279,11 +279,10 @@ describe('Unit::MenuEmbed', () => {
     })
   })
   describe('setUpPagination', () => {
-    it('reacts with arrows if multiple pages', async () => {
+    it('reacts with arrows', async () => {
+      menuEmbed.paginationErrorHandler = jest.fn()
       const spy = jest.spyOn(menuEmbed, 'createReactionCollector')
         .mockReturnValue()
-      jest.spyOn(menuEmbed, 'spansMultiplePages')
-        .mockReturnValue(true)
       const react = jest.fn()
       const message = {
         react
@@ -292,6 +291,20 @@ describe('Unit::MenuEmbed', () => {
       expect(react).toHaveBeenNthCalledWith(1, '◀')
       expect(react).toHaveBeenNthCalledWith(2, '▶')
       expect(spy).toHaveBeenCalled()
+    })
+    it('handles errors', async () => {
+      const errorHandler = jest.fn()
+      menuEmbed.paginationErrorHandler = errorHandler
+      jest.spyOn(menuEmbed, 'createReactionCollector')
+        .mockReturnValue()
+      const reactError = new Error('wsgrw')
+      const react = jest.fn()
+        .mockRejectedValue(reactError)
+      const message = {
+        react
+      } as unknown as Message
+      await menuEmbed.setUpPagination(message)
+      expect(errorHandler).toHaveBeenCalledWith(reactError)
     })
   })
   describe('createReactionCollector', () => {
@@ -351,6 +364,34 @@ describe('Unit::MenuEmbed', () => {
       await flushPromises()
       expect(prevPage).not.toHaveBeenCalled()
       expect(nextPage).not.toHaveBeenCalled()
+    })
+    it('handles errors for next page', async () => {
+      menuEmbed.createReactionCollector(message)
+      const reaction = {
+        emoji: {
+          name: '▶'
+        }
+      }
+      const error = new Error('sedgrwf')
+      nextPage.mockRejectedValue(error)
+      collector.emit('collect', reaction)
+      await flushPromises()
+      expect(menuEmbed.paginationErrorHandler)
+        .toHaveBeenCalledWith(error)
+    })
+    it('handles errors for prev page', async () => {
+      menuEmbed.createReactionCollector(message)
+      const reaction = {
+        emoji: {
+          name: '◀'
+        }
+      }
+      const error = new Error('sedgrwf')
+      prevPage.mockRejectedValue(error)
+      collector.emit('collect', reaction)
+      await flushPromises()
+      expect(menuEmbed.paginationErrorHandler)
+        .toHaveBeenCalledWith(error)
     })
   })
   describe('getEmbedOfPage', () => {

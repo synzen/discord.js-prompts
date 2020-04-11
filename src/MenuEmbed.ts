@@ -170,9 +170,16 @@ export class MenuEmbed {
    * @param message Channel to send to
    */
   async setUpPagination (message: Message): Promise<void> {
-    await message.react('◀')
-    await message.react('▶')
-    this.createReactionCollector(message)
+    if (!this.paginationErrorHandler) {
+      throw new TypeError('Error handler for pagination is undefined')
+    }
+    try {
+      await message.react('◀')
+      await message.react('▶')
+      this.createReactionCollector(message)
+    } catch (err) {
+      this.paginationErrorHandler(err)
+    }
   }
 
   /**
@@ -182,7 +189,7 @@ export class MenuEmbed {
    */
   createReactionCollector (message: Message): void {
     if (!this.paginationErrorHandler) {
-      throw new Error('Error handler for pagination is undefined')
+      throw new TypeError('Error handler for pagination is undefined')
     }
     const filter = (r: MessageReaction): boolean => r.emoji.name === '◀' || r.emoji.name === '▶'
     const collector = message.createReactionCollector(filter, {
