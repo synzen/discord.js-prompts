@@ -1,6 +1,6 @@
-import { MessageOptions } from 'discord.js'
 import { MenuVisual } from '../../visuals/MenuVisual'
 import { MenuEmbed } from '../../MenuEmbed'
+import { MessageOptions } from '../../types/MessageOptions'
 
 describe('Unit::visuals/MenuVisual', () => {
   describe('constructor', () => {

@@ -1,6 +1,7 @@
 import { PromptRunner, Prompt } from 'prompt-anything'
-import { User, TextChannel } from 'discord.js'
 import { DiscordChannel } from './DiscordChannel'
+import { TextChannel } from './types/TextChannel'
+import { User } from './types/User'
 
 export class DiscordPromptRunner<T> extends PromptRunner<T> {
   constructor(author: User, data: T) {
@@ -14,8 +15,8 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
     return new DiscordChannel(channel)
   }
 
-  run (phase: Prompt<T>, channel: TextChannel): Promise<T> {
+  runDiscord (phase: Prompt<T>, channel: TextChannel): Promise<T> {
     const compatibleChannel = DiscordPromptRunner.convertTextChannel(channel)
-    return super.run(phase, compatibleChannel)
+    return this.run(phase, compatibleChannel)
   }
 }

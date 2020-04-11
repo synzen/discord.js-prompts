@@ -1,13 +1,11 @@
 import { EventEmitter } from 'events'
-import { Message } from 'discord.js'
 import { DiscordChannel } from '../DiscordChannel';
 import { DiscordPrompt } from '../DiscordPrompt';
 import { MessageVisual } from '../visuals/MessageVisual';
 import { Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-
-jest.mock('discord.js')
+import { Message } from '../types/Message';
 
 class MockCollector extends EventEmitter {
   stop = jest.fn()

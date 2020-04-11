@@ -1,6 +1,7 @@
-import { MessageEmbed, Message } from 'discord.js'
 import { MenuEmbed } from "../MenuEmbed"
 import { EventEmitter } from 'events'
+import { Embed } from "../Embed";
+import { Message } from '../types/Message'
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
@@ -18,12 +19,15 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('constructor', () => {
     it('accepts no args', () => {
-      expect(menuEmbed.embed).toBeInstanceOf(MessageEmbed)
+      expect(menuEmbed.embed).toBeInstanceOf(Embed)
       expect(menuEmbed.maxPerPage).toEqual(5)
       expect(menuEmbed.page).toEqual(0)
+      expect(menuEmbed.embed.fields).toEqual([])
     })
     it('overwrites embed and settings', () => {
-      const myEmbed = new MessageEmbed().setTitle('awsdf')
+      const myEmbed = new Embed({
+        title: 'awsdf'
+      })
       const maxPerPage = 10
       const menuEmbed = new MenuEmbed(myEmbed, {
         maxPerPage
@@ -52,14 +56,17 @@ describe('Unit::MenuEmbed', () => {
     it('adds the field correctly', () => {
       jest.spyOn(menuEmbed, 'numberOfOptions')
         .mockReturnValue(2)
-      const embed = {
-        addField: jest.fn()
-      } as unknown as MessageEmbed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      } as Embed
       const title = 'aedsg'
       const description = 'swetr'
       const returned = menuEmbed.addOption(title, description)
-      expect(embed.addField).toHaveBeenCalledWith(`3) ${title}`, description)
+      const fields = menuEmbed.embed.fields
+      expect(fields).toEqual([{
+        name: `3) ${title}`,
+        value: description
+      }])
       expect(returned).toEqual(menuEmbed)
     })
   })
@@ -79,66 +86,66 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('setTitle', () => {
     it('sets the title', () => {
-      const embed = {
-        setTitle: jest.fn()
-      } as unknown as MessageEmbed
+      const embed = {} as Embed
       menuEmbed.embed = embed
       const title = 'asedfrhgt'
       const returned = menuEmbed.setTitle(title)
-      expect(menuEmbed.embed.setTitle)
-        .toHaveBeenCalledWith(title)
+      expect(menuEmbed.embed.title)
+        .toEqual(title)
       expect(returned).toEqual(menuEmbed)
     })
   })
   describe('setAuthor', () => {
     it('sets the author', () => {
-      const embed = {
-        setAuthor: jest.fn()
-      } as unknown as MessageEmbed
+      const embed = {} as Embed
       menuEmbed.embed = embed
       const name = 'asedfrhgt'
       const icon = 'aesdtg'
       const url = 'sweyr'
       const returned = menuEmbed.setAuthor(name, icon, url)
-      expect(menuEmbed.embed.setAuthor)
-        .toHaveBeenCalledWith(name, icon, url)
+      expect(menuEmbed.embed.author)
+        .toEqual({
+          name,
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          icon_url: icon,
+          url
+        })
       expect(returned).toEqual(menuEmbed)
     })
     it('has optional icon and url', () => {
-      const embed = {
-        setAuthor: jest.fn()
-      } as unknown as MessageEmbed
+      const embed = {} as Embed
       menuEmbed.embed = embed
       const name = 'asedfrhgt'
       const returned = menuEmbed.setAuthor(name)
-      expect(menuEmbed.embed.setAuthor)
-        .toHaveBeenCalledWith(name, undefined, undefined)
+      expect(menuEmbed.embed.author)
+        .toEqual({
+          name,
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          icon_url: undefined,
+          url: undefined
+        })
       expect(returned).toEqual(menuEmbed)
     })
   })
   describe('setDescription', () => {
     it('sets the description', () => {
-      const embed = {
-        setDescription: jest.fn()
-      } as unknown as MessageEmbed
+      const embed = {} as Embed
       menuEmbed.embed = embed
       const desc = 'asedfrhgt'
       const returned = menuEmbed.setDescription(desc)
-      expect(menuEmbed.embed.setDescription)
-        .toHaveBeenCalledWith(desc)
+      expect(menuEmbed.embed.description)
+        .toEqual(desc)
       expect(returned).toEqual(menuEmbed)
     })
   })
   describe('setColor', () => {
     it('sets the color', () => {
-      const embed = {
-        setColor: jest.fn()
-      } as unknown as MessageEmbed
+      const embed = {} as Embed
       menuEmbed.embed = embed
       const color = 2456
       const returned = menuEmbed.setColor(color)
-      expect(menuEmbed.embed.setColor)
-        .toHaveBeenCalledWith(color)
+      expect(menuEmbed.embed.color)
+        .toEqual(color)
       expect(returned).toEqual(menuEmbed)
     })
   })
@@ -162,7 +169,7 @@ describe('Unit::MenuEmbed', () => {
     it('returns correctly', () => {
       const embed = {
         fields: [1, 2, 3]
-      } as unknown as MessageEmbed
+      } as unknown as Embed
       menuEmbed.embed = embed
       menuEmbed.page = 0
       expect(menuEmbed.isOnFirstPage())
@@ -254,11 +261,13 @@ describe('Unit::MenuEmbed', () => {
       } as unknown as Message
       const embedPage = {
         a: 'b'
-      } as unknown as MessageEmbed
+      } as unknown as Embed
       jest.spyOn(menuEmbed, 'getEmbedOfPage')
         .mockReturnValue(embedPage)
       await menuEmbed.setMessage(message)
-      expect(edit).toHaveBeenCalledWith(embedPage)
+      expect(edit).toHaveBeenCalledWith('', {
+        embed: embedPage
+      })
     })
   })
   describe('canPaginate', () => {
@@ -423,7 +432,7 @@ describe('Unit::MenuEmbed', () => {
       menuEmbed.maxPerPage = 0
       const embed = {
         fields: [1,2,3,4,5,6,7,8,9,10,11]
-      } as unknown as MessageEmbed
+      } as unknown as Embed
       menuEmbed.embed = embed
       expect(menuEmbed.getEmbedOfPage(2))
         .toEqual(embed)
@@ -433,7 +442,7 @@ describe('Unit::MenuEmbed', () => {
       const embed = {
         title: 'foo',
         fields: [1,2,3,4,5,6,7,8,9,10,11]
-      } as unknown as MessageEmbed
+      } as unknown as Embed
       const firstPage = {
         title: 'foo',
         fields: [1,2,3]

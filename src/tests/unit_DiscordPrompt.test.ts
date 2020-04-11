@@ -1,13 +1,12 @@
 import { EventEmitter } from 'events'
-import { Message } from 'discord.js'
 import { DiscordChannel } from '../DiscordChannel';
 import { DiscordPrompt } from '../DiscordPrompt';
 import { MessageVisual } from '../visuals/MessageVisual';
 import { PromptCollector, Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
+import { Message } from '../types/Message';
 
-jest.mock('discord.js')
 jest.mock('../visuals/MessageVisual')
 
 class MockCollector extends EventEmitter {

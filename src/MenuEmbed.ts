@@ -1,11 +1,15 @@
-import { MessageEmbed, Message, MessageReaction } from 'discord.js'
+import { MessageEmbed } from "./types/MessageEmbed"
+import { Embed } from "./Embed"
+import { Message } from "./types/Message"
+import { MessageReaction } from "./types/MessageReaction"
+
 
 type MenuEmbedSettings = {
   maxPerPage: number;
 }
 
-export class MenuEmbed {
-  embed: MessageEmbed = new MessageEmbed()
+export class MenuEmbed  {
+  embed: Embed = new Embed()
   /**
    * Maximum number of fields per page
    */
@@ -21,7 +25,7 @@ export class MenuEmbed {
    */
   paginationErrorHandler?: (error: Error) => void
 
-  constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
+  constructor (embed?: Embed, settings?: MenuEmbedSettings) {
     if (embed) {
       this.embed = embed
     }
@@ -50,7 +54,10 @@ export class MenuEmbed {
    */
   addOption (name: string, description: string): this {
     const count = this.numberOfOptions()
-    this.embed.addField(`${count + 1}) ${name}`, description)
+    this.embed.fields.push({
+       name: `${count + 1}) ${name}`,
+       value: description
+    })
     return this
   }
 
@@ -80,7 +87,7 @@ export class MenuEmbed {
    * @param title 
    */
   setTitle (title: string): this {
-    this.embed.setTitle(title)
+    this.embed.title = title
     return this
   }
 
@@ -92,7 +99,12 @@ export class MenuEmbed {
    * @param url 
    */
   setAuthor (name: string, icon?: string, url?: string): this {
-    this.embed.setAuthor(name, icon, url)
+    this.embed.author = {
+      name,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      icon_url: icon,
+      url
+    }
     return this
   }
 
@@ -102,7 +114,7 @@ export class MenuEmbed {
    * @param description 
    */
   setDescription (description: string): this {
-    this.embed.setDescription(description)
+    this.embed.description = description
     return this
   }
 
@@ -112,7 +124,7 @@ export class MenuEmbed {
    * @param color Integer color
    */
   setColor (color: number): this {
-    this.embed.setColor(color)
+    this.embed.color = color
     return this
   }
 
@@ -162,7 +174,9 @@ export class MenuEmbed {
    * @param message Message to update
    */
   async setMessage (message: Message): Promise<void> {
-    await message.edit(this.getEmbedOfPage(this.page))
+    await message.edit('', {
+      embed: this.getEmbedOfPage(this.page)
+    })
   }
 
   /**
@@ -227,11 +241,12 @@ export class MenuEmbed {
     if (!this.maxPerPage) {
       return this.embed
     }
-    const embed = new MessageEmbed(this.embed)
     const startField = page * this.maxPerPage
     const fields = this.embed.fields.slice(startField, startField + this.maxPerPage)
-    embed.fields = fields
-    return embed
+    return {
+      ...this.embed,
+      fields
+    }
   }
 
   /**

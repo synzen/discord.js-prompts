@@ -1,10 +1,10 @@
-import { Message } from 'discord.js'
 import { Prompt, PromptCollector, Rejection } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
 import { MessageVisual } from "./visuals/MessageVisual";
 import { MenuVisual } from './visuals/MenuVisual';
 import { MenuEmbed } from './MenuEmbed';
+import { Message } from "./types/Message";
 
 export type BaseData = {
   authorID: string;

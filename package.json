@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "main": "build/index.js",
-  "files": ["build/**/*"],
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
@@ -14,8 +16,8 @@
   },
   "author": "synzen",
   "license": "MIT",
-  "peerDependencies": {
-    "discord.js": "^12.1.1"
+  "dependencies": {
+    "prompt-anything": "github:synzen/prompt-anything"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
@@ -27,8 +29,5 @@
     "jest": "^25.3.0",
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.3"
-  },
-  "dependencies": {
-    "prompt-anything": "github:synzen/prompt-anything"
   }
 }

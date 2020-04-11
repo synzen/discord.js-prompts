@@ -1,5 +1,5 @@
-import { User } from 'discord.js'
 import { DiscordPromptRunner } from "../DiscordPromptRunner"
+import { User } from "../types/User"
 
 describe('Unit::DiscordPromptRunner', () => {
   describe('constructor', () => {

@@ -1,4 +1,3 @@
-import { TextChannel, Message, User, MessageReaction } from 'discord.js'
 import { DiscordPrompt } from "../DiscordPrompt"
 import { PromptFunction, PromptCollector, Rejection } from "prompt-anything"
 import { DiscordPromptRunner } from '../DiscordPromptRunner'
@@ -6,6 +5,10 @@ import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
+import { TextChannel } from "../types/TextChannel";
+import { User } from "../types/User";
+import { Message } from "../types/Message";
+import { MessageReaction } from "../types/MessageReaction";
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
@@ -13,15 +16,14 @@ async function flushPromises(): Promise<void> {
   });
 }
 
-
 const createMockTextChannel = (): TextChannel => ({
   send: jest.fn(),
   createMessageCollector: jest.fn()
-}) as unknown as TextChannel
+})
 
 const createMockAuthor = (authorID: string): User => ({
   id: authorID
-}) as User
+})
 
 const createMockMessage = (authorID: string, content = ''): Message => ({
   content,
@@ -31,13 +33,13 @@ const createMockMessage = (authorID: string, content = ''): Message => ({
   edit: jest.fn(),
   react: jest.fn(),
   createReactionCollector: jest.fn()
-}) as unknown as Message
+})
 
 const createMockReaction = (name: string): MessageReaction => ({
   emoji: {
     name
   }
-}) as MessageReaction
+})
 
 describe('E2E tests', () => {
   type PromptData = {
@@ -94,7 +96,7 @@ describe('E2E tests', () => {
     }, askNameFn)
     
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.run(askName, textChannel)
+    runner.runDiscord(askName, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     // Simulate unauthorized user input
@@ -118,7 +120,7 @@ describe('E2E tests', () => {
       text: `What's your name?`
     }, askNameFn)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.run(askName, textChannel)
+    runner.runDiscord(askName, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     const exitMessage = createMockMessage(authorID, 'exit')
@@ -141,7 +143,7 @@ describe('E2E tests', () => {
     const menuVisual = new MenuVisual(menu)
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.run(selectOption, textChannel)
+    runner.runDiscord(selectOption, textChannel)
     await flushPromises()
     // Invalid option selection
     const invalidMessage = createMockMessage(authorID, '4')
@@ -157,7 +159,7 @@ describe('E2E tests', () => {
     expect(emit.mock.calls[1][0]).toEqual('message')
     expect(emit.mock.calls[1][1]).toEqual(validMessage)
   })
-  it.only('rcts', async () => {
+  it('changes embed to the next page with MenuEmbed', async () => {
     const selectOptionFn: PromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
@@ -192,7 +194,7 @@ describe('E2E tests', () => {
     textChannelSend.mockResolvedValue(reactableMessage)
 
     // Run
-    runner.run(selectOption, textChannel)
+    runner.runDiscord(selectOption, textChannel)
     await flushPromises()
 
     // React
@@ -204,12 +206,13 @@ describe('E2E tests', () => {
     // Check nextPage was called
     expect(nextPage).toHaveBeenCalledTimes(1)
     const edit = reactableMessage.edit as jest.Mock
-    expect(edit).toHaveBeenCalledWith(expect.objectContaining({
-      fields: [{
-        name: '2) option2',
-        value: 'd',
-        inline: false
-      }]
+    expect(edit).toHaveBeenCalledWith('', expect.objectContaining({
+      embed: {
+        fields: [{
+          name: '2) option2',
+          value: 'd'
+        }]
+      }
     }))
 
     // Clean up

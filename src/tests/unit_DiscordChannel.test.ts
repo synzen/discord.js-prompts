@@ -1,10 +1,11 @@
 import { DiscordChannel } from "../DiscordChannel"
-import { TextChannel, MessageOptions, Message } from 'discord.js'
 import { MenuVisual } from "../visuals/MenuVisual"
 import { MenuEmbed } from "../MenuEmbed"
 import { MessageVisual } from "../visuals/MessageVisual"
+import { TextChannel } from "../types/TextChannel"
+import { MessageOptions } from "../types/MessageOptions"
+import { Message } from "../types/Message"
 
-jest.mock('discord.js')
 jest.mock('../MenuEmbed')
 jest.mock('../visuals/MessageVisual')
 jest.mock('../visuals/MenuVisual')
@@ -17,7 +18,7 @@ describe('Unit::DiscordChannel', () => {
     it('initializes the channel', () => {
       const textChannel = {
         id: 'aedstgr'
-      } as TextChannel
+      } as unknown as TextChannel
       const channel = new DiscordChannel(textChannel)
       expect(channel.channel).toEqual(textChannel)
     })
