@@ -348,7 +348,7 @@ describe('Unit::MenuEmbed', () => {
           name: '◀'
         }
       }
-      collector.emit('collect', reaction)
+      collector.emit('collect', reaction, {})
       await flushPromises()
       expect(prevPage).toHaveBeenCalled()
       expect(nextPage).not.toHaveBeenCalled()
@@ -360,7 +360,7 @@ describe('Unit::MenuEmbed', () => {
           name: '▶'
         }
       }
-      collector.emit('collect', reaction)
+      collector.emit('collect', reaction, {})
       await flushPromises()
       expect(prevPage).not.toHaveBeenCalled()
       expect(nextPage).toHaveBeenCalled()
@@ -372,7 +372,19 @@ describe('Unit::MenuEmbed', () => {
           name: 'srdfehy'
         }
       }
-      collector.emit('collect', reaction)
+      collector.emit('collect', reaction, {})
+      await flushPromises()
+      expect(prevPage).not.toHaveBeenCalled()
+      expect(nextPage).not.toHaveBeenCalled()
+    })
+    it('ignores the bot reaction', async () => {
+      menuEmbed.createReactionCollector(message)
+      const reaction = {
+        emoji: {
+          name: '▶'
+        }
+      }
+      collector.emit('collect', reaction, { client: true })
       await flushPromises()
       expect(prevPage).not.toHaveBeenCalled()
       expect(nextPage).not.toHaveBeenCalled()
@@ -386,7 +398,7 @@ describe('Unit::MenuEmbed', () => {
       }
       const error = new Error('sedgrwf')
       nextPage.mockRejectedValue(error)
-      collector.emit('collect', reaction)
+      collector.emit('collect', reaction, {})
       await flushPromises()
       expect(menuEmbed.paginationErrorHandler)
         .toHaveBeenCalledWith(error)
@@ -400,7 +412,7 @@ describe('Unit::MenuEmbed', () => {
       }
       const error = new Error('sedgrwf')
       prevPage.mockRejectedValue(error)
-      collector.emit('collect', reaction)
+      collector.emit('collect', reaction, {})
       await flushPromises()
       expect(menuEmbed.paginationErrorHandler)
         .toHaveBeenCalledWith(error)

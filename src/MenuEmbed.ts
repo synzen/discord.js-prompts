@@ -200,13 +200,16 @@ export class MenuEmbed {
       throw new TypeError('Error handler for pagination is undefined')
     }
     const filter = (r: MessageReaction): boolean => {
-      return !r.me && (r.emoji.name === '◀' || r.emoji.name === '▶')
+      return r.emoji.name === '◀' || r.emoji.name === '▶'
     }
     const collector = message.createReactionCollector(filter, {
       time: 90000
     })
-    collector.on('collect', (reaction) => {
+    collector.on('collect', (reaction, user) => {
       const name = reaction.emoji.name
+      if (user.client) {
+        return
+      }
       if (name === '◀') {
         this.prevPage(message).catch(this.paginationErrorHandler)
       } else if (name === '▶') {
