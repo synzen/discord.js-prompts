@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "main": "build/index.js",
+  "files": ["build/**/*"],
   "scripts": {
-    "prepare": "tsc",
-    "lint": "eslint ./src/**/*",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "lint": "eslint \"./src/**/*\"",
     "test": "jest ./src",
     "test-coverage": "jest ./src --coverage",
     "test-watch": "jest --watch"
