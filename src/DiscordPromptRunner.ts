@@ -10,8 +10,12 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
     })
   }
 
+  static convertTextChannel (channel: TextChannel): DiscordChannel {
+    return new DiscordChannel(channel)
+  }
+
   run (phase: Prompt<T>, channel: TextChannel): Promise<T> {
-    const compatibleChannel = new DiscordChannel(channel)
+    const compatibleChannel = DiscordPromptRunner.convertTextChannel(channel)
     return super.run(phase, compatibleChannel)
   }
 }

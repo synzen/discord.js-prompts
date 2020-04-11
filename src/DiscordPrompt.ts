@@ -33,9 +33,13 @@ export class DiscordPrompt<T> extends Prompt<T> {
     await this.sendVisual(DiscordPrompt.exitVisual, channel)
   }
 
+  createEmitter (): EventEmitter {
+    return new EventEmitter()
+  }
+
   createCollector(channel: DiscordChannel, data: T&BaseData): PromptCollector<T> {
     const discordChannel = channel
-    const emitter: PromptCollector<T> = new EventEmitter()
+    const emitter: PromptCollector<T> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.authorID);
     collector.on('collect', async (message: Message) => {
       this.handleMessage(message, data, emitter)

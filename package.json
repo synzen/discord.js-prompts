@@ -8,7 +8,7 @@
     "prepare": "npm run build",
     "build": "tsc",
     "lint": "eslint \"./src/**/*\"",
-    "test": "jest ./src",
+    "test": "jest",
     "test-coverage": "jest ./src --coverage",
     "test-watch": "jest --watch"
   },
