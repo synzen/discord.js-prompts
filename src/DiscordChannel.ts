@@ -20,7 +20,9 @@ export class DiscordChannel implements ChannelInterface {
     }
     options.embed = visual.menu.embed
     const sent = await this.channel.send('', options)
-    await visual.menu.setUpPagination(sent)
+    if (visual.menu.canPaginate()) {
+      await visual.menu.setUpPagination(sent)
+    }
     return sent
   }
 

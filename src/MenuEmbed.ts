@@ -14,6 +14,10 @@ export class MenuEmbed {
    * The current page
    */
   page = 0
+  /**
+   * If defined, enable pagination and handle errors
+   */
+  paginationErrorHandler?: (error: Error) => void
 
   constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
     if (embed) {
@@ -22,6 +26,10 @@ export class MenuEmbed {
     if (settings?.maxPerPage) {
       this.maxPerPage = settings?.maxPerPage
     }
+  }
+
+  enablePagination (errorHandler: (error: Error) => void): void {
+    this.paginationErrorHandler = errorHandler
   }
 
   /**
@@ -141,16 +149,21 @@ export class MenuEmbed {
   }
 
   /**
+   * If this menu should enable pagination
+   */
+  canPaginate (): boolean {
+    return this.spansMultiplePages() && !!this.paginationErrorHandler
+  }
+
+  /**
    * Sets up pagination on a message
    * 
    * @param message Channel to send to
    */
   async setUpPagination (message: Message): Promise<void> {
-    if (this.spansMultiplePages()) {
-      await message.react('◀')
-      await message.react('▶')
-      this.createReactionCollector(message)
-    }
+    await message.react('◀')
+    await message.react('▶')
+    this.createReactionCollector(message)
   }
 
   /**
@@ -159,6 +172,9 @@ export class MenuEmbed {
    * @param message Message to collect reactions on
    */
   createReactionCollector (message: Message): void {
+    if (!this.paginationErrorHandler) {
+      throw new Error('Error handler for pagination is undefined')
+    }
     const filter = (r: MessageReaction): boolean => r.emoji.name === '◀' || r.emoji.name === '▶'
     const collector = message.createReactionCollector(filter, {
       time: 90000
@@ -166,9 +182,9 @@ export class MenuEmbed {
     collector.on('collect', (reaction) => {
       const name = reaction.emoji.name
       if (name === '◀') {
-        this.prevPage(message).catch(console.error)
+        this.prevPage(message).catch(this.paginationErrorHandler)
       } else if (name === '▶') {
-        this.nextPage(message).catch(console.error)
+        this.nextPage(message).catch(this.paginationErrorHandler)
       }
     })
   }

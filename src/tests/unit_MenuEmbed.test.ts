@@ -32,6 +32,13 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
     })
   })
+  describe('enablePagination', () => {
+    it('defines the error handler', () => {
+      const func = jest.fn()
+      menuEmbed.enablePagination(func)
+      expect(menuEmbed.paginationErrorHandler).toEqual(func)
+    })
+  })
   describe('addOption', () => {
     it('adds the field correctly', () => {
       const embed = {
@@ -247,6 +254,30 @@ describe('Unit::MenuEmbed', () => {
       expect(edit).toHaveBeenCalledWith(embedPage)
     })
   })
+  describe('canPaginate', () => {
+    it('returns correctly', () => {
+      // Case 1
+      jest.spyOn(menuEmbed, 'spansMultiplePages') 
+        .mockReturnValue(true)
+      menuEmbed.paginationErrorHandler = jest.fn()
+      expect(menuEmbed.canPaginate()).toEqual(true)
+      // Case 2
+      jest.spyOn(menuEmbed, 'spansMultiplePages') 
+        .mockReturnValue(false)
+      menuEmbed.paginationErrorHandler = jest.fn()
+      expect(menuEmbed.canPaginate()).toEqual(false)
+      // Case 3
+      jest.spyOn(menuEmbed, 'spansMultiplePages') 
+        .mockReturnValue(true)
+      menuEmbed.paginationErrorHandler = undefined
+      expect(menuEmbed.canPaginate()).toEqual(false)
+      // Case 4
+      jest.spyOn(menuEmbed, 'spansMultiplePages') 
+        .mockReturnValue(false)
+      menuEmbed.paginationErrorHandler = undefined
+      expect(menuEmbed.canPaginate()).toEqual(false)
+    })
+  })
   describe('setUpPagination', () => {
     it('reacts with arrows if multiple pages', async () => {
       const spy = jest.spyOn(menuEmbed, 'createReactionCollector')
@@ -261,18 +292,6 @@ describe('Unit::MenuEmbed', () => {
       expect(react).toHaveBeenNthCalledWith(1, '◀')
       expect(react).toHaveBeenNthCalledWith(2, '▶')
       expect(spy).toHaveBeenCalled()
-    })
-    it('does not react if only 1 page', async () => {
-      jest.spyOn(menuEmbed, 'createReactionCollector')
-        .mockReturnValue()
-      jest.spyOn(menuEmbed, 'spansMultiplePages')
-        .mockReturnValue(false)
-      const react = jest.fn()
-      const message = {
-        react
-      } as unknown as Message
-      await menuEmbed.setUpPagination(message)
-      expect(react).not.toHaveBeenCalled()
     })
   })
   describe('createReactionCollector', () => {
@@ -290,6 +309,12 @@ describe('Unit::MenuEmbed', () => {
         .mockResolvedValue(menuEmbed)
       nextPage = jest.spyOn(menuEmbed, 'nextPage')
         .mockResolvedValue(menuEmbed)
+      menuEmbed.paginationErrorHandler = jest.fn()
+    })
+    it('throws an error if no error handler is defined', () => {
+      menuEmbed.paginationErrorHandler = undefined
+      expect(() => menuEmbed.createReactionCollector(message))
+        .toThrow('Error handler for pagination is undefined')
     })
     it('goes to prev page if ◀ emoji', async () => {
       menuEmbed.createReactionCollector(message)

@@ -10,6 +10,9 @@ jest.mock('../visuals/MessageVisual')
 jest.mock('../visuals/MenuVisual')
 
 describe('Unit::DiscordChannel', () => {
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
   describe('constructor', () => {
     it('initializes the channel', () => {
       const textChannel = {
@@ -44,6 +47,42 @@ describe('Unit::DiscordChannel', () => {
         embed: menuEmbed.embed
       })
       expect(returned).toEqual(createdMessage)
+    })
+    it('sets up pagination if eligible', async () => {
+      const menuEmbed = new MenuEmbed()
+      jest.spyOn(menuEmbed, 'canPaginate').mockReturnValue(true)
+      const setUpPagination = jest.spyOn(menuEmbed, 'setUpPagination')
+        .mockImplementation()
+      // Create the visual
+      const menuVisual = new MenuVisual(menuEmbed)
+      menuVisual.menu = menuEmbed
+      // Create the channel
+      const textChannel = {
+        send: jest.fn().mockResolvedValue({} as Message)
+      } as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.channel = textChannel
+      // Send it
+      await discordChannel.sendMenuVisual(menuVisual)
+      expect(setUpPagination).toHaveBeenCalled()
+    })
+    it('does not set up pagination if ineligible', async () => {
+      const menuEmbed = new MenuEmbed()
+      jest.spyOn(menuEmbed, 'canPaginate').mockReturnValue(false)
+      const setUpPagination = jest.spyOn(menuEmbed, 'setUpPagination')
+        .mockImplementation()
+      // Create the visual
+      const menuVisual = new MenuVisual(menuEmbed)
+      menuVisual.menu = menuEmbed
+      // Create the channel
+      const textChannel = {
+        send: jest.fn().mockResolvedValue({} as Message)
+      } as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.channel = textChannel
+      // Send it
+      await discordChannel.sendMenuVisual(menuVisual)
+      expect(setUpPagination).not.toHaveBeenCalled()
     })
   })
   describe('sendMessageVisual', () => {
