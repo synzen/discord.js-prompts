@@ -147,13 +147,13 @@ describe('Unit::MenuEmbed', () => {
       jest.spyOn(menuEmbed, 'numberOfOptions')
         .mockReturnValue(3)
       menuEmbed.maxPerPage = 2
-      menuEmbed.page = 1
+      menuEmbed.page = 0
       expect(menuEmbed.isOnLastPage())
         .toEqual(false)
-      menuEmbed.page = 2
+      menuEmbed.page = 1
       expect(menuEmbed.isOnLastPage())
         .toEqual(true)
-      menuEmbed.page = 3
+      menuEmbed.page = 2
       expect(menuEmbed.isOnLastPage())
           .toEqual(true)
     })

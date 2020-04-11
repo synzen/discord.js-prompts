@@ -120,7 +120,7 @@ export class MenuEmbed {
    * Check if the current page is the last page
    */
   isOnLastPage (): boolean {
-    return this.maxPerPage * this.page >= this.numberOfOptions()
+    return this.maxPerPage * (this.page + 1) >= this.numberOfOptions()
   }
 
   /**
