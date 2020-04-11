@@ -2,7 +2,7 @@ import { PromptRunner, Prompt } from 'prompt-anything'
 import { User, TextChannel } from 'discord.js'
 import { DiscordChannel } from './DiscordChannel'
 
-export class DiscordInteraction<T> extends PromptRunner<T> {
+export class DiscordPromptRunner<T> extends PromptRunner<T> {
   constructor(author: User, data: T) {
     super({
       ...data,
