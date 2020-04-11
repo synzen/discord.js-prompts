@@ -7,10 +7,10 @@ import { MenuVisual } from './visuals/MenuVisual';
 import { MenuEmbed } from './MenuEmbed';
 
 export type BaseData = {
-  authorID?: string;
+  authorID: string;
 }
 
-export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
+export class DiscordPrompt<T> extends Prompt<T> {
   duration = 90000
   static inactivityVisual: MessageVisual = {
     text: 'Menu has been closed due to inactivity.'
@@ -33,7 +33,7 @@ export class DiscordPrompt<T extends BaseData> extends Prompt<T> {
     await this.sendVisual(DiscordPrompt.exitVisual, channel)
   }
 
-  createCollector(channel: DiscordChannel, data: T): PromptCollector<T> {
+  createCollector(channel: DiscordChannel, data: T&BaseData): PromptCollector<T> {
     const discordChannel = channel
     const emitter: PromptCollector<T> = new EventEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.authorID);
