@@ -279,6 +279,11 @@ describe('Unit::MenuEmbed', () => {
     })
   })
   describe('setUpPagination', () => {
+    it('rejects if no error handler is defined', () => {
+      menuEmbed.paginationErrorHandler = undefined
+      expect(menuEmbed.setUpPagination({} as Message))
+        .rejects.toThrow('Error handler for pagination is undefined')
+    })
     it('reacts with arrows', async () => {
       menuEmbed.paginationErrorHandler = jest.fn()
       const spy = jest.spyOn(menuEmbed, 'createReactionCollector')
