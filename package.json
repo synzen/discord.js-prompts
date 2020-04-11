@@ -26,5 +26,7 @@
     "ts-jest": "^25.2.1",
     "typescript": "^3.8.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "prompt-anything": "github:synzen/prompt-anything"
+  }
 }
