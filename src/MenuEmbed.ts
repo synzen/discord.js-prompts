@@ -15,7 +15,9 @@ export class MenuEmbed {
    */
   page = 0
   /**
-   * If defined, enable pagination and handle errors
+   * If defined, enable pagination and handle errors when
+   * the menu fails to set up pagination (when message
+   * edits or reactions fail)
    */
   paginationErrorHandler?: (error: Error) => void
 
@@ -28,6 +30,13 @@ export class MenuEmbed {
     }
   }
 
+  /**
+   * Enable pagination by defining an error handler for
+   * when the menu fails to set up pages (when message
+   * edits or reactions fail)
+   * 
+   * @param errorHandler Error handler 
+   */
   enablePagination (errorHandler: (error: Error) => void): void {
     this.paginationErrorHandler = errorHandler
   }
