@@ -38,6 +38,11 @@ describe('Unit::MenuEmbed', () => {
       menuEmbed.enablePagination(func)
       expect(menuEmbed.paginationErrorHandler).toEqual(func)
     })
+    it('returns this', () => {
+      const func = jest.fn()
+      const returned = menuEmbed.enablePagination(func)
+      expect(returned).toEqual(menuEmbed)
+    })
   })
   describe('addOption', () => {
     beforeEach(() => {

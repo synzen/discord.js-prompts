@@ -37,8 +37,9 @@ export class MenuEmbed {
    * 
    * @param errorHandler Error handler 
    */
-  enablePagination (errorHandler: (error: Error) => void): void {
+  enablePagination (errorHandler: (error: Error) => void): this {
     this.paginationErrorHandler = errorHandler
+    return this
   }
 
   /**
