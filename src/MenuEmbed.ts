@@ -199,7 +199,9 @@ export class MenuEmbed {
     if (!this.paginationErrorHandler) {
       throw new TypeError('Error handler for pagination is undefined')
     }
-    const filter = (r: MessageReaction): boolean => r.emoji.name === '◀' || r.emoji.name === '▶'
+    const filter = (r: MessageReaction): boolean => {
+      return !r.me && (r.emoji.name === '◀' || r.emoji.name === '▶')
+    }
     const collector = message.createReactionCollector(filter, {
       time: 90000
     })
