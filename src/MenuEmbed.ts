@@ -219,7 +219,10 @@ export class MenuEmbed  {
     const collector = message.createReactionCollector(filter, {
       time: 90000
     })
-    collector.on('collect', (reaction) => {
+    collector.on('collect', (reaction, user) => {
+      if (user.bot) {
+        return
+      }
       const name = reaction.emoji.name
       if (name === '◀') {
         this.prevPage(message).catch(this.paginationErrorHandler)

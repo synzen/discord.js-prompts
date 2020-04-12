@@ -386,6 +386,18 @@ describe('Unit::MenuEmbed', () => {
       expect(prevPage).not.toHaveBeenCalled()
       expect(nextPage).not.toHaveBeenCalled()
     })
+    it('ignores the bot reaction', async () => {
+      menuEmbed.createReactionCollector(message)
+      const reaction = {
+        emoji: {
+          name: '▶'
+        }
+      }
+      collector.emit('collect', reaction, { bot: true })
+      await flushPromises()
+      expect(prevPage).not.toHaveBeenCalled()
+      expect(nextPage).not.toHaveBeenCalled()
+    })
     it('handles errors for next page', async () => {
       menuEmbed.createReactionCollector(message)
       const reaction = {
