@@ -29,7 +29,7 @@ const askNameFn: PromptFunction<PersonDetails> = async (m, data) => {
     name: m.content
   }
 }
-const askNamePrompt = new DiscordPrompt<PersonDetails>(askNameVisual, async (m, data) => ({ ...data, name: m.content }))
+const askNamePrompt = new DiscordPrompt<PersonDetails>(askNameVisual, askNameFn)
 
 // Set up reusable prompt to ask age
 const askAgeVisual: VisualGenerator<PersonDetails> = (data) => {
