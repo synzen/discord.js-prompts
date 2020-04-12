@@ -4,9 +4,9 @@
 
 Create prompts in Discord, just like you would in console!
 
-# Quick Start
+## Example
 
-This is an example that asks the user for their name and age. The bot will then spit it back.
+This will ask the user for their name and age. The bot will then spit it back.
 
 ```ts
 import { Client } from 'discord.js'
@@ -76,3 +76,6 @@ client.on('message', async (message) => {
   }
 });
 ```
+<p align="center">
+  <img src="https://i.imgur.com/6nw8d8n.png">
+</p>
