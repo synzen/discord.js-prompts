@@ -56,7 +56,7 @@ export class MenuEmbed  {
    * @param name Name of option
    * @param description Description of optino
    */
-  addOption (name: string, description: string): this {
+  addOption (name: string, description = '\u200b'): this {
     const count = this.numberOfOptions()
     this.embed.fields.push({
        name: `${count + 1}) ${name}`,

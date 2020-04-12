@@ -94,13 +94,28 @@ describe('Unit::MenuEmbed', () => {
       }
       const title = 'aedsg'
       const description = 'swetr'
-      const returned = menuEmbed.addOption(title, description)
+      menuEmbed.addOption(title, description)
       const fields = menuEmbed.embed.fields
       expect(fields).toEqual([{
         name: `3) ${title}`,
         value: description
       }])
+    })
+    it('returns this', () => {
+      menuEmbed.embed = {
+        fields: []
+      }
+      const returned = menuEmbed.addOption('title', 'description')
       expect(returned).toEqual(menuEmbed)
+    })
+    it('it uses 0 width space as description if not provided', () => {
+      menuEmbed.embed = {
+        fields: []
+      }
+      const title = 'aedsg'
+      menuEmbed.addOption(title)
+      const fields = menuEmbed.embed.fields
+      expect(fields[0].value).toEqual('\u200b')
     })
   })
   describe('isInvalidOption', () => {
