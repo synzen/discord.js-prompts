@@ -1,12 +1,25 @@
 import { MenuEmbed } from "../MenuEmbed"
 import { EventEmitter } from 'events'
-import { Embed } from "../Embed";
 import { Message } from '../types/Message'
-
+import { MessageEmbed, MessageEmbedWithFields } from '../types/MessageEmbed'
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
     setImmediate(resolve);
   });
+}
+
+const generateEmbed = (fieldCount: number): MessageEmbedWithFields => {
+  const embed: MessageEmbedWithFields = {
+    fields: []
+  }
+  const field = {
+    name: 'a',
+    value: 'b'
+  }
+  for (let i = 0; i < fieldCount; ++i) {
+    embed.fields.push(field)
+  }
+  return embed
 }
 
 describe('Unit::MenuEmbed', () => {
@@ -19,20 +32,37 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('constructor', () => {
     it('accepts no args', () => {
-      expect(menuEmbed.embed).toBeInstanceOf(Embed)
       expect(menuEmbed.maxPerPage).toEqual(5)
       expect(menuEmbed.page).toEqual(0)
       expect(menuEmbed.embed.fields).toEqual([])
     })
     it('overwrites embed and settings', () => {
-      const myEmbed = new Embed({
-        title: 'awsdf'
-      })
+      const myEmbed = {
+        title: 'awsdf',
+        fields: [{
+          name: 'adf',
+          value: 'shfrg'
+        }]
+      }
       const maxPerPage = 10
       const menuEmbed = new MenuEmbed(myEmbed, {
         maxPerPage
       })
       expect(menuEmbed.embed).toEqual(myEmbed)
+      expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
+    })
+    it('adds an empty fields array if it does not exist', () => {
+      const myEmbed = {
+        title: 'awsdf'
+      }
+      const maxPerPage = 10
+      const menuEmbed = new MenuEmbed(myEmbed, {
+        maxPerPage
+      })
+      expect(menuEmbed.embed).toEqual({
+        ...myEmbed,
+        fields: []
+      })
       expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
     })
   })
@@ -58,7 +88,7 @@ describe('Unit::MenuEmbed', () => {
         .mockReturnValue(2)
       menuEmbed.embed = {
         fields: []
-      } as Embed
+      }
       const title = 'aedsg'
       const description = 'swetr'
       const returned = menuEmbed.addOption(title, description)
@@ -86,8 +116,9 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('setTitle', () => {
     it('sets the title', () => {
-      const embed = {} as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      }
       const title = 'asedfrhgt'
       const returned = menuEmbed.setTitle(title)
       expect(menuEmbed.embed.title)
@@ -97,8 +128,9 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('setAuthor', () => {
     it('sets the author', () => {
-      const embed = {} as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      }
       const name = 'asedfrhgt'
       const icon = 'aesdtg'
       const url = 'sweyr'
@@ -113,8 +145,9 @@ describe('Unit::MenuEmbed', () => {
       expect(returned).toEqual(menuEmbed)
     })
     it('has optional icon and url', () => {
-      const embed = {} as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      }
       const name = 'asedfrhgt'
       const returned = menuEmbed.setAuthor(name)
       expect(menuEmbed.embed.author)
@@ -129,8 +162,9 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('setDescription', () => {
     it('sets the description', () => {
-      const embed = {} as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      }
       const desc = 'asedfrhgt'
       const returned = menuEmbed.setDescription(desc)
       expect(menuEmbed.embed.description)
@@ -140,8 +174,9 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('setColor', () => {
     it('sets the color', () => {
-      const embed = {} as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = {
+        fields: []
+      }
       const color = 2456
       const returned = menuEmbed.setColor(color)
       expect(menuEmbed.embed.color)
@@ -167,10 +202,7 @@ describe('Unit::MenuEmbed', () => {
   })
   describe('isOnFirstPage', () => {
     it('returns correctly', () => {
-      const embed = {
-        fields: [1, 2, 3]
-      } as unknown as Embed
-      menuEmbed.embed = embed
+      menuEmbed.embed = generateEmbed(3)
       menuEmbed.page = 0
       expect(menuEmbed.isOnFirstPage())
         .toEqual(true)
@@ -261,7 +293,7 @@ describe('Unit::MenuEmbed', () => {
       } as unknown as Message
       const embedPage = {
         a: 'b'
-      } as unknown as Embed
+      } as unknown as MessageEmbed
       jest.spyOn(menuEmbed, 'getEmbedOfPage')
         .mockReturnValue(embedPage)
       await menuEmbed.setMessage(message)
@@ -430,38 +462,51 @@ describe('Unit::MenuEmbed', () => {
   describe('getEmbedOfPage', () => {
     it('returns the full embed if no max per page', () => {
       menuEmbed.maxPerPage = 0
-      const embed = {
-        fields: [1,2,3,4,5,6,7,8,9,10,11]
-      } as unknown as Embed
+      const embed = generateEmbed(11)
       menuEmbed.embed = embed
       expect(menuEmbed.getEmbedOfPage(2))
         .toEqual(embed)
     })
     it('returns the right embed', () => {
-      menuEmbed.maxPerPage = 3
+      menuEmbed.maxPerPage = 2
       const embed = {
         title: 'foo',
-        fields: [1,2,3,4,5,6,7,8,9,10,11]
-      } as unknown as Embed
+        fields: [{
+          name: 'name1',
+          value: 'value1'
+        }, {
+          name: 'name2',
+          value: 'value2'
+        }, {
+          name: 'name1',
+          value: 'value3'
+        }, {
+          name: 'name4',
+          value: 'value4'
+        }, {
+          name: 'name5',
+          value: 'value5'
+        }]
+      }
       const firstPage = {
         title: 'foo',
-        fields: [1,2,3]
+        fields: [embed.fields[0], embed.fields[1]]
       }
       const secondPage = {
         title: 'foo',
-        fields: [4,5,6]
+        fields: [embed.fields[2], embed.fields[3]]
       }
-      const fourthPage = {
+      const thirdPage = {
         title: 'foo',
-        fields: [10,11]
+        fields: [embed.fields[4]]
       }
       menuEmbed.embed = embed
       expect(menuEmbed.getEmbedOfPage(0))
         .toEqual(expect.objectContaining(firstPage))
       expect(menuEmbed.getEmbedOfPage(1))
         .toEqual(expect.objectContaining(secondPage))
-      expect(menuEmbed.getEmbedOfPage(3))
-        .toEqual(expect.objectContaining(fourthPage))
+      expect(menuEmbed.getEmbedOfPage(2))
+        .toEqual(expect.objectContaining(thirdPage))
     })
   })
   describe('spansMultiplePages', () => {

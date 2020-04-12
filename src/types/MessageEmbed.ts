@@ -41,3 +41,5 @@ export interface MessageEmbed {
   fields?: Array<EmbedField>;
   [key: string]: string|number|Date|EmbedFooter|EmbedImage|EmbedThumbnail|EmbedAuthor|Array<EmbedField>|undefined;
 }
+
+export type MessageEmbedWithFields = MessageEmbed & { fields: Array<EmbedField> }

@@ -1,5 +1,4 @@
-import { MessageEmbed } from "./types/MessageEmbed"
-import { Embed } from "./Embed"
+import { MessageEmbed, MessageEmbedWithFields } from "./types/MessageEmbed"
 import { Message } from "./types/Message"
 import { MessageReaction } from "./types/MessageReaction"
 
@@ -9,7 +8,9 @@ type MenuEmbedSettings = {
 }
 
 export class MenuEmbed  {
-  embed: Embed = new Embed()
+  embed: MessageEmbedWithFields = {
+    fields: []
+  }
   /**
    * Maximum number of fields per page
    */
@@ -25,9 +26,12 @@ export class MenuEmbed  {
    */
   paginationErrorHandler?: (error: Error) => void
 
-  constructor (embed?: Embed, settings?: MenuEmbedSettings) {
+  constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
     if (embed) {
-      this.embed = embed
+      this.embed = {
+        fields: [],
+        ...embed
+      }
     }
     if (settings?.maxPerPage) {
       this.maxPerPage = settings?.maxPerPage

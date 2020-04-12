@@ -3,7 +3,6 @@ export * from './DiscordChannel'
 export * from './DiscordPromptRunner'
 export * from './DiscordPrompt'
 export * from './MenuEmbed'
-export * from './Embed'
 export * from './visuals/MessageVisual'
 export * from './visuals/MenuVisual'
 
