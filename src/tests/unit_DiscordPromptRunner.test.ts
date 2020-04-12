@@ -1,5 +1,9 @@
 import { DiscordPromptRunner } from "../DiscordPromptRunner"
 import { User } from "../types/User"
+import { DiscordChannel } from "../DiscordChannel"
+import { TextChannel } from "../types/TextChannel"
+
+jest.mock('../DiscordChannel')
 
 describe('Unit::DiscordPromptRunner', () => {
   describe('constructor', () => {
@@ -16,6 +20,16 @@ describe('Unit::DiscordPromptRunner', () => {
         ...data,
         authorID: author.id
       })
+    })
+  })
+  describe('convertTextChannel', () => {
+    it('returns a DiscordChannel', () => {
+      const textChannel = {
+        a: 'b'
+      } as unknown as TextChannel
+      const returned = DiscordPromptRunner.convertTextChannel(textChannel)
+      expect(DiscordChannel).toHaveBeenCalledWith(textChannel)
+      expect(returned).toBeInstanceOf(DiscordChannel)
     })
   })
 })

@@ -44,12 +44,8 @@ describe('Unit::MenuEmbed', () => {
           value: 'shfrg'
         }]
       }
-      const maxPerPage = 10
-      const menuEmbed = new MenuEmbed(myEmbed, {
-        maxPerPage
-      })
+      const menuEmbed = new MenuEmbed(myEmbed)
       expect(menuEmbed.embed).toEqual(myEmbed)
-      expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
     })
     it('adds an empty fields array if it does not exist', () => {
       const myEmbed = {
@@ -62,6 +58,13 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.embed).toEqual({
         ...myEmbed,
         fields: []
+      })
+      expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
+    })
+    it('overwrites settings', () => {
+      const maxPerPage = 10
+      const menuEmbed = new MenuEmbed(undefined, {
+        maxPerPage
       })
       expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
     })
@@ -111,6 +114,10 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.isInvalidOption(2))
         .toEqual(false)
       expect(menuEmbed.isInvalidOption(3))
+        .toEqual(true)
+    })
+    it('returns true for NaN', () => {
+      expect(menuEmbed.isInvalidOption(NaN))
         .toEqual(true)
     })
   })

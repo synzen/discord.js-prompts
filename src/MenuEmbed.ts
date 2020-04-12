@@ -34,7 +34,7 @@ export class MenuEmbed  {
       }
     }
     if (settings?.maxPerPage) {
-      this.maxPerPage = settings?.maxPerPage
+      this.maxPerPage = settings.maxPerPage
     }
   }
 
