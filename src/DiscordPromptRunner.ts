@@ -15,8 +15,13 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
     return new DiscordChannel(channel)
   }
 
-  runDiscord (phase: PromptNode<T>, channel: TextChannel): Promise<T> {
-    const compatibleChannel = DiscordPromptRunner.convertTextChannel(channel)
-    return this.run(phase, compatibleChannel)
+  run (phase: PromptNode<T>, channel: DiscordChannel): Promise<T>;
+  run (phase: PromptNode<T>, channel: TextChannel): Promise<T>;
+  run (phase: PromptNode<T>, channel: TextChannel|DiscordChannel): Promise<T> {
+    if (channel instanceof DiscordChannel) {
+      return super.run(phase, channel)
+    } else {
+      return super.run(phase, DiscordPromptRunner.convertTextChannel(channel))
+    }
   }
 }

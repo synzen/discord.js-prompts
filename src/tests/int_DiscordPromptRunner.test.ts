@@ -96,7 +96,7 @@ describe('E2E tests', () => {
     }, askNameFn)
     const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(askNameNode, textChannel)
+    runner.run(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     // Simulate unauthorized user input
@@ -121,7 +121,7 @@ describe('E2E tests', () => {
     }, askNameFn)
     const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(askNameNode, textChannel)
+    runner.run(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     const exitMessage = createMockMessage(authorID, 'exit')
@@ -145,7 +145,7 @@ describe('E2E tests', () => {
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
     const selectOptionNode = new PromptNode(selectOption)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.runDiscord(selectOptionNode, textChannel)
+    runner.run(selectOptionNode, textChannel)
     await flushPromises()
     // Invalid option selection
     const invalidMessage = createMockMessage(authorID, '4')
@@ -197,7 +197,7 @@ describe('E2E tests', () => {
     textChannelSend.mockResolvedValue(reactableMessage)
 
     // Run
-    runner.runDiscord(selectOptionNode, textChannel)
+    runner.run(selectOptionNode, textChannel)
     await flushPromises()
 
     // React
