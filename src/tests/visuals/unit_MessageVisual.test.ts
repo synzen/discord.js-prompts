@@ -1,5 +1,5 @@
 import { MessageVisual } from "../../visuals/MessageVisual"
-import { MessageOptions } from "../../types/MessageOptions"
+import { MessageOptions } from "../../interfaces/MessageOptions"
 
 describe('Unit::visuals/MessageVisual', () => {
   describe('constructor', () => {

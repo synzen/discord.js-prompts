@@ -1,7 +1,7 @@
 import { MenuEmbed } from "../MenuEmbed"
 import { EventEmitter } from 'events'
-import { Message } from '../types/Message'
-import { MessageEmbed, MessageEmbedWithFields } from '../types/MessageEmbed'
+import { Message } from '../interfaces/Message'
+import { MessageEmbed, MessageEmbedWithFields } from '../interfaces/MessageEmbed'
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
     setImmediate(resolve);

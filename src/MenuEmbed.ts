@@ -1,6 +1,6 @@
-import { MessageEmbed, MessageEmbedWithFields } from "./types/MessageEmbed"
-import { Message } from "./types/Message"
-import { MessageReaction } from "./types/MessageReaction"
+import { MessageEmbed, MessageEmbedWithFields } from "./interfaces/MessageEmbed"
+import { Message } from "./interfaces/Message"
+import { MessageReaction } from "./interfaces/MessageReaction"
 
 
 type MenuEmbedSettings = {

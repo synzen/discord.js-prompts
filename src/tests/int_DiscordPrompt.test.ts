@@ -5,7 +5,7 @@ import { MessageVisual } from '../visuals/MessageVisual';
 import { Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { Message } from '../types/Message';
+import { Message } from '../interfaces/Message';
 
 class MockCollector extends EventEmitter {
   stop = jest.fn()

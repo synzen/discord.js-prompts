@@ -5,10 +5,10 @@ import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { TextChannel } from "../types/TextChannel";
-import { User } from "../types/User";
-import { Message } from "../types/Message";
-import { MessageReaction } from "../types/MessageReaction";
+import { TextChannel } from "../interfaces/TextChannel";
+import { User } from "../interfaces/User";
+import { Message } from "../interfaces/Message";
+import { MessageReaction } from "../interfaces/MessageReaction";
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {

@@ -1,6 +1,6 @@
 import { VisualInterface } from "prompt-anything";
 import { MenuEmbed } from "../MenuEmbed";
-import { MessageOptions } from "../types/MessageOptions";
+import { MessageOptions } from "../interfaces/MessageOptions";
 
 export class MenuVisual implements VisualInterface {
   text = ''

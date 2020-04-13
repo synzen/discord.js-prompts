@@ -1,6 +1,6 @@
 import { MenuVisual } from '../../visuals/MenuVisual'
 import { MenuEmbed } from '../../MenuEmbed'
-import { MessageOptions } from '../../types/MessageOptions'
+import { MessageOptions } from '../../interfaces/MessageOptions'
 
 describe('Unit::visuals/MenuVisual', () => {
   describe('constructor', () => {

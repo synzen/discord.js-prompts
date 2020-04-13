@@ -1,5 +1,5 @@
 import { VisualInterface } from "prompt-anything";
-import { MessageOptions } from "../types/MessageOptions";
+import { MessageOptions } from "../interfaces/MessageOptions";
 
 export class MessageVisual implements VisualInterface {
   text: string;

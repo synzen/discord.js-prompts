@@ -1,7 +1,7 @@
 import { DiscordPromptRunner } from "../DiscordPromptRunner"
-import { User } from "../types/User"
+import { User } from "../interfaces/User"
 import { DiscordChannel } from "../DiscordChannel"
-import { TextChannel } from "../types/TextChannel"
+import { TextChannel } from "../interfaces/TextChannel"
 import { PromptNode, PromptRunner } from "prompt-anything"
 import { DiscordPrompt } from "../DiscordPrompt"
 
