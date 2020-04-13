@@ -1,11 +1,15 @@
 {
-  "name": "discord.js-prompts",
+  "name": "discord-prompts",
   "version": "0.0.1",
   "description": "",
   "main": "build/index.js",
   "files": [
     "build/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/synzen/discord-prompts"
+  },
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
@@ -17,7 +21,7 @@
   "author": "synzen",
   "license": "MIT",
   "dependencies": {
-    "prompt-anything": "github:synzen/prompt-anything"
+    "prompt-anything": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

@@ -1,12 +1,16 @@
-# Discord.js Prompts
+# Discord Prompts
 [![Maintainability](https://api.codeclimate.com/v1/badges/c4c08e63d9d7078a3b5b/maintainability)](https://codeclimate.com/github/synzen/discord.js-prompts/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c4c08e63d9d7078a3b5b/test_coverage)](https://codeclimate.com/github/synzen/discord.js-prompts/test_coverage)
 
 Create prompts in Discord, just like you would in console!
 
+This works out-of-the-box with [discord.js](https://discord.js.org/#/). For use with other libraries, the relevant interfaces in src/interfaces must be implemented, starting from `User` and `TextChannel` since these two interfaces are the entry point for using this module.
+
+For full documentation, see [prompt-anything](https://github.com/synzen/prompt-anything)'s documentation and the example below.
+
 ## Example
 
-This will ask the user for their name and age. The bot will then spit it back.
+This will cause the bot application (with discord.js) to ask the user for their name and age. The bot will then send the collected results back. An image of the interaction is provided at the bottom.
 
 ```ts
 import { Client } from 'discord.js'
