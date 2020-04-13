@@ -25,6 +25,43 @@ describe('Unit::DiscordPromptRunner', () => {
       })
     })
   })
+  describe('static addActiveChannel', () => {
+    afterEach(() => {
+      DiscordPromptRunner.activeChannels = new Set()
+    })
+    it('adds the channel id', () => {
+      const channelID = 'wseryh'
+      DiscordPromptRunner.addActiveChannel(channelID)
+      expect(DiscordPromptRunner.activeChannels.has(channelID))
+        .toEqual(true)
+    })
+  })
+  describe('static deleteActiveChannel', () => {
+    afterEach(() => {
+      DiscordPromptRunner.activeChannels = new Set()
+    })
+    it('deletes the channel id', () => {
+      const channelID = 'wseryh'
+      DiscordPromptRunner.activeChannels = new Set([channelID])
+      DiscordPromptRunner.deleteActiveChannel(channelID)
+      expect(DiscordPromptRunner.activeChannels.has(channelID))
+        .toEqual(false)
+    })
+  })
+  describe('static isActiveChannel', () => {
+    afterEach(() => {
+      DiscordPromptRunner.activeChannels = new Set()
+    })
+    it('returns whether if the channel is an active one', () => {
+      const channelID = 'wseryh'
+      DiscordPromptRunner.activeChannels = new Set([channelID])
+      expect(DiscordPromptRunner.isActiveChannel(channelID))
+        .toEqual(true)
+      DiscordPromptRunner.activeChannels = new Set()
+      expect(DiscordPromptRunner.isActiveChannel(channelID))
+        .toEqual(false)
+    })
+  })
   describe('convertTextChannel', () => {
     it('returns a DiscordChannel', () => {
       const textChannel = {

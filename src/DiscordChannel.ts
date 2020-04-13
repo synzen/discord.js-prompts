@@ -7,9 +7,11 @@ import { MessageOptions } from "./interfaces/MessageOptions";
 import { TextChannel } from "./interfaces/TextChannel";
 
 export class DiscordChannel implements ChannelInterface {
+  id: string;
   channel: TextChannel;
   
   constructor (channel: TextChannel) {
+    this.id = channel.id
     this.channel = channel
   }
 

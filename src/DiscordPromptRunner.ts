@@ -7,12 +7,46 @@ import { User } from './interfaces/User'
  * Runs a series of prompt nodes
  */
 export class DiscordPromptRunner<T> extends PromptRunner<T> {
+  /**
+   * Channel IDs that are currently running prompts
+   */
+  static activeChannels: Set<string> = new Set()
   constructor(author: User, data: T) {
     super({
       ...data,
       authorID: author.id
     })
   }
+
+  /**
+   * Marks a channel as active
+   * 
+   * @param id Channel ID
+   */
+  static addActiveChannel (id: string): void {
+    this.activeChannels.add(id)
+  }
+
+  /**
+   * Unmarks a channel as active
+   * 
+   * @param id Channel ID
+   */
+  static deleteActiveChannel (id: string): void {
+    this.activeChannels.delete(id)
+  }
+
+  /**
+   * Check if a channel is currently running a prompt. This
+   * should be called before running a prompt runner to
+   * check if there are any active menus before running
+   * a new one
+   * 
+   * @param id Channel ID
+   */
+  static isActiveChannel (id: string): boolean {
+    return this.activeChannels.has(id)
+  } 
 
   /**
    * Convert a TextChannel to a DiscordChannel for
@@ -33,11 +67,17 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
    * @param node Node that contains the starting prompt
    * @param channel Discord channel to send the prompts to
    */
-  run (node: PromptNode<T>, channel: TextChannel|DiscordChannel): Promise<T> {
+  async run (node: PromptNode<T>, channel: TextChannel|DiscordChannel): Promise<T> {
+    let compatibleChannel: DiscordChannel
+    const channelID = channel.id
     if (channel instanceof DiscordChannel) {
-      return super.run(node, channel)
+      compatibleChannel = channel
     } else {
-      return super.run(node, DiscordPromptRunner.convertTextChannel(channel))
+      compatibleChannel = DiscordPromptRunner.convertTextChannel(channel)
     }
+    DiscordPromptRunner.addActiveChannel(channelID)
+    const result = await super.run(node, compatibleChannel)
+    DiscordPromptRunner.deleteActiveChannel(channelID)
+    return result
   }
 }

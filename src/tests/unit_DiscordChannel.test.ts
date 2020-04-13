@@ -22,6 +22,13 @@ describe('Unit::DiscordChannel', () => {
       const channel = new DiscordChannel(textChannel)
       expect(channel.channel).toEqual(textChannel)
     })
+    it('initializes ID', () => {
+      const textChannel = {
+        id: 'aedstgr'
+      } as unknown as TextChannel
+      const channel = new DiscordChannel(textChannel)
+      expect(channel.id).toEqual(textChannel.id)
+    })
   })
   describe('sendMenuVisual', () => {
     it('sends correctly', async () => {

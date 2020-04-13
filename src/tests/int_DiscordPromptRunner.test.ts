@@ -17,6 +17,7 @@ async function flushPromises(): Promise<void> {
 }
 
 const createMockTextChannel = (): TextChannel => ({
+  id: '',
   send: jest.fn(),
   createMessageCollector: jest.fn()
 })
