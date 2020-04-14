@@ -4,9 +4,19 @@
 
 Create prompts in Discord, just like you would in console!
 
-This works out-of-the-box with [discord.js](https://discord.js.org/#/). For use with other libraries, the relevant interfaces in src/interfaces must be implemented, starting from `User` and `TextChannel` since these two interfaces are the entry point for using this module.
+This works out-of-the-box with [discord.js](https://discord.js.org/#/), and is an implementation of [prompt-anything](https://github.com/synzen/prompt-anything). For use with other libraries, the relevant interfaces in src/interfaces must be implemented, starting from `User` and `TextChannel` since these two interfaces are the entry point for using this module.
 
-For full documentation, see [prompt-anything](https://github.com/synzen/prompt-anything)'s documentation and the example below (available in JS and TS).
+For full documentation, see [prompt-anything](https://github.com/synzen/prompt-anything)'s documentation and the example below (available in JS and TS). It comes with all the same features of prompt anything, including
+
+- Modular, reusable prompts that are also composed of three reusable components (visual, function/message handler, and condition)
+- Conditional execution in whatever order you can dream of
+- Trivial unit as well as (mostly) trivial integration tests (see [prompt-anything#testing](https://github.com/synzen/prompt-anything#testing))
+- Optional channel tracking that can be used to prevent multiple prompts running within the same channel
+
+### Table of Contents
+
+- [Example](#example)
+- [Channel Tracking](#channel-tracking)
 
 ## Example
 
@@ -151,3 +161,17 @@ client.on('message', async (message) => {
   }
 });
 ```
+
+## Channel Tracking
+
+Every time prompts are run with `PromptRunner`, the channel ID is stored in a `Set` that is then removed upon prompt completion.
+
+You can access these for your convenience through the static methods:
+
+```ts
+PromptRunner.addActiveChannel(id: string): void
+PromptRunner.deleteActiveChannel(id: string): void
+PromptRunner.isActiveChannel(id: string): boolean
+```
+
+You can call `isActiveChannel` before calling a `PromptRunner`'s run method for example.
