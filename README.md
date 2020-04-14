@@ -16,6 +16,8 @@ For full documentation, see [prompt-anything](https://github.com/synzen/prompt-a
 ### Table of Contents
 
 - [Example](#example)
+  - [JavaScript](#javascript)
+  - [TypeScript](#typescript)
 - [Channel Tracking](#channel-tracking)
 
 ## Example
