@@ -166,14 +166,14 @@ client.on('message', async (message) => {
 
 ## Channel Tracking
 
-Every time prompts are run with `PromptRunner`, the channel ID is stored in a `Set` that is then removed upon prompt completion.
+Every time prompts are run with `DiscordPromptRunner`, the channel ID is stored in a `Set` that is then removed upon prompt completion.
 
 You can access these for your convenience through the static methods:
 
 ```ts
-PromptRunner.addActiveChannel(id: string): void
-PromptRunner.deleteActiveChannel(id: string): void
-PromptRunner.isActiveChannel(id: string): boolean
+DiscordPromptRunner.addActiveChannel(id: string): void
+DiscordPromptRunner.deleteActiveChannel(id: string): void
+DiscordPromptRunner.isActiveChannel(id: string): boolean
 ```
 
-You can call `isActiveChannel` before calling a `PromptRunner`'s run method for example.
+You can call `isActiveChannel` before calling a `DiscordPromptRunner`'s run method for example.
