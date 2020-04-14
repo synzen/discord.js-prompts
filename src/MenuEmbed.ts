@@ -4,7 +4,15 @@ import { MessageReaction } from "./interfaces/MessageReaction"
 
 
 type MenuEmbedSettings = {
-  maxPerPage: number;
+  /**
+   * Maximum number of fields/options per page
+   */
+  maxPerPage?: number;
+  /**
+   * Miliseconds until reactions are no longer accepted on
+   * paginated embeds
+   */
+  paginationTimeout?: number;
 }
 
 export class MenuEmbed  {
@@ -12,7 +20,7 @@ export class MenuEmbed  {
     fields: []
   }
   /**
-   * Maximum number of fields per page
+   * Maximum number of fields/options per page
    */
   maxPerPage = 5
   /**
@@ -25,6 +33,11 @@ export class MenuEmbed  {
    * edits or reactions fail)
    */
   paginationErrorHandler?: (error: Error) => void
+  /**
+   * Miliseconds until reactions are no longer accepted on
+   * paginated embeds
+   */
+  paginationTimeout = 90000
 
   constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
     if (embed) {
@@ -35,6 +48,9 @@ export class MenuEmbed  {
     }
     if (settings?.maxPerPage) {
       this.maxPerPage = settings.maxPerPage
+    }
+    if (settings?.paginationTimeout) {
+      this.paginationTimeout = settings.paginationTimeout
     }
   }
 
@@ -221,7 +237,7 @@ export class MenuEmbed  {
       return r.emoji.name === '◀' || r.emoji.name === '▶'
     }
     const collector = message.createReactionCollector(filter, {
-      time: 90000
+      time: this.paginationTimeout
     })
     collector.on('collect', (reaction, user) => {
       if (user.bot) {

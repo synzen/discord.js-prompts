@@ -63,10 +63,13 @@ describe('Unit::MenuEmbed', () => {
     })
     it('overwrites settings', () => {
       const maxPerPage = 10
+      const paginationTimeout = 346346
       const menuEmbed = new MenuEmbed(undefined, {
-        maxPerPage
+        maxPerPage,
+        paginationTimeout
       })
       expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
+      expect(menuEmbed.paginationTimeout).toEqual(paginationTimeout)
     })
   })
   describe('enablePagination', () => {
