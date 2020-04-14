@@ -5,7 +5,6 @@ import { Collector } from "./Collector";
 import { MessageInterface } from "prompt-anything";
 
 export interface Message extends MessageInterface {
-  content: string;
   author: User;
   edit: (text?: string, embed?: MessageEmbed) => Promise<Message>;
   react: (reaction: string) => Promise<MessageReaction>;

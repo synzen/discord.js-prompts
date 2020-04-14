@@ -13,6 +13,7 @@ For full documentation, see [prompt-anything#usage](https://github.com/synzen/pr
 - Conditional execution in whatever order you can dream of
 - Trivial unit tests and (mostly) trivial integration tests (see [prompt-anything#testing](https://github.com/synzen/prompt-anything#testing))
 - Channel tracking that can be used to prevent multiple prompts running within the same channel
+- Built-in support for multiple choice menus
 
 ### Table of Contents
 

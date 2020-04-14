@@ -21,7 +21,7 @@
   "author": "synzen",
   "license": "MIT",
   "dependencies": {
-    "prompt-anything": "^1.1.0"
+    "prompt-anything": "github:synzen/prompt-anything"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

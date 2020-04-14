@@ -2,11 +2,12 @@ import { PromptRunner, PromptNode } from 'prompt-anything'
 import { DiscordChannel } from './DiscordChannel'
 import { TextChannel } from './interfaces/TextChannel'
 import { User } from './interfaces/User'
+import { Message } from './interfaces/Message'
 
 /**
  * Runs a series of prompt nodes
  */
-export class DiscordPromptRunner<T> extends PromptRunner<T> {
+export class DiscordPromptRunner<T> extends PromptRunner<T, Message> {
   /**
    * Channel IDs that are currently running prompts
    */
@@ -58,8 +59,8 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
     return new DiscordChannel(channel)
   }
 
-  run (node: PromptNode<T>, channel: DiscordChannel): Promise<T>;
-  run (node: PromptNode<T>, channel: TextChannel): Promise<T>;
+  run (node: PromptNode<T, Message>, channel: DiscordChannel): Promise<T>;
+  run (node: PromptNode<T, Message>, channel: TextChannel): Promise<T>;
 
   /**
    * Start running prompts with the root PromptNode
@@ -67,7 +68,7 @@ export class DiscordPromptRunner<T> extends PromptRunner<T> {
    * @param node Node that contains the starting prompt
    * @param channel Discord channel to send the prompts to
    */
-  async run (node: PromptNode<T>, channel: TextChannel|DiscordChannel): Promise<T> {
+  async run (node: PromptNode<T, Message>, channel: TextChannel|DiscordChannel): Promise<T> {
     let compatibleChannel: DiscordChannel
     const channelID = channel.id
     if (channel instanceof DiscordChannel) {

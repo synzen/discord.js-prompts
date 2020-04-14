@@ -1,5 +1,5 @@
 import { DiscordPrompt } from "../DiscordPrompt"
-import { PromptFunction, PromptCollector, Rejection, PromptNode } from "prompt-anything"
+import { PromptCollector, Rejection, PromptNode } from "prompt-anything"
 import { DiscordPromptRunner } from '../DiscordPromptRunner'
 import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
@@ -9,6 +9,7 @@ import { TextChannel } from "../interfaces/TextChannel";
 import { User } from "../interfaces/User";
 import { Message } from "../interfaces/Message";
 import { MessageReaction } from "../interfaces/MessageReaction";
+import { DiscordPromptFunction } from "../types/DiscordPromptFunction";
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
@@ -51,7 +52,7 @@ describe('E2E tests', () => {
   let author: User
   let emit: jest.SpyInstance
   let collectorStop: jest.SpyInstance
-  let emitter: PromptCollector<PromptData>
+  let emitter: PromptCollector<PromptData, Message>
   let collector: EventEmitter
   let textChannel: TextChannel
   let channel: DiscordChannel
@@ -86,7 +87,7 @@ describe('E2E tests', () => {
     emitter.removeAllListeners()
   })
   it(`ignores messages that are not from the author`, async () => {
-    const askNameFn: PromptFunction<PromptData> = async (m, data) => {
+    const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
         name: m.content
@@ -111,7 +112,7 @@ describe('E2E tests', () => {
     expect(emit).toHaveBeenCalledWith('message', collectedMessage)
   })
   it(`exits when message is exit`, async () => {
-    const askNameFn: PromptFunction<PromptData> = async (m, data) => {
+    const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
         name: m.content
@@ -132,7 +133,7 @@ describe('E2E tests', () => {
     expect(collectorStop).toHaveBeenCalled()
   })
   it(`automatically rejects menu input`, async () => {
-    const selectOptionFn: PromptFunction<PromptData> = async (m, data) => {
+    const selectOptionFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
         name: m.content
@@ -163,7 +164,7 @@ describe('E2E tests', () => {
     expect(emit.mock.calls[1][1]).toEqual(validMessage)
   })
   it('changes embed to the next page with MenuEmbed', async () => {
-    const selectOptionFn: PromptFunction<PromptData> = async (m, data) => {
+    const selectOptionFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
         name: m.content

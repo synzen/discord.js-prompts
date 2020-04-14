@@ -62,7 +62,7 @@ describe('Unit::DiscordPrompt', () => {
   })
   describe('handleMessage', () => {
     it('emits exit when message content is exit', () => {
-      const emitter: PromptCollector<{}> = new EventEmitter()
+      const emitter: PromptCollector<{}, Message> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'exit'
@@ -73,7 +73,7 @@ describe('Unit::DiscordPrompt', () => {
     it('emits message if visual is not a menu', () => {
       const messageVisual = new MessageVisual('dh')
       jest.spyOn(prompt, 'getVisual').mockReturnValue(messageVisual)
-      const emitter: PromptCollector<{}> = new EventEmitter()
+      const emitter: PromptCollector<{}, Message> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'dfht'
@@ -85,7 +85,7 @@ describe('Unit::DiscordPrompt', () => {
       const messageVisual = new MenuVisual(new MenuEmbed())
       jest.spyOn(prompt, 'getVisual').mockReturnValue(messageVisual)
       const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage').mockReturnValue()
-      const emitter: PromptCollector<{}> = new EventEmitter()
+      const emitter: PromptCollector<{}, Message> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'dfht'
@@ -101,7 +101,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isInvalidOption = jest.fn().mockReturnValue(true)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}>
+      } as unknown as PromptCollector<{}, Message>
       const message = {
         content: 'dfht'
       } as Message
@@ -113,7 +113,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isInvalidOption = jest.fn().mockReturnValue(false)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}>
+      } as unknown as PromptCollector<{}, Message>
       const message = {
         content: 'dfht'
       } as Message

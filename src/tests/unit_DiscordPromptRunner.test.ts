@@ -4,6 +4,8 @@ import { DiscordChannel } from "../DiscordChannel"
 import { TextChannel } from "../interfaces/TextChannel"
 import { PromptNode, PromptRunner } from "prompt-anything"
 import { DiscordPrompt } from "../DiscordPrompt"
+import { Message } from "../interfaces/Message"
+import { DiscordPromptNode } from "../DiscordPromptNode"
 
 jest.mock('../DiscordPrompt')
 jest.mock('../DiscordChannel')
@@ -79,7 +81,7 @@ describe('Unit::DiscordPromptRunner', () => {
       const discordChannel = new DiscordChannel(textChannel)
       const runner = new DiscordPromptRunner({} as User, {})
       const prompt = new DiscordPrompt<DataType>({ text: '' })
-      const node = new PromptNode<DataType>(prompt)
+      const node = new DiscordPromptNode<DataType>(prompt)
       const superRun = jest.spyOn(PromptRunner.prototype, 'run')
         .mockImplementation()
       runner.run(node, discordChannel)
@@ -90,7 +92,7 @@ describe('Unit::DiscordPromptRunner', () => {
       const textChannel = {} as TextChannel
       const runner = new DiscordPromptRunner({} as User, {})
       const prompt = new DiscordPrompt<DataType>({ text: '' })
-      const node = new PromptNode<DataType>(prompt)
+      const node = new DiscordPromptNode<DataType>(prompt)
       const superRun = jest.spyOn(PromptRunner.prototype, 'run')
         .mockImplementation()
       const convertedChannel = {

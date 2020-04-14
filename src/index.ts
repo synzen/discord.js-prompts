@@ -6,6 +6,7 @@ export * from './MenuEmbed'
 export * from './visuals/MessageVisual'
 export * from './visuals/MenuVisual'
 
+export * from './types/DiscordPromptFunction'
 export * from './interfaces/TextChannel'
 export * from './interfaces/Collector'
 export * from './interfaces/Message'

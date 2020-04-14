@@ -10,7 +10,7 @@ export type BaseData = {
   authorID: string;
 }
 
-export class DiscordPrompt<T> extends Prompt<T> {
+export class DiscordPrompt<T> extends Prompt<T, Message> {
   duration = 90000
   static inactivityVisual: MessageVisual = {
     text: 'Menu has been closed due to inactivity.'
@@ -37,9 +37,9 @@ export class DiscordPrompt<T> extends Prompt<T> {
     return new EventEmitter()
   }
 
-  createCollector(channel: DiscordChannel, data: T&BaseData): PromptCollector<T> {
+  createCollector(channel: DiscordChannel, data: T&BaseData): PromptCollector<T, Message> {
     const discordChannel = channel
-    const emitter: PromptCollector<T> = this.createEmitter()
+    const emitter: PromptCollector<T, Message> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.authorID);
     collector.on('collect', async (message: Message) => {
       this.handleMessage(message, data, emitter)
@@ -50,7 +50,7 @@ export class DiscordPrompt<T> extends Prompt<T> {
     return emitter
   }
 
-  handleMessage (message: Message, data: T, emitter: PromptCollector<T>): void {
+  handleMessage (message: Message, data: T, emitter: PromptCollector<T, Message>): void {
     // Exit
     if (message.content === 'exit') {
       emitter.emit('exit', message)
@@ -65,7 +65,7 @@ export class DiscordPrompt<T> extends Prompt<T> {
     }
   }
   
-  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<T>): void {
+  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<T, Message>): void {
     if (menu.isInvalidOption(Number(message.content))) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {

@@ -6,7 +6,7 @@ import { Message } from "./interfaces/Message";
 import { MessageOptions } from "./interfaces/MessageOptions";
 import { TextChannel } from "./interfaces/TextChannel";
 
-export class DiscordChannel implements ChannelInterface {
+export class DiscordChannel implements ChannelInterface<Message> {
   id: string;
   channel: TextChannel;
   
