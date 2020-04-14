@@ -13,13 +13,15 @@ For full documentation, see [prompt-anything#usage](https://github.com/synzen/pr
 - Conditional execution in whatever order you can dream of
 - Trivial unit tests and (mostly) trivial integration tests (see [prompt-anything#testing](https://github.com/synzen/prompt-anything#testing))
 - Channel tracking that can be used to prevent multiple prompts running within the same channel
-- Built-in support for multiple choice menus
+- Built-in support for multiple choice menus with pagination and time limits
 
 ### Table of Contents
 
 - [Example](#example)
   - [JavaScript](#javascript)
   - [TypeScript](#typescript)
+- [Using Menus](#using-menus)
+  - [Pagination](#pagination)
 - [Channel Tracking](#channel-tracking)
 
 ## Example
@@ -99,7 +101,7 @@ client.on('message', async (message) => {
 ### TypeScript
 ```ts
 import { Client } from 'discord.js'
-import { DiscordPrompt, PromptFunction, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, TextChannel } from 'discord-prompts';
+import { DiscordPrompt, DiscordPromptFunction, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, TextChannel } from 'discord-prompts';
 
 const client = new Client()
 
@@ -112,7 +114,7 @@ type PersonDetails = {
 const askNameVisual = {
   text: `What's your name`
 }
-const askNameFn: PromptFunction<PersonDetails> = async (m, data) => {
+const askNameFn: DiscordPromptFunction<PersonDetails> = async (m, data) => {
   return {
     ...data,
     name: m.content
@@ -164,6 +166,62 @@ client.on('message', async (message) => {
       })
   }
 });
+```
+## Using Menus
+The built-in menus will automatically handle invalid options and numbering. You simply use the pre-made visual components of `MenuEmbed` with the `MenuVisual`. 
+
+Automatic pagination controls via reactions is also built in (see the next section)!
+
+<p align="center">
+  <img src="https://i.imgur.com/Rf4ycHq.png">
+</p>
+
+
+```ts
+const askFruitMenu = new MenuEmbed()
+  .setTitle('What is your favorite fruit?')
+  .addOption('Apple')
+  .addOption('Orange')
+  .addOption('Broccoli', 'Broccoli is so tasty, it might as well be a fruit')
+const askFruitVisual = new MenuVisual(askFruitMenu)
+
+const askFruitFn: DiscordPromptFunction<AgeMenuData> = async (message: Message, data: AgeMenuData) => {
+  const { content } = message
+  if (content === '1') {
+    // apple
+  } else if (content === '2') {
+    // orange
+  } else {
+    // broccoli
+  }
+  return data
+}
+
+const askFruitPrompt = new DiscordPrompt<AgeMenuData>(askFruitVisual, askFruitFn)
+const askFruitNode = new PromptNode(askFruitPrompt)
+```
+
+### Pagination
+
+Pagination is disabled by default. To enable it, pass a callback to `MenuEmbed.prototype.enablePagination` that will handle any errors that occurs from adding reactions or editing the message.
+
+You can also pass a `maxPerPage` or `paginationTimeout` (time until reactions are no longer accepted) in an object as the second argument (the first argument is to initialize it with a pre-made embed).
+
+<p align="center">
+  <img alt="Menu page 1" src="https://i.imgur.com/lAcp2tR.png">
+  <img alt="Menu page 2" src="https://i.imgur.com/cjBsPRu.png">
+</p>
+
+```ts
+const askFruitMenu = new MenuEmbed(undefined, { maxPerPage: 2 })
+  .setTitle('What is your favorite fruit?')
+  .addOption('Apple')
+  .addOption('Orange')
+  .addOption('Broccoli', 'Broccoli is so tasty, it might as well be a fruit')
+  .enablePagination((error: Error) => {
+    // Handle errors here
+    throw error
+  })
 ```
 
 ## Channel Tracking
