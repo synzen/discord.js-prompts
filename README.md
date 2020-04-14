@@ -12,6 +12,11 @@ For full documentation, see [prompt-anything](https://github.com/synzen/prompt-a
 
 This will cause the bot application (with discord.js) to ask the user for their name and age. The bot will then send the collected results back. An image of the interaction is provided at the bottom.
 
+<p align="center">
+  <img src="https://i.imgur.com/DCydxh5.png">
+</p>
+
+
 ### JavaScript
 ```js
 const Client = require('discord.js').Client
@@ -146,6 +151,3 @@ client.on('message', async (message) => {
   }
 });
 ```
-<p align="center">
-  <img src="https://i.imgur.com/DCydxh5.png">
-</p>
