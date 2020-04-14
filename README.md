@@ -1,6 +1,6 @@
 # Discord Prompts
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/synzen/discord-prompts?style=flat-square)](https://codeclimate.com/github/synzen/discord-prompts/maintainability)
-<a href="https://codeclimate.com/github/synzen/discord-prompts/test_coverage"><img src="https://img.shields.io/codeclimate/coverage/synzen/discord-prompts?style=flat-square" /></a>
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/synzen/discord-prompts?style=flat-square)](https://codeclimate.com/github/synzen/discord-prompts/test_coverage)
 ![Github license](https://img.shields.io/github/license/synzen/discord-prompts?color=%231081c1&style=flat-square)
 
 Create prompts in Discord, just like you would in console!
