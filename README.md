@@ -6,15 +6,81 @@ Create prompts in Discord, just like you would in console!
 
 This works out-of-the-box with [discord.js](https://discord.js.org/#/). For use with other libraries, the relevant interfaces in src/interfaces must be implemented, starting from `User` and `TextChannel` since these two interfaces are the entry point for using this module.
 
-For full documentation, see [prompt-anything](https://github.com/synzen/prompt-anything)'s documentation and the example below.
+For full documentation, see [prompt-anything](https://github.com/synzen/prompt-anything)'s documentation and the example below (available in JS and TS).
 
 ## Example
 
 This will cause the bot application (with discord.js) to ask the user for their name and age. The bot will then send the collected results back. An image of the interaction is provided at the bottom.
 
+### JavaScript
+```js
+const Client = require('discord.js').Client
+const { DiscordPrompt, Rejection, PromptNode, DiscordPromptRunner } = require('discord-prompts')
+
+const client = new Client()
+
+// Set up reusable prompt to ask name
+const askNameVisual = {
+  text: `What's your name`
+}
+const askNameFn = async (m, data) => {
+  return {
+    ...data,
+    name: m.content
+  }
+}
+const askNamePrompt = new DiscordPrompt(askNameVisual, askNameFn)
+
+// Set up reusable prompt to ask age
+const askAgeVisual = (data) => {
+  return {
+    text: `How old are you, ${data.name}?`
+  }
+}
+const askAgeFn = async (m, data) => {
+  const age = Number(m.content)
+  if (isNaN(age)) {
+    throw new Rejection(`That's not a valid number. Try again.`)
+  }
+  return {
+    ...data,
+    age
+  }
+}
+const askAgePrompt = new DiscordPrompt(askAgeVisual, askAgeFn)
+
+// Set up reusable prompt that just sends visual, and doesn't wait for input
+const summaryVisual = (data) => ({
+  text: `Your name is ${data.name}. You are ${data.age} years old.`
+})
+const summaryPrompt = new DiscordPrompt(summaryVisual)
+
+// Set and configure nodes that dictates the order of execution
+const askName = new PromptNode(askNamePrompt)
+const askAge = new PromptNode(askAgePrompt)
+const summary = new PromptNode(summaryPrompt)
+
+askName.addChild(askAge)
+askAge.addChild(summary)
+
+// Now pass the root node, askName, to a PromptRunner, as done below
+client.on('message', async (message) => {
+  if (message.content === 'askme') {
+    const runner = new DiscordPromptRunner(message.author, {})
+    runner.run(askName, message.channel)
+      .then((data) => {
+        // Access data returned by the last prompt
+        // data.age
+        // data.name
+      })
+  }
+})
+```
+
+### TypeScript
 ```ts
 import { Client } from 'discord.js'
-import { DiscordPrompt, PromptFunction, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, TextChannel } from 'discord.js-prompts';
+import { DiscordPrompt, PromptFunction, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, TextChannel } from 'discord-prompts';
 
 const client = new Client()
 
@@ -69,7 +135,7 @@ askAge.addChild(summary)
 
 // Now pass the root node, askName, to a PromptRunner, as done below
 client.on('message', async (message) => {
-  if (message.content === 'askmeal') {
+  if (message.content === 'askme') {
     const runner = new DiscordPromptRunner<PersonDetails>(message.author, {})
     runner.run(askName, message.channel as TextChannel)
       .then((data) => {
@@ -81,5 +147,5 @@ client.on('message', async (message) => {
 });
 ```
 <p align="center">
-  <img src="https://i.imgur.com/6nw8d8n.png">
+  <img src="https://i.imgur.com/DCydxh5.png">
 </p>
