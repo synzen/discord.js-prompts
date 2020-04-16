@@ -16,12 +16,12 @@ describe('Unit::DiscordPromptRunner', () => {
       } as User
       const data = {
         dfgdfg: 'wsrg',
-        authorID: 'asewdgtr'
+        __authorID: 'asewdgtr'
       }
       const runner = new DiscordPromptRunner(author, data)
       expect(runner.initialData).toEqual({
         ...data,
-        authorID: author.id
+        __authorID: author.id
       })
     })
   })

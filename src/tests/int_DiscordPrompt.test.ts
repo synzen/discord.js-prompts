@@ -35,7 +35,7 @@ describe('Int::DiscordPrompt', () => {
     })
     it('emits a message for non-menu visuals', () => {
       const returned = prompt.createCollector(discordChannel, {
-        authorID: 'af'
+        __authorID: 'af'
       })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
@@ -46,7 +46,7 @@ describe('Int::DiscordPrompt', () => {
     })
     it('emits exit when message content is exit', () => {
       const returned = prompt.createCollector(discordChannel, {
-        authorID: 'srfh'
+        __authorID: 'srfh'
       })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
@@ -64,7 +64,7 @@ describe('Int::DiscordPrompt', () => {
       jest.spyOn(prompt, 'getVisual')
         .mockReturnValue(menuVisual)
       const returned = prompt.createCollector(discordChannel, {
-        authorID: 'sed'
+        __authorID: 'sed'
       })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
@@ -82,7 +82,7 @@ describe('Int::DiscordPrompt', () => {
       jest.spyOn(prompt, 'getVisual')
         .mockReturnValue(menuVisual)
       const returned = prompt.createCollector(discordChannel, {
-        authorID: 'sryhdet'
+        __authorID: 'sryhdet'
       })
       const emit = jest.spyOn(returned, 'emit')
       const message = {

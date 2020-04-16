@@ -38,13 +38,13 @@ describe('Unit::DiscordPrompt', () => {
     })
     it('returns an event emitter', () => {
       const returned = prompt.createCollector(discordChannel, {
-        authorID: 'asde'
+        __authorID: 'asde'
       })
       expect(returned).toBeInstanceOf(EventEmitter)
     })
     it('calls stops collector once emitter is stopped', () => {
       const emitter = prompt.createCollector(discordChannel, {
-        authorID: 'azsf'
+        __authorID: 'azsf'
       })
       emitter.emit('stop')
       expect(createdCollector.stop).toHaveBeenCalledTimes(1)
@@ -52,7 +52,7 @@ describe('Unit::DiscordPrompt', () => {
     it('calls handle message for every message in collector', () => {
       const handleMessage = jest.spyOn(prompt, 'handleMessage').mockReturnValue()
       const data = {
-        authorID: 'bar'
+        __authorID: 'bar'
       }
       const emitter = prompt.createCollector(discordChannel, data)
       const message = {} as Message

@@ -7,7 +7,7 @@ import { MenuEmbed } from './MenuEmbed';
 import { Message } from 'discord.js'
 
 export type BaseData = {
-  authorID: string;
+  __authorID: string;
 }
 
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
@@ -34,7 +34,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType, Message> {
     const discordChannel = channel
     const emitter: PromptCollector<DataType, Message> = this.createEmitter()
-    const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.authorID);
+    const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
       this.handleMessage(message, data, emitter)
     });

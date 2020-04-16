@@ -13,7 +13,7 @@ export class DiscordPromptRunner<DataType> extends PromptRunner<DataType, Messag
   constructor(author: User, data: DataType) {
     super({
       ...data,
-      authorID: author.id
+      __authorID: author.id
     })
   }
 
