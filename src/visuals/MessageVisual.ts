@@ -1,5 +1,5 @@
 import { VisualInterface } from "prompt-anything";
-import { MessageOptions } from "../interfaces/MessageOptions";
+import { MessageOptions } from 'discord.js'
 
 export class MessageVisual implements VisualInterface {
   text: string;

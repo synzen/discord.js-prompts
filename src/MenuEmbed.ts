@@ -1,7 +1,5 @@
 import { MessageEmbed, MessageEmbedWithFields } from "./interfaces/MessageEmbed"
-import { Message } from "./interfaces/Message"
-import { MessageReaction } from "./interfaces/MessageReaction"
-
+import { Message, MessageReaction } from 'discord.js'
 
 type MenuEmbedSettings = {
   /**
