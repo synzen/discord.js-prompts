@@ -24,6 +24,8 @@ For full documentation, see [prompt-anything#usage](https://github.com/synzen/pr
 
 ## Example
 
+See the src/examples folder.
+
 This will cause the bot application (with discord.js) to ask the user for their name and age. The bot will then send the collected results back. An image of the interaction is provided at the bottom.
 
 <p align="center">
@@ -31,140 +33,6 @@ This will cause the bot application (with discord.js) to ask the user for their 
 </p>
 
 
-### JavaScript
-```js
-const Client = require('discord.js').Client
-const { DiscordPrompt, Rejection, PromptNode, DiscordPromptRunner } = require('discord-prompts')
-
-const client = new Client()
-
-// Set up reusable prompt to ask name
-const askNameVisual = {
-  text: `What's your name`
-}
-const askNameFn = async (m, data) => {
-  return {
-    ...data,
-    name: m.content
-  }
-}
-const askNamePrompt = new DiscordPrompt(askNameVisual, askNameFn)
-
-// Set up reusable prompt to ask age
-const askAgeVisual = (data) => {
-  return {
-    text: `How old are you, ${data.name}?`
-  }
-}
-const askAgeFn = async (m, data) => {
-  const age = Number(m.content)
-  if (isNaN(age)) {
-    throw new Rejection(`That's not a valid number. Try again.`)
-  }
-  return {
-    ...data,
-    age
-  }
-}
-const askAgePrompt = new DiscordPrompt(askAgeVisual, askAgeFn)
-
-// Set up reusable prompt that just sends visual, and doesn't wait for input
-const summaryVisual = (data) => ({
-  text: `Your name is ${data.name}. You are ${data.age} years old.`
-})
-const summaryPrompt = new DiscordPrompt(summaryVisual)
-
-// Set and configure nodes that dictates the order of execution
-const askName = new PromptNode(askNamePrompt)
-const askAge = new PromptNode(askAgePrompt)
-const summary = new PromptNode(summaryPrompt)
-
-askName.addChild(askAge)
-askAge.addChild(summary)
-
-// Now pass the root node, askName, to a PromptRunner, as done below
-client.on('message', async (message) => {
-  if (message.content === 'askme') {
-    const runner = new DiscordPromptRunner(message.author, {})
-    runner.run(askName, message.channel)
-      .then((data) => {
-        // Access data returned by the last prompt
-        // data.age
-        // data.name
-      })
-  }
-})
-```
-
-### TypeScript
-```ts
-import { Client } from 'discord.js'
-import { DiscordPrompt, DiscordPromptFunction, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, TextChannel } from 'discord-prompts';
-
-const client = new Client()
-
-type PersonDetails = {
-  name?: string;
-  age?: number;
-}
-
-// Set up reusable prompt to ask name
-const askNameVisual = {
-  text: `What's your name`
-}
-const askNameFn: DiscordPromptFunction<PersonDetails> = async (m, data) => {
-  return {
-    ...data,
-    name: m.content
-  }
-}
-const askNamePrompt = new DiscordPrompt<PersonDetails>(askNameVisual, askNameFn)
-
-// Set up reusable prompt to ask age
-const askAgeVisual: VisualGenerator<PersonDetails> = (data) => {
-  return {
-    text: `How old are you, ${data.name}?`
-  }
-}
-const askAgeFn: PromptFunction<PersonDetails> = async (m, data) => {
-  const age = Number(m.content)
-  if (isNaN(age)) {
-    throw new Rejection(`That's not a valid number. Try again.`)
-  }
-  return {
-    ...data,
-    age
-  }
-}
-const askAgePrompt = new DiscordPrompt<PersonDetails>(askAgeVisual, askAgeFn)
-
-// Set up reusable prompt that just sends visual, and doesn't wait for input
-const summaryVisual: VisualGenerator<PersonDetails> = (data) => ({
-  text: `Your name is ${data.name}. You are ${data.age} years old.`
-})
-const summaryPrompt = new DiscordPrompt<PersonDetails>(summaryVisual)
-
-// Set and configure nodes that dictates the order of execution
-const askName = new PromptNode(askNamePrompt)
-const askAge = new PromptNode(askAgePrompt)
-const summary = new PromptNode(summaryPrompt)
-
-askName.addChild(askAge)
-askAge.addChild(summary)
-
-// Now pass the root node, askName, to a PromptRunner, as done below
-client.on('message', async (message) => {
-  if (message.content === 'askme') {
-    const runner = new DiscordPromptRunner<PersonDetails>(message.author, {})
-    runner.run(askName, message.channel as TextChannel)
-      .then((data) => {
-        // Access data returned by the last prompt
-        // data.age
-        // data.name
-      })
-  }
-});
-```
 ## Using Menus
 The built-in menus will automatically handle invalid options and numbering. You simply use the pre-made visual components of `MenuEmbed` with the `MenuVisual`. 
 
@@ -176,8 +44,11 @@ Automatic pagination controls via reactions is also built in (see the next secti
 
 
 ```ts
-const askFruitMenu = new MenuEmbed()
-  .setTitle('What is your favorite fruit?')
+import { MessageEmbed } from 'discord.js'
+const embed = new MessageEmbed({
+  title: 'What is your favorite fruit?'
+})
+const askFruitMenu = new MenuEmbed(embed)
   .addOption('Apple')
   .addOption('Orange')
   .addOption('Broccoli', 'Broccoli is so tasty, it might as well be a fruit')
@@ -211,8 +82,11 @@ You can also pass a `maxPerPage` or `paginationTimeout` (time until reactions ar
 </p>
 
 ```ts
-const askFruitMenu = new MenuEmbed(undefined, { maxPerPage: 2 })
-  .setTitle('What is your favorite fruit?')
+import { MessageEmbed } from 'discord.js'
+const embed = new MessageEmbed({
+  title: 'What is your favorite fruit?'
+})
+const askFruitMenu = new MenuEmbed(embed, { maxPerPage: 2 })
   .addOption('Apple')
   .addOption('Orange')
   .addOption('Broccoli', 'Broccoli is so tasty, it might as well be a fruit')
