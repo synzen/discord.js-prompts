@@ -32,7 +32,7 @@ export class MenuEmbed  {
    * the menu fails to set up pagination (when message
    * edits or reactions fail)
    */
-  paginationErrorHandler?: (error: Error) => void
+  paginationErrorHandler?: (error: Error, message: Message) => void
   /**
    * Miliseconds until reactions are no longer accepted on
    * paginated embeds
@@ -61,7 +61,7 @@ export class MenuEmbed  {
    * 
    * @param errorHandler Error handler 
    */
-  enablePagination (errorHandler: (error: Error) => void): this {
+  enablePagination (errorHandler: (error: Error, message: Message) => void): this {
     this.paginationErrorHandler = errorHandler
     return this
   }
@@ -220,7 +220,7 @@ export class MenuEmbed  {
       await message.react('▶')
       this.createReactionCollector(message)
     } catch (err) {
-      this.paginationErrorHandler(err)
+      this.paginationErrorHandler(err, message)
     }
   }
 
@@ -245,9 +245,17 @@ export class MenuEmbed  {
       }
       const name = reaction.emoji.name
       if (name === '◀') {
-        this.prevPage(message).catch(this.paginationErrorHandler)
+        this.prevPage(message).catch(err => {
+          if (this.paginationErrorHandler) {
+            this.paginationErrorHandler(err, message)
+          }
+        })
       } else if (name === '▶') {
-        this.nextPage(message).catch(this.paginationErrorHandler)
+        this.nextPage(message).catch(err => {
+          if (this.paginationErrorHandler) {
+            this.paginationErrorHandler(err, message)
+          }
+        })
       }
     })
   }

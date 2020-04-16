@@ -382,7 +382,7 @@ describe('Unit::MenuEmbed', () => {
         react
       } as unknown as Message
       await menuEmbed.setUpPagination(message)
-      expect(errorHandler).toHaveBeenCalledWith(reactError)
+      expect(errorHandler).toHaveBeenCalledWith(reactError, message)
     })
   })
   describe('createReactionCollector', () => {
@@ -467,7 +467,7 @@ describe('Unit::MenuEmbed', () => {
       collector.emit('collect', reaction, {})
       await flushPromises()
       expect(menuEmbed.paginationErrorHandler)
-        .toHaveBeenCalledWith(error)
+        .toHaveBeenCalledWith(error, message)
     })
     it('handles errors for prev page', async () => {
       menuEmbed.createReactionCollector(message)
@@ -481,7 +481,7 @@ describe('Unit::MenuEmbed', () => {
       collector.emit('collect', reaction, {})
       await flushPromises()
       expect(menuEmbed.paginationErrorHandler)
-        .toHaveBeenCalledWith(error)
+        .toHaveBeenCalledWith(error, message)
     })
   })
   describe('getEmbedOfPage', () => {
