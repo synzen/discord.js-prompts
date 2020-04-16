@@ -2,9 +2,8 @@ import { DiscordChannel } from "../DiscordChannel"
 import { MenuVisual } from "../visuals/MenuVisual"
 import { MenuEmbed } from "../MenuEmbed"
 import { MessageVisual } from "../visuals/MessageVisual"
-import { TextChannel } from "../interfaces/TextChannel"
 import { MessageOptions } from "../interfaces/MessageOptions"
-import { Message } from "../interfaces/Message"
+import { TextChannel, Message } from 'discord.js'
 
 jest.mock('../MenuEmbed')
 jest.mock('../visuals/MessageVisual')

@@ -2,9 +2,8 @@ import { DiscordPromptRunner } from "../DiscordPromptRunner"
 import { User } from "../interfaces/User"
 import { DiscordChannel } from "../DiscordChannel"
 import { TextChannel } from "../interfaces/TextChannel"
-import { PromptNode, PromptRunner } from "prompt-anything"
+import { PromptRunner } from "prompt-anything"
 import { DiscordPrompt } from "../DiscordPrompt"
-import { Message } from "../interfaces/Message"
 import { DiscordPromptNode } from "../DiscordPromptNode"
 
 jest.mock('../DiscordPrompt')

@@ -4,7 +4,7 @@ import { DiscordChannel } from "./DiscordChannel";
 import { MessageVisual } from "./visuals/MessageVisual";
 import { MenuVisual } from './visuals/MenuVisual';
 import { MenuEmbed } from './MenuEmbed';
-import { Message } from "./interfaces/Message";
+import { Message } from 'discord.js'
 
 export type BaseData = {
   authorID: string;

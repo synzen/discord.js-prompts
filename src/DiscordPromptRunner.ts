@@ -1,8 +1,6 @@
 import { PromptRunner, PromptNode } from 'prompt-anything'
 import { DiscordChannel } from './DiscordChannel'
-import { TextChannel } from './interfaces/TextChannel'
-import { User } from './interfaces/User'
-import { Message } from './interfaces/Message'
+import { TextChannel, User, Message } from 'discord.js'
 
 /**
  * Runs a series of prompt nodes

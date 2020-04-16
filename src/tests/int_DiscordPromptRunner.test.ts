@@ -5,11 +5,8 @@ import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { TextChannel } from "../interfaces/TextChannel";
-import { User } from "../interfaces/User";
-import { Message } from "../interfaces/Message";
-import { MessageReaction } from "../interfaces/MessageReaction";
 import { DiscordPromptFunction } from "../types/DiscordPromptFunction";
+import { TextChannel, User, Message, MessageReaction } from 'discord.js'
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
@@ -21,11 +18,11 @@ const createMockTextChannel = (): TextChannel => ({
   id: '',
   send: jest.fn(),
   createMessageCollector: jest.fn()
-})
+}) as unknown as TextChannel
 
 const createMockAuthor = (authorID: string): User => ({
   id: authorID
-})
+}) as unknown as User
 
 const createMockMessage = (authorID: string, content = ''): Message => ({
   content,
@@ -35,13 +32,13 @@ const createMockMessage = (authorID: string, content = ''): Message => ({
   edit: jest.fn(),
   react: jest.fn(),
   createReactionCollector: jest.fn()
-})
+}) as unknown as Message
 
 const createMockReaction = (name: string): MessageReaction => ({
   emoji: {
     name
   }
-})
+}) as unknown as MessageReaction
 
 describe('E2E tests', () => {
   type PromptData = {

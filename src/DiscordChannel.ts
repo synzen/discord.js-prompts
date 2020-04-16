@@ -2,9 +2,7 @@ import { ChannelInterface } from "prompt-anything";
 import { DiscordVisual } from "./visuals/DiscordVisual";
 import { MenuVisual } from "./visuals/MenuVisual";
 import { MessageVisual } from "./visuals/MessageVisual";
-import { Message } from "./interfaces/Message";
-import { MessageOptions } from "./interfaces/MessageOptions";
-import { TextChannel } from "./interfaces/TextChannel";
+import { Message, MessageOptions, TextChannel } from 'discord.js'
 
 export class DiscordChannel implements ChannelInterface<Message> {
   id: string;

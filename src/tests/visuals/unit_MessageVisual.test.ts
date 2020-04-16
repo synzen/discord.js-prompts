@@ -1,5 +1,5 @@
 import { MessageVisual } from "../../visuals/MessageVisual"
-import { MessageOptions } from "../../interfaces/MessageOptions"
+import { MessageOptions } from 'discord.js'
 
 describe('Unit::visuals/MessageVisual', () => {
   describe('constructor', () => {

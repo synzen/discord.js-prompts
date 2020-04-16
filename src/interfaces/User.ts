@@ -1,3 +1,5 @@
-export interface User {
-  id: string;
-}
+export { User } from 'discord.js'
+
+// export interface User {
+//   id: string;
+// }

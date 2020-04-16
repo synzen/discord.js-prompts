@@ -1,4 +1,4 @@
 import { PromptFunction } from "prompt-anything";
-import { Message } from "../interfaces/Message";
+import { Message } from 'discord.js'
 
-export type DiscordPromptFunction<T> = PromptFunction<T, Message>
+export type DiscordPromptFunction<DataType> = PromptFunction<DataType, Message>

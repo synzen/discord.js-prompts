@@ -5,7 +5,7 @@ import { MessageVisual } from '../visuals/MessageVisual';
 import { PromptCollector, Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { Message } from '../interfaces/Message';
+import { Message } from 'discord.js'
 
 jest.mock('../visuals/MessageVisual')
 

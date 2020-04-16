@@ -8,7 +8,7 @@ export * from './visuals/MenuVisual'
 
 export * from './types/DiscordPromptFunction'
 export * from './interfaces/TextChannel'
-export * from './interfaces/Collector'
+export * from './interfaces/MessageCollector'
 export * from './interfaces/Message'
 export * from './interfaces/MessageEmbed'
 export * from './interfaces/MessageOptions'
