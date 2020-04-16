@@ -12,16 +12,10 @@ export type BaseData = {
 
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
-  static inactivityVisual: MessageVisual = {
-    text: 'Menu has been closed due to inactivity.'
-  }
-  static exitVisual: MessageVisual = {
-    text: 'Menu closed.'
-  }
+  static inactivityVisual: MessageVisual = new MessageVisual('Menu closed due to inactivity.')
+  static exitVisual: MessageVisual = new MessageVisual('Menu closed.')
   static getRejectVisual (error: Rejection): MessageVisual {
-    return {
-      text: error.message
-    }
+    return new MessageVisual(error.message)
   }
   async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)

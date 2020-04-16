@@ -7,6 +7,7 @@ import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
 import { DiscordPromptFunction } from "../types/DiscordPromptFunction";
 import { TextChannel, User, Message, MessageReaction } from 'discord.js'
+import { MessageVisual } from "../visuals/MessageVisual";
 
 async function flushPromises(): Promise<void> {
   return new Promise(resolve => {
@@ -90,9 +91,8 @@ describe('E2E tests', () => {
         name: m.content
       }
     }
-    const askName = new DiscordPrompt<PromptData>({
-      text: `What's your name?`
-    }, askNameFn)
+    const askNameVisual = new MessageVisual('What is your name?')
+    const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
     const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
     runner.run(askNameNode, textChannel)
@@ -115,9 +115,8 @@ describe('E2E tests', () => {
         name: m.content
       }
     }
-    const askName = new DiscordPrompt<PromptData>({
-      text: `What's your name?`
-    }, askNameFn)
+    const askNameVisual = new MessageVisual('What is your name?')
+    const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
     const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
     runner.run(askNameNode, textChannel)
@@ -208,13 +207,15 @@ describe('E2E tests', () => {
     // Check nextPage was called
     expect(nextPage).toHaveBeenCalledTimes(1)
     const edit = reactableMessage.edit as jest.Mock
-    expect(edit).toHaveBeenCalledWith('', expect.objectContaining({
-      fields: [{
-        name: '2) option2',
-        value: 'd',
-        inline: false
-      }]
-    }))
+    expect(edit).toHaveBeenCalledWith('', {
+      embed: expect.objectContaining({
+        fields: [{
+          name: '2) option2',
+          value: 'd',
+          inline: false
+        }]
+      })
+    })
 
     // Clean up
     reactCollector.removeAllListeners()

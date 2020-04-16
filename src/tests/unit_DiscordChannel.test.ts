@@ -116,6 +116,12 @@ describe('Unit::DiscordChannel', () => {
     })
   })
   describe('send', () => {
+    it('throws if it is not a MenuVisual or MessageVisual', async () => {
+      const discordChannel = new DiscordChannel({} as TextChannel)
+      await expect(discordChannel.send({
+        text: 'hi'
+      })).rejects.toThrow(TypeError)
+    })
     it('calls sendMenuVisual if visual is MenuVisual', async () => {
       const visual = new MenuVisual(new MenuEmbed())
       // Create the channel

@@ -35,8 +35,10 @@ export class DiscordChannel implements ChannelInterface<Message> {
   async send (visual: DiscordVisual): Promise<Message> {
     if (visual instanceof MenuVisual) {
       return this.sendMenuVisual(visual)
-    } else {
+    } else if (visual instanceof MessageVisual) {
       return this.sendMessageVisual(visual)
+    } else {
+      throw new TypeError('Invalid visual format, must be MenuVisual or MessageVisual')
     }
   }
   
