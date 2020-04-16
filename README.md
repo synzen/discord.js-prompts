@@ -1,11 +1,9 @@
-# Discord Prompts
+# Discord.js Prompts
 [![Maintainability](https://badgen.net/codeclimate/maintainability/synzen/discord-prompts?style=flat)](https://codeclimate.com/github/synzen/discord-prompts/maintainability)
 [![Test Coverage](https://badgen.net/codeclimate/coverage/synzen/discord-prompts?style=flat)](https://codeclimate.com/github/synzen/discord-prompts/test_coverage)
 ![Github license](https://badgen.net/github/license/synzen/discord-prompts?style=flat)
 
-Create prompts in Discord, just like you would in console!
-
-This works out-of-the-box with [discord.js](https://discord.js.org/#/), and is an implementation of [prompt-anything](https://github.com/synzen/prompt-anything). For use with other libraries, the relevant interfaces in src/interfaces must be implemented, starting from `User` and `TextChannel`.
+Create prompts in Discord, just like you would in console! Implemented with [prompt-anything](https://github.com/synzen/prompt-anything).
 
 For full documentation, see [prompt-anything#usage](https://github.com/synzen/prompt-anything#usage)'s documentation and the example below (available in JS and TS). It comes with all the same features of prompt-anything, including
 
