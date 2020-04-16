@@ -1,5 +1,4 @@
-import { MessageEmbed, MessageEmbedWithFields } from "./interfaces/MessageEmbed"
-import { Message, MessageReaction } from 'discord.js'
+import { Message, MessageReaction, MessageEmbed } from 'discord.js'
 
 type MenuEmbedSettings = {
   /**
@@ -13,10 +12,20 @@ type MenuEmbedSettings = {
   paginationTimeout?: number;
 }
 
+type MenuEmbedOption = {
+  /**
+   * Name of the option
+   */
+  name: string;
+  /**
+   * Description of the option
+   */
+  description?: string;
+}
+
 export class MenuEmbed  {
-  embed: MessageEmbedWithFields = {
-    fields: []
-  }
+  embed = new MessageEmbed()
+  options: Array<MenuEmbedOption> = []
   /**
    * Maximum number of fields/options per page
    */
@@ -39,10 +48,7 @@ export class MenuEmbed  {
 
   constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
     if (embed) {
-      this.embed = {
-        fields: [],
-        ...embed
-      }
+      this.embed = embed
     }
     if (settings?.maxPerPage) {
       this.maxPerPage = settings.maxPerPage
@@ -72,9 +78,9 @@ export class MenuEmbed  {
    */
   addOption (name: string, description = '\u200b'): this {
     const count = this.numberOfOptions()
-    this.embed.fields.push({
-       name: `${count + 1}) ${name}`,
-       value: description
+    this.options.push({
+      name: `${count + 1}) ${name}`,
+      description
     })
     return this
   }
@@ -83,7 +89,7 @@ export class MenuEmbed  {
    * Return the number of options this embed has
    */
   numberOfOptions (): number {
-    return this.embed.fields.length
+    return this.options.length
   }
 
   /**
@@ -97,53 +103,6 @@ export class MenuEmbed  {
       return true
     }
     return number > this.numberOfOptions() || number <= 0
-  }
-
-  /**
-   * Set the title of the embed
-   * 
-   * @param title 
-   */
-  setTitle (title: string): this {
-    this.embed.title = title
-    return this
-  }
-
-  /**
-   * Set the author of the embed
-   * 
-   * @param name 
-   * @param icon 
-   * @param url 
-   */
-  setAuthor (name: string, icon?: string, url?: string): this {
-    this.embed.author = {
-      name,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      icon_url: icon,
-      url
-    }
-    return this
-  }
-
-  /**
-   * Set the description of the embed
-   * 
-   * @param description 
-   */
-  setDescription (description: string): this {
-    this.embed.description = description
-    return this
-  }
-
-  /**
-   * Set the color of the embed
-   * 
-   * @param color Integer color
-   */
-  setColor (color: number): this {
-    this.embed.color = color
-    return this
   }
 
   /**
@@ -192,8 +151,9 @@ export class MenuEmbed  {
    * @param message Message to update
    */
   async setMessage (message: Message): Promise<void> {
+    // toJSON must be used, it fails otherwise for some reason
     await message.edit('', {
-      embed: this.getEmbedOfPage(this.page)
+      embed: this.getEmbedOfPage(this.page).toJSON()
     })
   }
 
@@ -259,20 +219,30 @@ export class MenuEmbed  {
   }
 
   /**
+   * Get the options of a page
+   * 
+   * @param page
+   */
+  getOptionsOfPage (page: number): Array<MenuEmbedOption> {
+    if (!this.maxPerPage) {
+      return this.options
+    }
+    const startField = page * this.maxPerPage
+    return this.options.slice(startField, startField + this.maxPerPage)
+  }
+
+  /**
    * Get the embed that corresponds to a page number
    * 
    * @param page
    */
   getEmbedOfPage (page: number): MessageEmbed {
-    if (!this.maxPerPage) {
-      return this.embed
+    const newEmbed = new MessageEmbed(this.embed)
+    const options = this.getOptionsOfPage(page)
+    for (const option of options) {
+      newEmbed.addField(option.name, option.description)
     }
-    const startField = page * this.maxPerPage
-    const fields = this.embed.fields.slice(startField, startField + this.maxPerPage)
-    return {
-      ...this.embed,
-      fields
-    }
+    return newEmbed
   }
 
   /**

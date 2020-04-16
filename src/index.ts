@@ -7,4 +7,3 @@ export * from './visuals/MessageVisual'
 export * from './visuals/MenuVisual'
 
 export * from './types/DiscordPromptFunction'
-export * from './interfaces/MessageEmbed'

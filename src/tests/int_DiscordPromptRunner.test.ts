@@ -209,12 +209,11 @@ describe('E2E tests', () => {
     expect(nextPage).toHaveBeenCalledTimes(1)
     const edit = reactableMessage.edit as jest.Mock
     expect(edit).toHaveBeenCalledWith('', expect.objectContaining({
-      embed: {
-        fields: [{
-          name: '2) option2',
-          value: 'd'
-        }]
-      }
+      fields: [{
+        name: '2) option2',
+        value: 'd',
+        inline: false
+      }]
     }))
 
     // Clean up
