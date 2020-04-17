@@ -14,7 +14,7 @@ const askNameFn = async (m, data) => {
 const askNamePrompt = new DiscordPrompt(askNameVisual, askNameFn)
 
 // Prompt to ask age
-const askAgeVisual = (data) => {
+const askAgeVisual = async (data) => {
   return new MessageVisual(`How old are you, ${data.name}?`)
 }
 const askAgeFn = async (m, data) => {
@@ -30,7 +30,7 @@ const askAgeFn = async (m, data) => {
 const askAgePrompt = new DiscordPrompt(askAgeVisual, askAgeFn)
 
 // Prompt that just sends visual, and doesn't wait for input
-const summaryVisual = (data) => {
+const summaryVisual = async (data) => {
   return new MessageVisual(`Your name is ${data.name}. You are ${data.age} years old.`)
 }
 const summaryPrompt = new DiscordPrompt(summaryVisual)
