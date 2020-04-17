@@ -31,12 +31,13 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     return new EventEmitter()
   }
 
-  createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType, Message> {
+  createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType> {
     const discordChannel = channel
-    const emitter: PromptCollector<DataType, Message> = this.createEmitter()
+    const emitter: PromptCollector<DataType> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
       this.handleMessage(message, data, emitter)
+        .catch(err => emitter.emit('error', err))
     });
     emitter.once('stop', () => {
       collector.stop()
@@ -44,14 +45,14 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     return emitter
   }
 
-  handleMessage (message: Message, data: DataType, emitter: PromptCollector<DataType, Message>): void {
+  async handleMessage (message: Message, data: DataType, emitter: PromptCollector<DataType>): Promise<void> {
     // Exit
     if (message.content === 'exit') {
       emitter.emit('exit', message)
       return
     }
     // Check if MenuVisual for special handling
-    const visual = this.getVisual(data)
+    const visual = await this.getVisual(data)
     if (visual instanceof MenuVisual) {
       this.handleMenuMessage(message, visual.menu, emitter)
     } else {
@@ -59,7 +60,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     }
   }
   
-  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType, Message>): void {
+  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType>): void {
     if (menu.isInvalidOption(Number(message.content))) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {

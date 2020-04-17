@@ -34,7 +34,8 @@ describe('Unit::DiscordPrompt', () => {
       createdCollector = new MockCollector()
       discordChannel.channel.createMessageCollector = jest.fn()
         .mockReturnValue(createdCollector)
-      jest.spyOn(prompt, 'handleMessage').mockReturnValue()
+      jest.spyOn(prompt, 'handleMessage')
+        .mockResolvedValue()
     })
     it('returns an event emitter', () => {
       const returned = prompt.createCollector(discordChannel, {
@@ -50,7 +51,8 @@ describe('Unit::DiscordPrompt', () => {
       expect(createdCollector.stop).toHaveBeenCalledTimes(1)
     })
     it('calls handle message for every message in collector', () => {
-      const handleMessage = jest.spyOn(prompt, 'handleMessage').mockReturnValue()
+      const handleMessage = jest.spyOn(prompt, 'handleMessage')
+        .mockResolvedValue()
       const data = {
         __authorID: 'bar'
       }
@@ -62,7 +64,7 @@ describe('Unit::DiscordPrompt', () => {
   })
   describe('handleMessage', () => {
     it('emits exit when message content is exit', () => {
-      const emitter: PromptCollector<{}, Message> = new EventEmitter()
+      const emitter: PromptCollector<{}> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'exit'
@@ -70,27 +72,28 @@ describe('Unit::DiscordPrompt', () => {
       prompt.handleMessage(message, {}, emitter)
       expect(emit).toHaveBeenCalledWith('exit', message)
     })
-    it('emits message if visual is not a menu', () => {
+    it('emits message if visual is not a menu', async () => {
       const messageVisual = new MessageVisual('dh')
-      jest.spyOn(prompt, 'getVisual').mockReturnValue(messageVisual)
-      const emitter: PromptCollector<{}, Message> = new EventEmitter()
+      jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
+      const emitter: PromptCollector<{}> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'dfht'
       } as Message
-      prompt.handleMessage(message, {}, emitter)
+      await prompt.handleMessage(message, {}, emitter)
       expect(emit).toHaveBeenCalledWith('message', message)
     })
-    it('calls handleMenuMessage if visual is a menu', () => {
+    it('calls handleMenuMessage if visual is a menu', async () => {
       const messageVisual = new MenuVisual(new MenuEmbed())
-      jest.spyOn(prompt, 'getVisual').mockReturnValue(messageVisual)
-      const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage').mockReturnValue()
-      const emitter: PromptCollector<{}, Message> = new EventEmitter()
+      jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
+      const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage')
+        .mockImplementation()
+      const emitter: PromptCollector<{}> = new EventEmitter()
       const emit = jest.spyOn(emitter, 'emit')
       const message = {
         content: 'dfht'
       } as Message
-      prompt.handleMessage(message, {}, emitter)
+      await prompt.handleMessage(message, {}, emitter)
       expect(handleMenuMessage).toHaveBeenCalled()
       expect(emit).not.toHaveBeenCalled()
     })
@@ -101,7 +104,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isInvalidOption = jest.fn().mockReturnValue(true)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}, Message>
+      } as unknown as PromptCollector<{}>
       const message = {
         content: 'dfht'
       } as Message
@@ -113,7 +116,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isInvalidOption = jest.fn().mockReturnValue(false)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}, Message>
+      } as unknown as PromptCollector<{}>
       const message = {
         content: 'dfht'
       } as Message

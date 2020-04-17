@@ -7,6 +7,12 @@ import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
 import { Message } from 'discord.js'
 
+async function flushPromises(): Promise<void> {
+  return new Promise(resolve => {
+    setImmediate(resolve);
+  });
+}
+
 class MockCollector extends EventEmitter {
   stop = jest.fn()
 }
@@ -33,7 +39,7 @@ describe('Int::DiscordPrompt', () => {
       discordChannel.channel.createMessageCollector = jest.fn()
         .mockReturnValue(createdCollector)
     })
-    it('emits a message for non-menu visuals', () => {
+    it('emits a message for non-menu visuals', async () => {
       const returned = prompt.createCollector(discordChannel, {
         __authorID: 'af'
       })
@@ -42,6 +48,7 @@ describe('Int::DiscordPrompt', () => {
         content: 'hello world'
       } as Message
       createdCollector.emit('collect', message)
+      await flushPromises()
       expect(emit).toHaveBeenCalledWith('message', message)
     })
     it('emits exit when message content is exit', () => {
@@ -55,14 +62,14 @@ describe('Int::DiscordPrompt', () => {
       createdCollector.emit('collect', message)
       expect(emit).toHaveBeenCalledWith('exit', message)
     })
-    it('emits a message when valid input for menu', () => {
+    it('emits a message when valid input for menu', async () => {
       const menu = new MenuEmbed()
       jest.spyOn(menu, 'isInvalidOption')
         .mockReturnValue(false)
       const menuVisual = new MenuVisual(menu)
       prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')
-        .mockReturnValue(menuVisual)
+        .mockResolvedValue(menuVisual)
       const returned = prompt.createCollector(discordChannel, {
         __authorID: 'sed'
       })
@@ -71,16 +78,17 @@ describe('Int::DiscordPrompt', () => {
         content: '1'
       } as Message
       createdCollector.emit('collect', message)
+      await flushPromises()
       expect(emit).toHaveBeenCalledWith('message', message)
     })
-    it('emits a reject when invalid input for menu', () => {
+    it('emits a reject when invalid input for menu', async () => {
       const menu = new MenuEmbed()
       jest.spyOn(menu, 'isInvalidOption')
         .mockReturnValue(true)
       const menuVisual = new MenuVisual(menu)
       prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')
-        .mockReturnValue(menuVisual)
+        .mockResolvedValue(menuVisual)
       const returned = prompt.createCollector(discordChannel, {
         __authorID: 'sryhdet'
       })
@@ -89,6 +97,7 @@ describe('Int::DiscordPrompt', () => {
         content: '2'
       } as Message
       createdCollector.emit('collect', message)
+      await flushPromises()
       expect(emit).toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
     })
   })

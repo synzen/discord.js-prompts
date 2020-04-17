@@ -19,7 +19,7 @@ const askNameFn: DiscordPromptFunction<PersonDetails> = async (m: Message, data:
 const askNamePrompt = new DiscordPrompt(askNameVisual, askNameFn)
 
 // Prompt to ask age
-const askAgeVisual: VisualGenerator<PersonDetails> = (data: PersonDetails) => {
+const askAgeVisual: VisualGenerator<PersonDetails> = async (data: PersonDetails) => {
   return new MessageVisual(`How old are you, ${data.name}?`)
 }
 const askAgeFn: DiscordPromptFunction<PersonDetails> = async (m: Message, data: PersonDetails) => {
@@ -35,7 +35,7 @@ const askAgeFn: DiscordPromptFunction<PersonDetails> = async (m: Message, data: 
 const askAgePrompt = new DiscordPrompt(askAgeVisual, askAgeFn)
 
 // Prompt that just sends visual, and doesn't wait for input
-const summaryVisual: VisualGenerator<PersonDetails> = (data: PersonDetails) => {
+const summaryVisual: VisualGenerator<PersonDetails> = async (data: PersonDetails) => {
   return new MessageVisual(`Your name is ${data.name}. You are ${data.age} years old.`)
 }
 const summaryPrompt = new DiscordPrompt<PersonDetails>(summaryVisual)
