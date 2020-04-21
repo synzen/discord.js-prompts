@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { Client } = require('discord.js')
 const { DiscordPrompt, Rejection, PromptNode, DiscordPromptRunner, MessageVisual } = require('discord.js-prompts');
 
