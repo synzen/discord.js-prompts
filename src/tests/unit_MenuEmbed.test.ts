@@ -53,12 +53,16 @@ describe('Unit::MenuEmbed', () => {
     it('overwrites settings', () => {
       const maxPerPage = 10
       const paginationTimeout = 346346
+      const multiSelect = true
       const menuEmbed = new MenuEmbed(undefined, {
         maxPerPage,
-        paginationTimeout
+        paginationTimeout,
+        multiSelect
       })
       expect(menuEmbed.maxPerPage).toEqual(maxPerPage)
       expect(menuEmbed.paginationTimeout).toEqual(paginationTimeout)
+      expect(menuEmbed.multiSelect).toEqual(multiSelect)
+      // expect(menuEmbed.multiSelect).toEqual(multiSelect)
     })
   })
   describe('enablePagination', () => {
@@ -99,21 +103,51 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.options[0].description).toEqual('\u200b')
     })
   })
-  describe('isInvalidOption', () => {
+  describe('isValidOption', () => {
     it('returns correctly', () => {
       jest.spyOn(menuEmbed, 'numberOfOptions')
         .mockReturnValue(2)
-      expect(menuEmbed.isInvalidOption(0))
-        .toEqual(true)
-      expect(menuEmbed.isInvalidOption(1))
+      expect(menuEmbed.isValidOption(0))
         .toEqual(false)
-      expect(menuEmbed.isInvalidOption(2))
-        .toEqual(false)
-      expect(menuEmbed.isInvalidOption(3))
+      expect(menuEmbed.isValidOption(1))
         .toEqual(true)
+      expect(menuEmbed.isValidOption(2))
+        .toEqual(true)
+      expect(menuEmbed.isValidOption(3))
+        .toEqual(false)
     })
-    it('returns true for NaN', () => {
-      expect(menuEmbed.isInvalidOption(NaN))
+    it('returns false for NaN', () => {
+      expect(menuEmbed.isValidOption(NaN))
+        .toEqual(false)
+    })
+  })
+  describe('isValidSelection', () => {
+    it('returns correctly for non-multiSelect', () => {
+      jest.spyOn(menuEmbed, 'isValidOption')
+        .mockReturnValue(true)
+      expect(menuEmbed.isValidSelection('asedgt'))
+        .toEqual(true)
+      jest.spyOn(menuEmbed, 'isValidOption')
+        .mockReturnValue(false)
+      expect(menuEmbed.isValidSelection('asedgt'))
+        .toEqual(false)
+    })
+    it('returns correctly for multiSelect when one option is invalid', () => {
+      menuEmbed.multiSelect = true
+      jest.spyOn(menuEmbed, 'isValidOption')
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true)
+      expect(menuEmbed.isValidSelection('1,5,6'))
+        .toEqual(false)
+    })
+    it('returns correctly for multiSelect when all options are valid', () => {
+      menuEmbed.multiSelect = false
+      jest.spyOn(menuEmbed, 'isValidOption')
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(true)
+      expect(menuEmbed.isValidSelection('1,5,6'))
         .toEqual(true)
     })
   })

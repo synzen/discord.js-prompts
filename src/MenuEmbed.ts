@@ -10,6 +10,10 @@ type MenuEmbedSettings = {
    * paginated embeds
    */
   paginationTimeout?: number;
+  /**
+   * Allow multiple options to be selected (comma-separated)
+   */
+  multiSelect?: boolean;
 }
 
 type MenuEmbedOption = {
@@ -27,10 +31,6 @@ export class MenuEmbed  {
   embed = new MessageEmbed()
   options: Array<MenuEmbedOption> = []
   /**
-   * Maximum number of fields/options per page
-   */
-  maxPerPage = 5
-  /**
    * The current page
    */
   page = 0
@@ -40,21 +40,22 @@ export class MenuEmbed  {
    * edits or reactions fail)
    */
   paginationErrorHandler?: (error: Error, message: Message) => void
-  /**
-   * Miliseconds until reactions are no longer accepted on
-   * paginated embeds
-   */
   paginationTimeout = 90000
+  maxPerPage = 5
+  multiSelect = false
 
-  constructor (embed?: MessageEmbed, settings?: MenuEmbedSettings) {
+  constructor (embed?: MessageEmbed, settings: MenuEmbedSettings = {}) {
     if (embed) {
       this.embed = embed
     }
-    if (settings?.maxPerPage) {
+    if (settings.maxPerPage !== undefined) {
       this.maxPerPage = settings.maxPerPage
     }
-    if (settings?.paginationTimeout) {
+    if (settings.paginationTimeout !== undefined) {
       this.paginationTimeout = settings.paginationTimeout
+    }
+    if (settings.multiSelect !== undefined) {
+      this.multiSelect = settings.multiSelect
     }
   }
 
@@ -98,11 +99,26 @@ export class MenuEmbed  {
    * 
    * @param number Option number
    */
-  isInvalidOption (number: number): boolean {
+  isValidOption (number: number): boolean {
     if (isNaN(number)) {
-      return true
+      return false
     }
-    return number > this.numberOfOptions() || number <= 0
+    return number <= this.numberOfOptions() && number > 0
+  }
+
+  /**
+   * Returns if a message content correctly identifies
+   * an option of this menu
+   * 
+   * @param content Message content
+   */
+  isValidSelection (content: string): boolean {
+    if (!this.multiSelect) {
+      return this.isValidOption(Number(content))
+    } else {
+      const numbers = content.split(',').map(val => Number(val))
+      return numbers.every(val => this.isValidOption(val))
+    }
   }
 
   /**

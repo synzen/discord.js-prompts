@@ -64,8 +64,8 @@ describe('Int::DiscordPrompt', () => {
     })
     it('emits a message when valid input for menu', async () => {
       const menu = new MenuEmbed()
-      jest.spyOn(menu, 'isInvalidOption')
-        .mockReturnValue(false)
+      jest.spyOn(menu, 'isValidSelection')
+        .mockReturnValue(true)
       const menuVisual = new MenuVisual(menu)
       prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')
@@ -83,8 +83,8 @@ describe('Int::DiscordPrompt', () => {
     })
     it('emits a reject when invalid input for menu', async () => {
       const menu = new MenuEmbed()
-      jest.spyOn(menu, 'isInvalidOption')
-        .mockReturnValue(true)
+      jest.spyOn(menu, 'isValidSelection')
+        .mockReturnValue(false)
       const menuVisual = new MenuVisual(menu)
       prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')

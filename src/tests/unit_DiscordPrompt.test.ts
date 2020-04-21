@@ -118,7 +118,7 @@ describe('Unit::DiscordPrompt', () => {
   describe('handleMenuMessage', () => {
     it('emits reject if content is invalid', () => {
       const menuEmbed = new MenuEmbed()
-      menuEmbed.isInvalidOption = jest.fn().mockReturnValue(true)
+      menuEmbed.isValidSelection = jest.fn().mockReturnValue(false)
       const emitter = {
         emit: jest.fn()
       } as unknown as PromptCollector<{}>
@@ -130,7 +130,7 @@ describe('Unit::DiscordPrompt', () => {
     })
     it('emits message if content is valid', () => {
       const menuEmbed = new MenuEmbed()
-      menuEmbed.isInvalidOption = jest.fn().mockReturnValue(false)
+      menuEmbed.isValidSelection = jest.fn().mockReturnValue(true)
       const emitter = {
         emit: jest.fn()
       } as unknown as PromptCollector<{}>

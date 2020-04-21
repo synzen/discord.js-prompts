@@ -64,7 +64,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
   
   handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType>): void {
-    if (menu.isInvalidOption(Number(message.content))) {
+    if (!menu.isValidSelection(message.content)) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {
       emitter.emit('message', message)
