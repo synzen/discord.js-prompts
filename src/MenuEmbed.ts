@@ -191,6 +191,7 @@ export class MenuEmbed  {
     if (!this.paginationErrorHandler) {
       throw new TypeError('Error handler for pagination is undefined')
     }
+    const errorHandler = this.paginationErrorHandler
     const filter = (r: MessageReaction): boolean => {
       return r.emoji.name === '◀' || r.emoji.name === '▶'
     }
@@ -204,15 +205,11 @@ export class MenuEmbed  {
       const name = reaction.emoji.name
       if (name === '◀') {
         this.prevPage(message).catch(err => {
-          if (this.paginationErrorHandler) {
-            this.paginationErrorHandler(err, message)
-          }
+          errorHandler(err, message)
         })
       } else if (name === '▶') {
         this.nextPage(message).catch(err => {
-          if (this.paginationErrorHandler) {
-            this.paginationErrorHandler(err, message)
-          }
+          errorHandler(err, message)
         })
       }
     })

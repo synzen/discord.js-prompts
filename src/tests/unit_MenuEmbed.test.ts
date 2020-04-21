@@ -382,7 +382,7 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.paginationErrorHandler)
         .toHaveBeenCalledWith(error, message)
     })
-    it('handles errors for prev page', async () => {
+    it('handles errors for next and prev page', async () => {
       menuEmbed.createReactionCollector(message)
       const reaction = {
         emoji: {
