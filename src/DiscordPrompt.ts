@@ -37,7 +37,6 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
       this.handleMessage(message, data, emitter)
-        .catch(err => emitter.emit('error', err))
     });
     emitter.once('stop', () => {
       collector.stop()
@@ -46,17 +45,21 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
 
   async handleMessage (message: Message, data: DataType, emitter: PromptCollector<DataType>): Promise<void> {
-    // Exit
-    if (message.content === 'exit') {
-      emitter.emit('exit', message)
-      return
-    }
-    // Check if MenuVisual for special handling
-    const visual = await this.getVisual(data)
-    if (visual instanceof MenuVisual) {
-      this.handleMenuMessage(message, visual.menu, emitter)
-    } else {
-      emitter.emit('message', message)
+    try {
+      // Exit
+      if (message.content === 'exit') {
+        emitter.emit('exit', message)
+        return
+      }
+      // Check if MenuVisual for special handling
+      const visual = await this.getVisual(data)
+      if (visual instanceof MenuVisual) {
+        this.handleMenuMessage(message, visual.menu, emitter)
+      } else {
+        emitter.emit('message', message)
+      }
+    } catch (err) {
+      emitter.emit('error', err)
     }
   }
   

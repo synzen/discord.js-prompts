@@ -63,39 +63,56 @@ describe('Unit::DiscordPrompt', () => {
     })
   })
   describe('handleMessage', () => {
-    it('emits exit when message content is exit', () => {
-      const emitter: PromptCollector<{}> = new EventEmitter()
-      const emit = jest.spyOn(emitter, 'emit')
+    it('emits exit when message content is exit', async () => {
+      const emitter: PromptCollector<{}> = {
+        emit: jest.fn()
+      } as unknown as EventEmitter
       const message = {
         content: 'exit'
       } as Message
-      prompt.handleMessage(message, {}, emitter)
-      expect(emit).toHaveBeenCalledWith('exit', message)
+      await prompt.handleMessage(message, {}, emitter)
+      expect(emitter.emit).toHaveBeenCalledWith('exit', message)
     })
     it('emits message if visual is not a menu', async () => {
       const messageVisual = new MessageVisual('dh')
-      jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
-      const emitter: PromptCollector<{}> = new EventEmitter()
-      const emit = jest.spyOn(emitter, 'emit')
+      jest.spyOn(prompt, 'getVisual')
+        .mockResolvedValue(messageVisual)
+      const emitter: PromptCollector<{}> = {
+        emit: jest.fn()
+      } as unknown as EventEmitter
       const message = {
         content: 'dfht'
       } as Message
       await prompt.handleMessage(message, {}, emitter)
-      expect(emit).toHaveBeenCalledWith('message', message)
+      expect(emitter.emit).toHaveBeenCalledWith('message', message)
     })
     it('calls handleMenuMessage if visual is a menu', async () => {
       const messageVisual = new MenuVisual(new MenuEmbed())
       jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
       const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage')
         .mockImplementation()
-      const emitter: PromptCollector<{}> = new EventEmitter()
-      const emit = jest.spyOn(emitter, 'emit')
+      const emitter: PromptCollector<{}> = {
+        emit: jest.fn()
+      } as unknown as EventEmitter
       const message = {
         content: 'dfht'
       } as Message
       await prompt.handleMessage(message, {}, emitter)
       expect(handleMenuMessage).toHaveBeenCalled()
-      expect(emit).not.toHaveBeenCalled()
+      expect(emitter.emit).not.toHaveBeenCalled()
+    })
+    it('emits error when getVisual fails', async () => {
+      const error = new Error('awstgedr')
+      jest.spyOn(prompt, 'getVisual')
+        .mockRejectedValue(error)
+      const emitter: PromptCollector<{}> = {
+        emit: jest.fn()
+      } as unknown as EventEmitter
+      const message = {
+        content: 'dfht'
+      } as Message
+      await prompt.handleMessage(message, {}, emitter)
+      expect(emitter.emit).toHaveBeenCalledWith('error', error)
     })
   })
   describe('handleMenuMessage', () => {
