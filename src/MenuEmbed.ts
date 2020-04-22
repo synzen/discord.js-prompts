@@ -85,6 +85,22 @@ export class MenuEmbed  {
     })
     return this
   }
+  
+  /**
+   * Enable multi selection for this menu
+   */
+  enableMultiSelect (): this {
+    this.multiSelect = true
+    return this
+  }
+
+  /**
+   * Disable multi selection for this menu
+   */
+  disableMultiSelect (): this {
+    this.multiSelect = false
+    return this
+  }
 
   /**
    * Return the number of options this embed has

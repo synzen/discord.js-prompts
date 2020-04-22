@@ -103,6 +103,30 @@ describe('Unit::MenuEmbed', () => {
       expect(menuEmbed.options[0].description).toEqual('\u200b')
     })
   })
+  describe('enableMultiSelect', () => {
+    it('works correctly', () => {
+      menuEmbed.multiSelect = false
+      menuEmbed.enableMultiSelect()
+      expect(menuEmbed.multiSelect)
+        .toEqual(true)
+    })
+    it('returns this', () => {
+      expect(menuEmbed.enableMultiSelect())
+        .toEqual(menuEmbed)
+    })
+  })
+  describe('disableMultiSelect', () => {
+    it('works correctly', () => {
+      menuEmbed.multiSelect = true
+      menuEmbed.disableMultiSelect()
+      expect(menuEmbed.multiSelect)
+        .toEqual(false)
+    })
+    it('returns this', () => {
+      expect(menuEmbed.disableMultiSelect())
+        .toEqual(menuEmbed)
+    })
+  })
   describe('isValidOption', () => {
     it('returns correctly', () => {
       jest.spyOn(menuEmbed, 'numberOfOptions')
