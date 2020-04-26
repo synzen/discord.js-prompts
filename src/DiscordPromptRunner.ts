@@ -10,6 +10,11 @@ export class DiscordPromptRunner<DataType> extends PromptRunner<DataType, Messag
    * Channel IDs that are currently running prompts
    */
   static activeChannels: Set<string> = new Set()
+
+  /**
+   * @param author User who started the prompt
+   * @param data Initial data
+   */
   constructor(author: User, data: DataType) {
     super({
       ...data,
