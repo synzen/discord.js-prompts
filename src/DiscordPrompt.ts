@@ -36,6 +36,11 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     const emitter: PromptCollector<DataType> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
+      /**
+       * This will store only user input (because of the above filter)
+       * Bot messages are stored within DiscordChannel send method
+       */
+      channel.storeMessage(message)
       this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {

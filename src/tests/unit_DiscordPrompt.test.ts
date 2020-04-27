@@ -28,7 +28,8 @@ describe('Unit::DiscordPrompt', () => {
     const discordChannel = {
       channel: {
         createMessageCollector: jest.fn()
-      }
+      },
+      storeMessage: jest.fn()
     } as unknown as DiscordChannel
     beforeEach(() => {
       createdCollector = new MockCollector()
@@ -60,6 +61,18 @@ describe('Unit::DiscordPrompt', () => {
       const message = {} as Message
       createdCollector.emit('collect', message)
       expect(handleMessage).toHaveBeenCalledWith(message, data, emitter)
+    })
+    it('stores the message for every message collected', () => {
+      jest.spyOn(prompt, 'handleMessage')
+        .mockResolvedValue()
+      const data = {
+        __authorID: 'bar'
+      }
+      prompt.createCollector(discordChannel, data)
+      const message = {} as Message
+      createdCollector.emit('collect', message)
+      expect(discordChannel.storeMessage)
+        .toHaveBeenCalledWith(message)
     })
   })
   describe('handleMessage', () => {
