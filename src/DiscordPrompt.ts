@@ -28,13 +28,16 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
 
   // Override events
   async onReject(error: Rejection, message: Message,  channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(await DiscordPrompt.getRejectVisual(error, message, channel, data), channel)
+    const visual = await (this.constructor as typeof DiscordPrompt).getRejectVisual(error, message, channel, data)
+    await this.sendVisual(visual, channel)
   }
   async onInactivity(channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(await DiscordPrompt.getInactivityVisual(channel, data), channel)
+    const visual = await (this.constructor as typeof DiscordPrompt).getInactivityVisual(channel, data)
+    await this.sendVisual(visual, channel)
   }
   async onExit(message: Message, channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(await DiscordPrompt.getExitVisual(message, channel, data), channel)
+    const visual = await (this.constructor as typeof DiscordPrompt).getExitVisual(message, channel, data)
+    await this.sendVisual(visual, channel)
   }
 
   createEmitter (): EventEmitter {
