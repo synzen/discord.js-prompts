@@ -1,7 +1,7 @@
 import { DiscordPromptRunner } from "../DiscordPromptRunner"
 import { DiscordChannel } from "../DiscordChannel"
 import { PromptRunner } from "prompt-anything"
-import { DiscordPrompt } from "../DiscordPrompt"
+import { DiscordPrompt, BaseData } from "../DiscordPrompt"
 import { DiscordPromptNode } from "../DiscordPromptNode"
 import { User, TextChannel } from 'discord.js'
 
@@ -74,23 +74,21 @@ describe('Unit::DiscordPromptRunner', () => {
   })
   describe('run', () => {
     it('accepts a DiscordChannel', () => {
-      type DataType = {}
       const textChannel = {} as TextChannel
       const discordChannel = new DiscordChannel(textChannel)
-      const runner = new DiscordPromptRunner({} as User, {})
-      const prompt = new DiscordPrompt<DataType>({ text: '' })
-      const node = new DiscordPromptNode<DataType>(prompt)
+      const runner = new DiscordPromptRunner({} as User, {} as BaseData)
+      const prompt = new DiscordPrompt<BaseData>({ text: '' })
+      const node = new DiscordPromptNode<BaseData>(prompt)
       const superRun = jest.spyOn(PromptRunner.prototype, 'run')
         .mockImplementation()
       runner.run(node, discordChannel)
       expect(superRun).toHaveBeenCalledWith(node, discordChannel)
     })
     it('accepts a TextChannel', () => {
-      type DataType = {}
       const textChannel = {} as TextChannel
-      const runner = new DiscordPromptRunner({} as User, {})
-      const prompt = new DiscordPrompt<DataType>({ text: '' })
-      const node = new DiscordPromptNode<DataType>(prompt)
+      const runner = new DiscordPromptRunner({} as User, {} as BaseData)
+      const prompt = new DiscordPrompt<BaseData>({ text: '' })
+      const node = new DiscordPromptNode<BaseData>(prompt)
       const superRun = jest.spyOn(PromptRunner.prototype, 'run')
         .mockImplementation()
       const convertedChannel = {

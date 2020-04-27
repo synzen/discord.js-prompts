@@ -1,4 +1,4 @@
-import { DiscordPrompt } from "../DiscordPrompt"
+import { DiscordPrompt, BaseData } from "../DiscordPrompt"
 import { PromptCollector, Rejection, PromptNode } from "prompt-anything"
 import { DiscordPromptRunner } from '../DiscordPromptRunner'
 import { EventEmitter } from 'events';
@@ -42,11 +42,11 @@ const createMockReaction = (name: string): MessageReaction => ({
 }) as unknown as MessageReaction
 
 describe('E2E tests', () => {
-  type PromptData = {
+  interface PromptData extends BaseData {
     age?: number;
     name?: string;
   }
-  const authorID = 'wse4rye35th'
+  const __authorID = 'wse4rye35th'
   let author: User
   let emit: jest.SpyInstance
   let collectorStop: jest.SpyInstance
@@ -56,7 +56,7 @@ describe('E2E tests', () => {
   let channel: DiscordChannel
   beforeEach(() => {
     jest.restoreAllMocks()
-    author = createMockAuthor(authorID)
+    author = createMockAuthor(__authorID)
     emitter = new EventEmitter()
     emit = jest.spyOn(emitter, 'emit')
     collectorStop = jest.fn()
@@ -94,16 +94,18 @@ describe('E2E tests', () => {
     const askNameVisual = new MessageVisual('What is your name?')
     const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
     const askNameNode = new PromptNode(askName)
-    const runner = new DiscordPromptRunner<PromptData>(author, {})
+    const runner = new DiscordPromptRunner<PromptData>(author, {
+      __authorID
+    })
     runner.run(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     // Simulate unauthorized user input
-    collector.emit('tryCollect', createMockMessage(authorID + 'aedg'))
+    collector.emit('tryCollect', createMockMessage(__authorID + 'aedg'))
     await flushPromises()
     expect(emit).not.toHaveBeenCalledWith('message')
     // Simulate authorized user input
-    const collectedMessage = createMockMessage(authorID)
+    const collectedMessage = createMockMessage(__authorID)
     collector.emit('tryCollect', collectedMessage)
     await flushPromises()
     expect(emit).toHaveBeenCalledWith('message', collectedMessage)
@@ -118,11 +120,13 @@ describe('E2E tests', () => {
     const askNameVisual = new MessageVisual('What is your name?')
     const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
     const askNameNode = new PromptNode(askName)
-    const runner = new DiscordPromptRunner<PromptData>(author, {})
+    const runner = new DiscordPromptRunner<PromptData>(author, {
+      __authorID
+    })
     runner.run(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
-    const exitMessage = createMockMessage(authorID, 'exit')
+    const exitMessage = createMockMessage(__authorID, 'exit')
     collector.emit('tryCollect', exitMessage)
     await flushPromises()
     expect(emit).toHaveBeenCalledWith('exit', exitMessage)
@@ -142,18 +146,20 @@ describe('E2E tests', () => {
     const menuVisual = new MenuVisual(menu)
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
     const selectOptionNode = new PromptNode(selectOption)
-    const runner = new DiscordPromptRunner<PromptData>(author, {})
+    const runner = new DiscordPromptRunner<PromptData>(author, {
+      __authorID
+    })
     runner.run(selectOptionNode, textChannel)
     await flushPromises()
     // Invalid option selection
-    const invalidMessage = createMockMessage(authorID, '4')
+    const invalidMessage = createMockMessage(__authorID, '4')
     collector.emit('tryCollect', invalidMessage)
     await flushPromises()
     expect(emit.mock.calls[0][0]).toEqual('reject')
     expect(emit.mock.calls[0][1]).toEqual(invalidMessage)
     expect(emit.mock.calls[0][2]).toBeInstanceOf(Rejection)
     // Valid option selection
-    const validMessage = createMockMessage(authorID, '3')
+    const validMessage = createMockMessage(__authorID, '3')
     collector.emit('tryCollect', validMessage)
     await flushPromises()
     expect(emit.mock.calls[1][0]).toEqual('message')
@@ -177,10 +183,12 @@ describe('E2E tests', () => {
     const menuVisual = new MenuVisual(menu)
     const selectOption = new DiscordPrompt<PromptData>(menuVisual, selectOptionFn)
     const selectOptionNode = new PromptNode(selectOption)
-    const runner = new DiscordPromptRunner<PromptData>(author, {})
+    const runner = new DiscordPromptRunner<PromptData>(author, {
+      __authorID
+    })
 
     // Create mocks
-    const reactableMessage = createMockMessage(authorID)
+    const reactableMessage = createMockMessage(__authorID)
     const createReactionCollector = reactableMessage.createReactionCollector as jest.Mock
     const reactCollector = new EventEmitter()
     createReactionCollector.mockImplementation((filter: (r: MessageReaction) => boolean) => {
@@ -200,7 +208,7 @@ describe('E2E tests', () => {
 
     // React
     const nextEmoji = createMockReaction('▶')
-    const reactor = createMockAuthor(authorID)
+    const reactor = createMockAuthor(__authorID)
     reactCollector.emit('tryCollect', nextEmoji, reactor)
     await flushPromises()
 
@@ -219,6 +227,6 @@ describe('E2E tests', () => {
 
     // Clean up
     reactCollector.removeAllListeners()
-    emitter.emit('exit', createMockMessage(authorID))
+    emitter.emit('exit', createMockMessage(__authorID))
   })
 })

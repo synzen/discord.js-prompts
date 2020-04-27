@@ -10,12 +10,19 @@ export type BaseData = {
   __authorID: string;
 }
 
-export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
+export class DiscordPrompt<DataType extends BaseData> extends Prompt<DataType, Message> {
   duration = 90000
   static inactivityVisual: MessageVisual = new MessageVisual('Menu closed due to inactivity.')
   static exitVisual: MessageVisual = new MessageVisual('Menu closed.')
   static getRejectVisual (error: Rejection): MessageVisual {
     return new MessageVisual(error.message)
+  }
+  static storeMessage<DataType extends BaseData> (message: Message, data: DataType, channel: DiscordChannel): void {
+    const { author, client } = message
+    const { __authorID } = data
+    if (author.id === __authorID || client.user && client.user.id === author.id ) {
+      channel.storeMessage(message)
+    }
   }
   async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
@@ -36,6 +43,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     const emitter: PromptCollector<DataType> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
+      DiscordPrompt.storeMessage(message, data, channel)
       this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {
