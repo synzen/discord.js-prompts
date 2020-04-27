@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import { DiscordChannel } from '../DiscordChannel';
-import { DiscordPrompt, BaseData } from '../DiscordPrompt';
+import { DiscordPrompt } from '../DiscordPrompt';
 import { MessageVisual } from '../visuals/MessageVisual';
 import { Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
@@ -19,7 +19,7 @@ class MockCollector extends EventEmitter {
 
 describe('Int::DiscordPrompt', () => {
   let visual: MessageVisual
-  let prompt: DiscordPrompt<BaseData>
+  let prompt: DiscordPrompt<{}>
   afterEach(function () {
     jest.resetAllMocks()
   })
@@ -38,35 +38,26 @@ describe('Int::DiscordPrompt', () => {
       createdCollector = new MockCollector()
       discordChannel.channel.createMessageCollector = jest.fn()
         .mockReturnValue(createdCollector)
-      discordChannel.storeMessage = jest.fn()
     })
     it('emits a message for non-menu visuals', async () => {
-      const data = {
+      const returned = prompt.createCollector(discordChannel, {
         __authorID: 'af'
-      }
-      const returned = prompt.createCollector(discordChannel, data)
+      })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
-        content: 'hello world',
-        author: {
-          id: data.__authorID
-        }
+        content: 'hello world'
       } as Message
       createdCollector.emit('collect', message)
       await flushPromises()
       expect(emit).toHaveBeenCalledWith('message', message)
     })
     it('emits exit when message content is exit', () => {
-      const data = {
+      const returned = prompt.createCollector(discordChannel, {
         __authorID: 'srfh'
-      }
-      const returned = prompt.createCollector(discordChannel, data)
+      })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
-        content: 'exit',
-        author: {
-          id: data.__authorID
-        }
+        content: 'exit'
       } as Message
       createdCollector.emit('collect', message)
       expect(emit).toHaveBeenCalledWith('exit', message)
@@ -76,19 +67,15 @@ describe('Int::DiscordPrompt', () => {
       jest.spyOn(menu, 'isValidSelection')
         .mockReturnValue(true)
       const menuVisual = new MenuVisual(menu)
-      prompt = new DiscordPrompt(menuVisual, async () => ({} as BaseData))
+      prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')
         .mockResolvedValue(menuVisual)
-      const data = {
+      const returned = prompt.createCollector(discordChannel, {
         __authorID: 'sed'
-      }
-      const returned = prompt.createCollector(discordChannel, data)
+      })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
-        content: '1',
-        author: {
-          id: data.__authorID
-        }
+        content: '1'
       } as Message
       createdCollector.emit('collect', message)
       await flushPromises()
@@ -99,37 +86,19 @@ describe('Int::DiscordPrompt', () => {
       jest.spyOn(menu, 'isValidSelection')
         .mockReturnValue(false)
       const menuVisual = new MenuVisual(menu)
-      prompt = new DiscordPrompt(menuVisual, async () => ({} as BaseData))
+      prompt = new DiscordPrompt(menuVisual, async () => ({}))
       jest.spyOn(prompt, 'getVisual')
         .mockResolvedValue(menuVisual)
-      const data = {
+      const returned = prompt.createCollector(discordChannel, {
         __authorID: 'sryhdet'
-      }
-      const returned = prompt.createCollector(discordChannel, data)
+      })
       const emit = jest.spyOn(returned, 'emit')
       const message = {
-        content: '2',
-        author: {
-          id: data.__authorID
-        }
+        content: '2'
       } as Message
       createdCollector.emit('collect', message)
       await flushPromises()
-      expect(emit)
-        .toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
-    })
-    it('stores the message', async () => {
-      const data = {
-        __authorID: 'aiyf'
-      }
-      prompt.createCollector(discordChannel, data)
-      const message = {
-        content: 'hello world'
-      } as Message
-      createdCollector.emit('collect', message)
-      await flushPromises()
-      expect(discordChannel.storeMessage)
-        .toHaveBeenCalledWith(message)
+      expect(emit).toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
     })
   })
 })

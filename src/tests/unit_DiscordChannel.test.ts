@@ -152,5 +152,35 @@ describe('Unit::DiscordChannel', () => {
       expect(sendMenuVisual).toHaveBeenCalledWith(visual)
       expect(returned).toEqual(createdMessage)
     })
+    it('saves the message for sendMessageVisual', async () => {
+      const visual = new MessageVisual('aedsgrf')
+      const discordChannel = new DiscordChannel({} as TextChannel)
+      const createdMessage = {
+        content: 'bar'
+      } as Message
+      jest.spyOn(discordChannel, 'sendMessageVisual')
+        .mockResolvedValue(createdMessage)
+      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+        .mockImplementation()
+      // Send
+      await discordChannel.send(visual)
+      expect(storeMessage).toHaveBeenCalledWith(createdMessage)
+    })
+    it('saves the message for sendMenuVisual', async () => {
+      const visual = new MenuVisual(new MenuEmbed())
+      // Create the channel
+      const discordChannel = new DiscordChannel({} as TextChannel)
+      const createdMessage = {
+        content: 'bar'
+      } as Message
+      // Mock the method
+      jest.spyOn(discordChannel, 'sendMenuVisual')
+        .mockResolvedValue(createdMessage)
+      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+        .mockImplementation()
+      // Send
+      await discordChannel.send(visual)
+      expect(storeMessage).toHaveBeenCalledWith(createdMessage)
+    })
   })
 })

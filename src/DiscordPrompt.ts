@@ -32,14 +32,10 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
 
   createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType> {
-    const { __authorID } = data
     const discordChannel = channel
     const emitter: PromptCollector<DataType> = this.createEmitter()
-    const collector = discordChannel.channel.createMessageCollector(({ author, client }) => {
-      return author.id === __authorID || (client.user && client.user.id === author.id)
-    })
+    const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
-      channel.storeMessage(message)
       this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {
