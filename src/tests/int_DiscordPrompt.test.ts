@@ -118,62 +118,18 @@ describe('Int::DiscordPrompt', () => {
       expect(emit)
         .toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
     })
-    it('stores the message if message from bot', async () => {
+    it('stores the message', async () => {
       const data = {
         __authorID: 'aiyf'
       }
-      const clientID = 'qaet64wry'
       prompt.createCollector(discordChannel, data)
       const message = {
-        content: 'hello world',
-        author: {
-          id: clientID
-        },
-        client: {
-          user: {
-            id: clientID
-          }
-        }
+        content: 'hello world'
       } as Message
       createdCollector.emit('collect', message)
       await flushPromises()
       expect(discordChannel.storeMessage)
         .toHaveBeenCalledWith(message)
-    })
-    it('stores the message if from original author', async () => {
-      const data = {
-        __authorID: 'aiyf'
-      }
-      prompt.createCollector(discordChannel, data)
-      const message = {
-        content: 'hello world',
-        author: {
-          id: data.__authorID
-        }
-      } as Message
-      createdCollector.emit('collect', message)
-      await flushPromises()
-      expect(discordChannel.storeMessage)
-        .toHaveBeenCalledWith(message)
-    })
-    it('does not store message if not from author or bot', async () => {
-      const data = {
-        __authorID: 'aiyf'
-      }
-      prompt.createCollector(discordChannel, data)
-      const message = {
-        content: 'hello world',
-        author: {
-          id: data.__authorID + '2w346try'
-        },
-        client: {
-          user: {}
-        }
-      } as Message
-      createdCollector.emit('collect', message)
-      await flushPromises()
-      expect(discordChannel.storeMessage)
-        .not.toHaveBeenCalled()
     })
   })
 })

@@ -84,7 +84,71 @@ describe('E2E tests', () => {
     collector.removeAllListeners()
     emitter.removeAllListeners()
   })
-  it(`ignores messages that are not from the author`, async () => {
+  it(`accepts message from the author`, async () => {
+    const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
+      return {
+        ...data,
+        name: m.content
+      }
+    }
+    const askNameVisual = new MessageVisual('What is your name?')
+    const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
+    const askNameNode = new PromptNode(askName)
+    const runner = new DiscordPromptRunner<PromptData>(author, {
+      __authorID
+    })
+    runner.run(askNameNode, textChannel)
+    // Wait for all pending promise callbacks to be executed for the emitter to set up
+    await flushPromises()
+    expect(emit).not.toHaveBeenCalledWith('message')
+    // Simulate authorized user input
+    const authorizedMessage = {
+      author: {
+        id: __authorID
+      },
+      client: {
+        user: {
+          id: __authorID + 'srfdeyh'
+        }
+      }
+    } as Message
+    collector.emit('tryCollect', authorizedMessage)
+    await flushPromises()
+    expect(emit).toHaveBeenCalledWith('message', authorizedMessage)
+  })
+  it('accepts messages from bot', async () => {
+      const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
+        return {
+          ...data,
+          name: m.content
+        }
+      }
+      const askNameVisual = new MessageVisual('What is your name?')
+      const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
+      const askNameNode = new PromptNode(askName)
+      const runner = new DiscordPromptRunner<PromptData>(author, {
+        __authorID
+      })
+      runner.run(askNameNode, textChannel)
+      // Wait for all pending promise callbacks to be executed for the emitter to set up
+      await flushPromises()
+      // Simulate authorized bot input
+      const clientID = 'w24r6y3e'
+      const authorizedMessage = {
+        author: {
+          id: clientID
+        },
+        client: {
+          user: {
+            id: clientID
+          }
+        }
+      } as Message
+      collector.emit('tryCollect', authorizedMessage)
+      await flushPromises()
+      expect(emit).toHaveBeenCalledWith('message', authorizedMessage)
+  })
+  it('does not emit message for messages not from bot or author', async () => {
     const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
@@ -101,14 +165,19 @@ describe('E2E tests', () => {
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     // Simulate unauthorized user input
-    collector.emit('tryCollect', createMockMessage(__authorID + 'aedg'))
+    const unauthorizedMessage = {
+      author: {
+        id: __authorID + 'abad'
+      },
+      client: {
+        user: {
+          id: __authorID + 'srfdeyh'
+        }
+      }
+    } as Message
+    collector.emit('tryCollect', unauthorizedMessage)
     await flushPromises()
     expect(emit).not.toHaveBeenCalledWith('message')
-    // Simulate authorized user input
-    const collectedMessage = createMockMessage(__authorID)
-    collector.emit('tryCollect', collectedMessage)
-    await flushPromises()
-    expect(emit).toHaveBeenCalledWith('message', collectedMessage)
   })
   it(`exits when message is exit`, async () => {
     const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {

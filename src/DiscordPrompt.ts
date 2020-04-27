@@ -17,13 +17,6 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   static getRejectVisual (error: Rejection): MessageVisual {
     return new MessageVisual(error.message)
   }
-  static storeMessage<DataType extends BaseData> (message: Message, data: DataType, channel: DiscordChannel): void {
-    const { author, client } = message
-    const { __authorID } = data
-    if (author.id === __authorID || (client.user && client.user.id === author.id)) {
-      channel.storeMessage(message)
-    }
-  }
   async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
   }
@@ -39,11 +32,14 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
 
   createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType> {
+    const { __authorID } = data
     const discordChannel = channel
     const emitter: PromptCollector<DataType> = this.createEmitter()
-    const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
+    const collector = discordChannel.channel.createMessageCollector(({ author, client }) => {
+      return author.id === __authorID || (client.user && client.user.id === author.id)
+    })
     collector.on('collect', async (message: Message) => {
-      DiscordPrompt.storeMessage(message, data, channel)
+      channel.storeMessage(message)
       this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {
