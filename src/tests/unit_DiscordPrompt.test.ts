@@ -166,9 +166,16 @@ describe('Unit::DiscordPrompt', () => {
       const channel = {
         foo: 'ade'
       } as unknown as DiscordChannel
+      const data = {
+        asdg: 'kghfdg'
+      }
       const rejection = new Rejection('sgrf')
-      prompt.onReject(rejection, message, channel)
-      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getRejectVisual(rejection), channel)
+      const rejectVisual = new MessageVisual('srfg')
+      const getRejectVisual = jest.spyOn(DiscordPrompt, 'getRejectVisual')
+        .mockReturnValue(rejectVisual)
+      await prompt.onReject(rejection, message, channel, data)
+      expect(sendVisual).toHaveBeenCalledWith(rejectVisual, channel)
+      expect(getRejectVisual).toHaveBeenCalledWith(rejection, message, channel, data)
     })
   })
   describe('onInactivity', () => {
@@ -180,8 +187,15 @@ describe('Unit::DiscordPrompt', () => {
       const channel = {
         foo: 'ade'
       } as unknown as DiscordChannel
-      prompt.onInactivity(channel)
-      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getInactivityVisual(), channel)
+      const data = {
+        dfg: 'dfrhgb'
+      }
+      const inactivityiVisual = new MessageVisual('srfg')
+      const getInactivityVisual = jest.spyOn(DiscordPrompt, 'getInactivityVisual')
+        .mockReturnValue(inactivityiVisual)
+      await prompt.onInactivity(channel, data)
+      expect(sendVisual).toHaveBeenCalledWith(inactivityiVisual, channel)
+      expect(getInactivityVisual).toHaveBeenCalledWith(channel, data)
     })
   })
   describe('onExit', () => {
@@ -196,8 +210,15 @@ describe('Unit::DiscordPrompt', () => {
       const channel = {
         foo: 'ade'
       } as unknown as DiscordChannel
-      prompt.onExit(message, channel)
-      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getExitVisual(), channel)
+      const data = {
+        baz: 'ho'
+      }
+      const exitVisual = new MessageVisual('srfg')
+      const getExitVisual = jest.spyOn(DiscordPrompt, 'getExitVisual')
+        .mockReturnValue(exitVisual)
+      await prompt.onExit(message, channel, data)
+      expect(sendVisual).toHaveBeenCalledWith(exitVisual, channel)
+      expect(getExitVisual).toHaveBeenCalledWith(message, channel, data)
     })
   })
 })

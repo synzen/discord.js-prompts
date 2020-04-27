@@ -14,15 +14,15 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   // Visuals
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getInactivityVisual<DataType> (channel: DiscordChannel, data: DataType): MessageVisual {
+  static getInactivityVisual<DataType> (channel?: DiscordChannel, data?: DataType): MessageVisual {
     return new MessageVisual('Menu closed due to inactivity.')
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getExitVisual<DataType> (message: Message, channel: DiscordChannel, data: DataType): MessageVisual {
+  static getExitVisual<DataType> (message?: Message, channel?: DiscordChannel, data?: DataType): MessageVisual {
     return new MessageVisual('Menu closed.')
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getRejectVisual<DataType> (error: Rejection, message: Message, channel: DiscordChannel, data: DataType): MessageVisual {
+  static getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): MessageVisual {
     return new MessageVisual(error.message)
   }
 
