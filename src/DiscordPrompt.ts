@@ -72,7 +72,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
       // Check if MenuVisual for special handling
       const visual = await this.getVisual(data)
       if (visual instanceof MenuVisual) {
-        this.handleMenuMessage(message, visual.menu, emitter)
+        this.handleMenuMessage(message, data, visual.menu, emitter)
       } else {
         emitter.emit('message', message)
       }
@@ -81,7 +81,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     }
   }
   
-  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType, Message>): void {
+  handleMenuMessage (message: Message, data: DataType, menu: MenuEmbed, emitter: PromptCollector<DataType, Message>): void {
     if (!menu.isValidSelection(message.content)) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {

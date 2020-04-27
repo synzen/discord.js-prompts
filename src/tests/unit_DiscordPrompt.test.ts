@@ -138,7 +138,7 @@ describe('Unit::DiscordPrompt', () => {
       const message = {
         content: 'dfht'
       } as Message
-      prompt.handleMenuMessage(message, menuEmbed, emitter)
+      prompt.handleMenuMessage(message, {}, menuEmbed, emitter)
       expect(emitter.emit).toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
     })
     it('emits message if content is valid', () => {
@@ -150,7 +150,7 @@ describe('Unit::DiscordPrompt', () => {
       const message = {
         content: 'dfht'
       } as Message
-      prompt.handleMenuMessage(message, menuEmbed, emitter)
+      prompt.handleMenuMessage(message, {}, menuEmbed, emitter)
       expect(emitter.emit).toHaveBeenCalledWith('message', message)
     })
   })
