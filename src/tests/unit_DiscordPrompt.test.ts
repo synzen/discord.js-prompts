@@ -181,7 +181,7 @@ describe('Unit::DiscordPrompt', () => {
         foo: 'ade'
       } as unknown as DiscordChannel
       prompt.onInactivity(channel)
-      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.inactivityVisual, channel)
+      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getInactivityVisual(), channel)
     })
   })
   describe('onExit', () => {
@@ -197,7 +197,7 @@ describe('Unit::DiscordPrompt', () => {
         foo: 'ade'
       } as unknown as DiscordChannel
       prompt.onExit(message, channel)
-      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.exitVisual, channel)
+      expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getExitVisual(), channel)
     })
   })
 })

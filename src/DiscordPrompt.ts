@@ -12,19 +12,26 @@ export type BaseData = {
 
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
-  static inactivityVisual: MessageVisual = new MessageVisual('Menu closed due to inactivity.')
-  static exitVisual: MessageVisual = new MessageVisual('Menu closed.')
+  // Visuals
+  static getInactivityVisual (): MessageVisual {
+    return new MessageVisual('Menu closed due to inactivity.')
+  }
+  static getExitVisual (): MessageVisual {
+    return new MessageVisual('Menu closed.')
+  }
   static getRejectVisual (error: Rejection): MessageVisual {
     return new MessageVisual(error.message)
   }
+
+  // Override events
   async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
   }
   async onInactivity(channel: DiscordChannel): Promise<void> {
-    await this.sendVisual(DiscordPrompt.inactivityVisual, channel)
+    await this.sendVisual(DiscordPrompt.getInactivityVisual(), channel)
   }
   async onExit(message: Message, channel: DiscordChannel): Promise<void> {
-    await this.sendVisual(DiscordPrompt.exitVisual, channel)
+    await this.sendVisual(DiscordPrompt.getExitVisual(), channel)
   }
 
   createEmitter (): EventEmitter {
