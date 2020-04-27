@@ -26,6 +26,66 @@ describe('Unit::DiscordPrompt', () => {
     visual = new MessageVisual('aedsg')
     prompt = new DiscordPrompt(visual)
   })
+  describe('static storeMessage', () => {
+    let channel: DiscordChannel
+    beforeEach(() => {
+      channel = {
+        storeMessage: jest.fn()
+      } as unknown as DiscordChannel
+    })
+    it('stores the message if from author', () => {
+      const __authorID = 'w4ry65et'
+      const message = {
+        author: {
+          id: __authorID
+        }
+      } as Message
+      const data: BaseData = {
+        __authorID
+      }
+      DiscordPrompt.storeMessage(message, data, channel)
+      expect(channel.storeMessage)
+        .toHaveBeenCalledWith(message)
+    })
+    it('stores the message if from bot', () => {
+      const __authorID = 'w4ry65et'
+      const message = {
+        author: {
+          id: __authorID
+        },
+        client: {
+          user: {
+            id: __authorID
+          }
+        }
+      } as Message
+      const data: BaseData = {
+        __authorID: 'wqe34y6r5'
+      }
+      DiscordPrompt.storeMessage(message, data, channel)
+      expect(channel.storeMessage)
+        .toHaveBeenCalledWith(message)
+    })
+    it('does not store the message if not from bot or author', () => {
+      const __authorID = 'w4ry65et'
+      const message = {
+        author: {
+          id: __authorID + "w4r3e5y7"
+        },
+        client: {
+          user: {
+            id: __authorID
+          }
+        }
+      } as Message
+      const data: BaseData = {
+        __authorID: 'wqe34y6r5'
+      }
+      DiscordPrompt.storeMessage(message, data, channel)
+      expect(channel.storeMessage)
+        .not.toHaveBeenCalled()
+    })
+  })
   describe('createCollector', () => {
     let createdCollector: MockCollector
     const discordChannel = {
