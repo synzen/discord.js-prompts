@@ -14,27 +14,27 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   // Visuals
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getInactivityVisual<DataType> (channel?: DiscordChannel, data?: DataType): MessageVisual {
+  static async getInactivityVisual<DataType> (channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     return new MessageVisual('Menu closed due to inactivity.')
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getExitVisual<DataType> (message?: Message, channel?: DiscordChannel, data?: DataType): MessageVisual {
+  static async getExitVisual<DataType> (message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     return new MessageVisual('Menu closed.')
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): MessageVisual {
+  static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     return new MessageVisual(error.message)
   }
 
   // Override events
   async onReject(error: Rejection, message: Message,  channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getRejectVisual(error, message, channel, data), channel)
+    await this.sendVisual(await DiscordPrompt.getRejectVisual(error, message, channel, data), channel)
   }
   async onInactivity(channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getInactivityVisual(channel, data), channel)
+    await this.sendVisual(await DiscordPrompt.getInactivityVisual(channel, data), channel)
   }
   async onExit(message: Message, channel: DiscordChannel, data: DataType): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getExitVisual(message, channel, data), channel)
+    await this.sendVisual(await DiscordPrompt.getExitVisual(message, channel, data), channel)
   }
 
   createEmitter (): EventEmitter {

@@ -172,7 +172,7 @@ describe('Unit::DiscordPrompt', () => {
       const rejection = new Rejection('sgrf')
       const rejectVisual = new MessageVisual('srfg')
       const getRejectVisual = jest.spyOn(DiscordPrompt, 'getRejectVisual')
-        .mockReturnValue(rejectVisual)
+        .mockResolvedValue(rejectVisual)
       await prompt.onReject(rejection, message, channel, data)
       expect(sendVisual).toHaveBeenCalledWith(rejectVisual, channel)
       expect(getRejectVisual).toHaveBeenCalledWith(rejection, message, channel, data)
@@ -192,7 +192,7 @@ describe('Unit::DiscordPrompt', () => {
       }
       const inactivityiVisual = new MessageVisual('srfg')
       const getInactivityVisual = jest.spyOn(DiscordPrompt, 'getInactivityVisual')
-        .mockReturnValue(inactivityiVisual)
+        .mockResolvedValue(inactivityiVisual)
       await prompt.onInactivity(channel, data)
       expect(sendVisual).toHaveBeenCalledWith(inactivityiVisual, channel)
       expect(getInactivityVisual).toHaveBeenCalledWith(channel, data)
@@ -215,7 +215,7 @@ describe('Unit::DiscordPrompt', () => {
       }
       const exitVisual = new MessageVisual('srfg')
       const getExitVisual = jest.spyOn(DiscordPrompt, 'getExitVisual')
-        .mockReturnValue(exitVisual)
+        .mockResolvedValue(exitVisual)
       await prompt.onExit(message, channel, data)
       expect(sendVisual).toHaveBeenCalledWith(exitVisual, channel)
       expect(getExitVisual).toHaveBeenCalledWith(message, channel, data)
