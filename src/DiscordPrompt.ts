@@ -13,25 +13,28 @@ export type BaseData = {
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   // Visuals
-  static getInactivityVisual (): MessageVisual {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static getInactivityVisual<DataType> (channel: DiscordChannel, data: DataType): MessageVisual {
     return new MessageVisual('Menu closed due to inactivity.')
   }
-  static getExitVisual (): MessageVisual {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static getExitVisual<DataType> (message: Message, channel: DiscordChannel, data: DataType): MessageVisual {
     return new MessageVisual('Menu closed.')
   }
-  static getRejectVisual (error: Rejection): MessageVisual {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static getRejectVisual<DataType> (error: Rejection, message: Message, channel: DiscordChannel, data: DataType): MessageVisual {
     return new MessageVisual(error.message)
   }
 
   // Override events
-  async onReject(error: Rejection, message: Message,  channel: DiscordChannel): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
+  async onReject(error: Rejection, message: Message,  channel: DiscordChannel, data: DataType): Promise<void> {
+    await this.sendVisual(DiscordPrompt.getRejectVisual(error, message, channel, data), channel)
   }
-  async onInactivity(channel: DiscordChannel): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getInactivityVisual(), channel)
+  async onInactivity(channel: DiscordChannel, data: DataType): Promise<void> {
+    await this.sendVisual(DiscordPrompt.getInactivityVisual(channel, data), channel)
   }
-  async onExit(message: Message, channel: DiscordChannel): Promise<void> {
-    await this.sendVisual(DiscordPrompt.getExitVisual(), channel)
+  async onExit(message: Message, channel: DiscordChannel, data: DataType): Promise<void> {
+    await this.sendVisual(DiscordPrompt.getExitVisual(message, channel, data), channel)
   }
 
   createEmitter (): EventEmitter {
