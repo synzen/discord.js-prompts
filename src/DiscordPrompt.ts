@@ -24,7 +24,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
 
   // Override events
-  async onReject(message: Message, error: Rejection, channel: DiscordChannel): Promise<void> {
+  async onReject(error: Rejection, message: Message,  channel: DiscordChannel): Promise<void> {
     await this.sendVisual(DiscordPrompt.getRejectVisual(error), channel)
   }
   async onInactivity(channel: DiscordChannel): Promise<void> {
@@ -38,9 +38,9 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     return new EventEmitter()
   }
 
-  createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType> {
+  createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType, Message> {
     const discordChannel = channel
-    const emitter: PromptCollector<DataType> = this.createEmitter()
+    const emitter: PromptCollector<DataType, Message> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
     collector.on('collect', async (message: Message) => {
       /**
@@ -56,7 +56,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     return emitter
   }
 
-  async handleMessage (message: Message, data: DataType, emitter: PromptCollector<DataType>): Promise<void> {
+  async handleMessage (message: Message, data: DataType, emitter: PromptCollector<DataType, Message>): Promise<void> {
     try {
       // Exit
       if (message.content === 'exit') {
@@ -75,7 +75,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     }
   }
   
-  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType>): void {
+  handleMenuMessage (message: Message, menu: MenuEmbed, emitter: PromptCollector<DataType, Message>): void {
     if (!menu.isValidSelection(message.content)) {
       emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
     } else {

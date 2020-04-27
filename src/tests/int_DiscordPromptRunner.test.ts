@@ -50,7 +50,7 @@ describe('E2E tests', () => {
   let author: User
   let emit: jest.SpyInstance
   let collectorStop: jest.SpyInstance
-  let emitter: PromptCollector<PromptData>
+  let emitter: PromptCollector<PromptData, Message>
   let collector: EventEmitter
   let textChannel: TextChannel
   let channel: DiscordChannel

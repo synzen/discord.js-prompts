@@ -77,7 +77,7 @@ describe('Unit::DiscordPrompt', () => {
   })
   describe('handleMessage', () => {
     it('emits exit when message content is exit', async () => {
-      const emitter: PromptCollector<{}> = {
+      const emitter: PromptCollector<{}, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -90,7 +90,7 @@ describe('Unit::DiscordPrompt', () => {
       const messageVisual = new MessageVisual('dh')
       jest.spyOn(prompt, 'getVisual')
         .mockResolvedValue(messageVisual)
-      const emitter: PromptCollector<{}> = {
+      const emitter: PromptCollector<{}, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -104,7 +104,7 @@ describe('Unit::DiscordPrompt', () => {
       jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
       const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage')
         .mockImplementation()
-      const emitter: PromptCollector<{}> = {
+      const emitter: PromptCollector<{}, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -118,7 +118,7 @@ describe('Unit::DiscordPrompt', () => {
       const error = new Error('awstgedr')
       jest.spyOn(prompt, 'getVisual')
         .mockRejectedValue(error)
-      const emitter: PromptCollector<{}> = {
+      const emitter: PromptCollector<{}, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -134,7 +134,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isValidSelection = jest.fn().mockReturnValue(false)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}>
+      } as unknown as PromptCollector<{}, Message>
       const message = {
         content: 'dfht'
       } as Message
@@ -146,7 +146,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isValidSelection = jest.fn().mockReturnValue(true)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}>
+      } as unknown as PromptCollector<{}, Message>
       const message = {
         content: 'dfht'
       } as Message
@@ -167,7 +167,7 @@ describe('Unit::DiscordPrompt', () => {
         foo: 'ade'
       } as unknown as DiscordChannel
       const rejection = new Rejection('sgrf')
-      prompt.onReject(message, rejection, channel)
+      prompt.onReject(rejection, message, channel)
       expect(sendVisual).toHaveBeenCalledWith(DiscordPrompt.getRejectVisual(rejection), channel)
     })
   })
