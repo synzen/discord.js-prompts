@@ -10,7 +10,7 @@ export type BaseData = {
   __authorID: string;
 }
 
-export class DiscordPrompt<DataType extends BaseData> extends Prompt<DataType, Message> {
+export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   static inactivityVisual: MessageVisual = new MessageVisual('Menu closed due to inactivity.')
   static exitVisual: MessageVisual = new MessageVisual('Menu closed.')
