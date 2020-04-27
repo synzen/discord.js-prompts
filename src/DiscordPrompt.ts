@@ -25,6 +25,10 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     return new MessageVisual(error.message)
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static createMenuRejection<DataType> (message?: Message, data?: DataType, menu?: MenuEmbed): Rejection {
+    return new Rejection('That is an invalid option. Try again.')
+  }
 
   // Override events
   async onReject(error: Rejection, message: Message,  channel: DiscordChannel, data: DataType): Promise<void> {
@@ -83,7 +87,8 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   
   handleMenuMessage (message: Message, data: DataType, menu: MenuEmbed, emitter: PromptCollector<DataType, Message>): void {
     if (!menu.isValidSelection(message.content)) {
-      emitter.emit('reject', message, new Rejection('That is an invalid option. Try again.'))
+      const rejection = (this.constructor as typeof DiscordPrompt).createMenuRejection(message, data, menu)
+      emitter.emit('reject', message, rejection)
     } else {
       emitter.emit('message', message)
     }

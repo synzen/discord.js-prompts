@@ -132,6 +132,9 @@ describe('Unit::DiscordPrompt', () => {
     it('emits reject if content is invalid', () => {
       const menuEmbed = new MenuEmbed()
       menuEmbed.isValidSelection = jest.fn().mockReturnValue(false)
+      const createdRejection = new Rejection('aqetsw6y4r75th')
+      jest.spyOn(DiscordPrompt, 'createMenuRejection')
+        .mockReturnValue(createdRejection)
       const emitter = {
         emit: jest.fn()
       } as unknown as PromptCollector<{}, Message>
@@ -139,7 +142,7 @@ describe('Unit::DiscordPrompt', () => {
         content: 'dfht'
       } as Message
       prompt.handleMenuMessage(message, {}, menuEmbed, emitter)
-      expect(emitter.emit).toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
+      expect(emitter.emit).toHaveBeenCalledWith('reject', message, createdRejection)
     })
     it('emits message if content is valid', () => {
       const menuEmbed = new MenuEmbed()
