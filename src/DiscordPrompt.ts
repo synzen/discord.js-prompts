@@ -20,7 +20,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   static storeMessage<DataType extends BaseData> (message: Message, data: DataType, channel: DiscordChannel): void {
     const { author, client } = message
     const { __authorID } = data
-    if (author.id === __authorID || client.user && client.user.id === author.id ) {
+    if (author.id === __authorID || (client.user && client.user.id === author.id)) {
       channel.storeMessage(message)
     }
   }
