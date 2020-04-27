@@ -23,6 +23,31 @@ describe('Unit::DiscordPrompt', () => {
     visual = new MessageVisual('aedsg')
     prompt = new DiscordPrompt(visual)
   })
+  describe('static getInactivityVisual', () => {
+    it('returns correctly', async () => {
+      const result = await DiscordPrompt.getInactivityVisual()
+      expect(result).toBeInstanceOf(MessageVisual)
+    })
+  })
+  describe('static getExitVisual', () => {
+    it('returns correctly', async () => {
+      const result = await DiscordPrompt.getExitVisual()
+      expect(result).toBeInstanceOf(MessageVisual)
+    })
+  })
+  describe('static getRejectVisual', () => {
+    it('returns correctly', async () => {
+      const rejection = new Rejection('wse34ry75')
+      const result = await DiscordPrompt.getRejectVisual(rejection)
+      expect(result).toBeInstanceOf(MessageVisual)
+    })
+  })
+  describe('static createMenuRejection', () => {
+    it('returns correctly', () => {
+      const result = DiscordPrompt.createMenuRejection()
+      expect(result).toBeInstanceOf(Rejection)
+    })
+  })
   describe('createCollector', () => {
     let createdCollector: MockCollector
     const discordChannel = {
