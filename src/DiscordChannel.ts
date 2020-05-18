@@ -50,7 +50,6 @@ export class DiscordChannel implements ChannelInterface<Message> {
       ...DiscordChannel.DEFAULT_OPTIONS,
       ...visual.options
     }
-    console.log(visual.options)
     return this.channel.send(visual.text, options)
   }
 
