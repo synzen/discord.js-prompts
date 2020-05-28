@@ -76,11 +76,12 @@ export class MenuEmbed  {
    * 
    * @param name Name of option
    * @param description Description of optino
+   * @param number Optionally override the numbering
    */
-  addOption (name: string, description = '\u200b'): this {
+  addOption (name: string, description = '\u200b', number?: number): this {
     const count = this.numberOfOptions()
     this.options.push({
-      name: `${count + 1}) ${name}`,
+      name: `${number ?? count + 1}) ${name}`,
       description
     })
     return this

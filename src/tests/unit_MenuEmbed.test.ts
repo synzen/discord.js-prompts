@@ -102,6 +102,16 @@ describe('Unit::MenuEmbed', () => {
       menuEmbed.addOption(title)
       expect(menuEmbed.options[0].description).toEqual('\u200b')
     })
+    it('overrides the default number if given', () => {
+      const title = 'aedsg'
+      const description = 'swetr'
+      const number = 53335
+      menuEmbed.addOption(title, description, number)
+      expect(menuEmbed.options).toEqual([{
+        name: `${number}) ${title}`,
+        description
+      }])
+    })
   })
   describe('enableMultiSelect', () => {
     it('works correctly', () => {
