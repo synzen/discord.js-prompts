@@ -1,5 +1,14 @@
 import { Client, Message, TextChannel } from 'discord.js'
-import { DiscordPrompt, VisualGenerator, Rejection, PromptNode, DiscordPromptRunner, MessageVisual, DiscordPromptFunction } from '../index';
+import {
+  DiscordPrompt,
+  VisualGenerator,
+  Rejection,
+  PromptNode,
+  DiscordPromptRunner,
+  MessageVisual,
+  DiscordPromptFunction
+} from '../index';
+import { Errors } from 'prompt-anything';
 
 const client = new Client()
 
@@ -54,12 +63,20 @@ client.on('message', async (message) => {
     const runner = new DiscordPromptRunner<PersonDetails>(message.author, {})
     runner.run(askName, message.channel as TextChannel)
       .then((data: PersonDetails) => {
-        // Access data from all prompts
+        // Data from the last prompt (askAge)
         console.log(data)
         // data.age
         // data.name
       })
-      .catch(console.error)
+      .catch(err => {
+        if (err instanceof Errors.UserInactivityError) {
+          // User is inactive
+        } else if (err instanceof Errors.UserVoluntaryExitError) {
+          // User manually typed "exit"
+        } else {
+          // Unexpected error
+        }
+      })
   }
 });
 

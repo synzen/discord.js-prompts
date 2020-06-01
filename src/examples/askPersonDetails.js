@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { Client } = require('discord.js')
-const { DiscordPrompt, Rejection, PromptNode, DiscordPromptRunner, MessageVisual } = require('discord.js-prompts');
+const {
+  DiscordPrompt,
+  Rejection,
+  PromptNode,
+  DiscordPromptRunner,
+  MessageVisual,
+  Errors
+} = require('discord.js-prompts');
 
 const client = new Client()
 
@@ -50,12 +57,20 @@ client.on('message', async (message) => {
     const runner = new DiscordPromptRunner(message.author, {})
     runner.run(askName, message.channel)
       .then((data) => {
-        // Access data from all prompts
+        // Data from the last prompt (askAge)
         console.log(data)
         // data.age
         // data.name
       })
-      .catch(console.error)
+      .catch(err => {
+        if (err instanceof Errors.UserInactivityError) {
+          // User is inactive
+        } else if (err instanceof Errors.UserVoluntaryExitError) {
+          // User manually typed "exit"
+        } else {
+          // Unexpected error
+        }
+      })
   }
 });
 
