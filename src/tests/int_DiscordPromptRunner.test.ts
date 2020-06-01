@@ -1,5 +1,5 @@
 import { DiscordPrompt } from "../DiscordPrompt"
-import { PromptCollector, Rejection, PromptNode } from "prompt-anything"
+import { PromptCollector, Rejection, PromptNode, Errors } from "prompt-anything"
 import { DiscordPromptRunner } from '../DiscordPromptRunner'
 import { EventEmitter } from 'events';
 import { DiscordChannel } from '../DiscordChannel';
@@ -108,7 +108,7 @@ describe('E2E tests', () => {
     await flushPromises()
     expect(emit).toHaveBeenCalledWith('message', collectedMessage)
   })
-  it(`exits when message is exit`, async () => {
+  it(`rejects when message is exit`, async () => {
     const askNameFn: DiscordPromptFunction<PromptData> = async (m, data) => {
       return {
         ...data,
@@ -119,13 +119,13 @@ describe('E2E tests', () => {
     const askName = new DiscordPrompt<PromptData>(askNameVisual, askNameFn)
     const askNameNode = new PromptNode(askName)
     const runner = new DiscordPromptRunner<PromptData>(author, {})
-    runner.run(askNameNode, textChannel)
+    const run = runner.run(askNameNode, textChannel)
     // Wait for all pending promise callbacks to be executed for the emitter to set up
     await flushPromises()
     const exitMessage = createMockMessage(authorID, 'exit')
     collector.emit('tryCollect', exitMessage)
-    await flushPromises()
-    expect(emit).toHaveBeenCalledWith('exit', exitMessage)
+    await expect(run).rejects.toThrow(Errors.UserVoluntaryExitError)
+    expect(emit).toHaveBeenCalledWith('exit')
     expect(collectorStop).toHaveBeenCalled()
   })
   it(`automatically rejects menu input`, async () => {
@@ -219,6 +219,6 @@ describe('E2E tests', () => {
 
     // Clean up
     reactCollector.removeAllListeners()
-    emitter.emit('exit', createMockMessage(authorID))
+    emitter.emit('exit')
   })
 })

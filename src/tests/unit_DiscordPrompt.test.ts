@@ -23,18 +23,6 @@ describe('Unit::DiscordPrompt', () => {
     visual = new MessageVisual('aedsg')
     prompt = new DiscordPrompt(visual)
   })
-  describe('static getInactivityVisual', () => {
-    it('returns correctly', async () => {
-      const result = await DiscordPrompt.getInactivityVisual()
-      expect(result).toBeInstanceOf(MessageVisual)
-    })
-  })
-  describe('static getExitVisual', () => {
-    it('returns correctly', async () => {
-      const result = await DiscordPrompt.getExitVisual()
-      expect(result).toBeInstanceOf(MessageVisual)
-    })
-  })
   describe('static getRejectVisual', () => {
     it('returns correctly', async () => {
       const rejection = new Rejection('wse34ry75')
@@ -109,7 +97,7 @@ describe('Unit::DiscordPrompt', () => {
         content: 'exit'
       } as Message
       await prompt.handleMessage(message, {}, emitter)
-      expect(emitter.emit).toHaveBeenCalledWith('exit', message)
+      expect(emitter.emit).toHaveBeenCalledWith('exit')
     })
     it('emits message if visual is not a menu', async () => {
       const messageVisual = new MessageVisual('dh')
@@ -204,49 +192,6 @@ describe('Unit::DiscordPrompt', () => {
       await prompt.onReject(rejection, message, channel, data)
       expect(sendVisual).toHaveBeenCalledWith(rejectVisual, channel)
       expect(getRejectVisual).toHaveBeenCalledWith(rejection, message, channel, data)
-    })
-  })
-  describe('onInactivity', () => {
-    beforeEach(() => {
-      jest.spyOn(prompt, 'sendVisual').mockResolvedValue({} as Message)
-    })
-    it('sends the inactivity visual', async () => {
-      const sendVisual = jest.spyOn(prompt, 'sendVisual')
-      const channel = {
-        foo: 'ade'
-      } as unknown as DiscordChannel
-      const data = {
-        dfg: 'dfrhgb'
-      }
-      const inactivityiVisual = new MessageVisual('srfg')
-      const getInactivityVisual = jest.spyOn(DiscordPrompt, 'getInactivityVisual')
-        .mockResolvedValue(inactivityiVisual)
-      await prompt.onInactivity(channel, data)
-      expect(sendVisual).toHaveBeenCalledWith(inactivityiVisual, channel)
-      expect(getInactivityVisual).toHaveBeenCalledWith(channel, data)
-    })
-  })
-  describe('onExit', () => {
-    beforeEach(() => {
-      jest.spyOn(prompt, 'sendVisual').mockResolvedValue({} as Message)
-    })
-    it('sends the exit visual', async () => {
-      const sendVisual = jest.spyOn(prompt, 'sendVisual')
-      const message = {
-        dhr: 'sedg'
-      } as unknown as Message
-      const channel = {
-        foo: 'ade'
-      } as unknown as DiscordChannel
-      const data = {
-        baz: 'ho'
-      }
-      const exitVisual = new MessageVisual('srfg')
-      const getExitVisual = jest.spyOn(DiscordPrompt, 'getExitVisual')
-        .mockResolvedValue(exitVisual)
-      await prompt.onExit(message, channel, data)
-      expect(sendVisual).toHaveBeenCalledWith(exitVisual, channel)
-      expect(getExitVisual).toHaveBeenCalledWith(message, channel, data)
     })
   })
 })

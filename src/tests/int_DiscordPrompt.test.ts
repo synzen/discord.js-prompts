@@ -61,7 +61,7 @@ describe('Int::DiscordPrompt', () => {
         content: 'exit'
       } as Message
       createdCollector.emit('collect', message)
-      expect(emit).toHaveBeenCalledWith('exit', message)
+      expect(emit).toHaveBeenCalledWith('exit')
     })
     it('emits a message when valid input for menu', async () => {
       const menu = new MenuEmbed()

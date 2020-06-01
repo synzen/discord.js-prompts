@@ -14,14 +14,6 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   // Visuals
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static async getInactivityVisual<DataType> (channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
-    return new MessageVisual('Menu closed due to inactivity.')
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static async getExitVisual<DataType> (message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
-    return new MessageVisual('Menu closed.')
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     return new MessageVisual(error.message)
   }
@@ -30,17 +22,9 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     return new Rejection('That is an invalid option. Try again.')
   }
 
-  // Override events
+  // Override event
   async onReject(error: Rejection, message: Message,  channel: DiscordChannel, data: DataType): Promise<void> {
     const visual = await (this.constructor as typeof DiscordPrompt).getRejectVisual(error, message, channel, data)
-    await this.sendVisual(visual, channel)
-  }
-  async onInactivity(channel: DiscordChannel, data: DataType): Promise<void> {
-    const visual = await (this.constructor as typeof DiscordPrompt).getInactivityVisual(channel, data)
-    await this.sendVisual(visual, channel)
-  }
-  async onExit(message: Message, channel: DiscordChannel, data: DataType): Promise<void> {
-    const visual = await (this.constructor as typeof DiscordPrompt).getExitVisual(message, channel, data)
     await this.sendVisual(visual, channel)
   }
 
@@ -70,7 +54,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     try {
       // Exit
       if (message.content === 'exit') {
-        emitter.emit('exit', message)
+        emitter.emit('exit')
         return
       }
       // Check if MenuVisual for special handling
