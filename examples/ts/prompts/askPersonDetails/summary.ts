@@ -1,6 +1,9 @@
 import { PersonDetails } from './types'
 import { VisualGenerator } from 'prompt-anything'
-import { MessageVisual, DiscordPrompt } from '../../../../src/index'
+import {
+  MessageVisual,
+  DiscordPrompt
+} from '../../../../src/index'
 
 // Prompt that just sends visual, and doesn't wait for input
 export const summaryVisual: VisualGenerator<PersonDetails> = async (data: PersonDetails) => {

@@ -2,8 +2,8 @@ import { Client, TextChannel } from 'discord.js'
 import {
   PromptNode,
   DiscordPromptRunner,
+  Errors
 } from '../../src/index';
-import { Errors } from 'prompt-anything';
 
 // Create the prompts
 import { askNamePrompt } from './prompts/askPersonDetails/askName'

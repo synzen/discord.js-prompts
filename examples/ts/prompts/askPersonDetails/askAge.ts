@@ -1,4 +1,10 @@
-import { MessageVisual, DiscordPromptFunction, DiscordPrompt, VisualGenerator, Rejection } from "../../../../src/index"
+import {
+  MessageVisual,
+  DiscordPromptFunction,
+  DiscordPrompt,
+  VisualGenerator,
+  Rejection
+} from "../../../../src/index"
 import { Message } from "discord.js"
 import { PersonDetails } from './types'
 
