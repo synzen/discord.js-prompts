@@ -7,7 +7,7 @@ import {
   DiscordPromptRunner,
   MessageVisual,
   DiscordPromptFunction
-} from '../index';
+} from '../src/index';
 import { Errors } from 'prompt-anything';
 
 const client = new Client()
@@ -61,6 +61,7 @@ askAge.addChild(summary)
 client.on('message', async (message) => {
   if (message.content === 'askdetails') {
     const runner = new DiscordPromptRunner<PersonDetails>(message.author, {})
+    console.log('Running prompt')
     runner.run(askName, message.channel as TextChannel)
       .then((data: PersonDetails) => {
         // Data from the last prompt (askAge)
@@ -70,9 +71,11 @@ client.on('message', async (message) => {
       })
       .catch(err => {
         if (err instanceof Errors.UserInactivityError) {
+          console.log('User was inactive', err)
           // User is inactive
         } else if (err instanceof Errors.UserVoluntaryExitError) {
           // User manually typed "exit"
+          console.log('User exited', err)
         } else {
           // Unexpected error
         }
@@ -80,4 +83,4 @@ client.on('message', async (message) => {
   }
 });
 
-client.login('token here');
+client.login('MjYzMzAzMjc0MzYxMjU3OTg1.XnpnIw.VzigW9W3u3slJONTaK7FToFDPmI');

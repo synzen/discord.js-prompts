@@ -55,6 +55,7 @@ askAge.addChild(summary)
 client.on('message', async (message) => {
   if (message.content === 'askdetails') {
     const runner = new DiscordPromptRunner(message.author, {})
+    console.log('Running prompt')
     runner.run(askName, message.channel)
       .then((data) => {
         // Data from the last prompt (askAge)
@@ -64,9 +65,11 @@ client.on('message', async (message) => {
       })
       .catch(err => {
         if (err instanceof Errors.UserInactivityError) {
+          console.log('User was inactive', err)
           // User is inactive
         } else if (err instanceof Errors.UserVoluntaryExitError) {
           // User manually typed "exit"
+          console.log('User exited', err)
         } else {
           // Unexpected error
         }
