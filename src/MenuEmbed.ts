@@ -207,6 +207,12 @@ export class MenuEmbed  {
       throw new TypeError('Error handler for pagination is undefined')
     }
     try {
+      /**
+       * The message must be cached for it to be referenced
+       * later by the reaction collector. This is required
+       * if all messages are not cached by default.
+       */
+      message.channel.messages.cache.set(message.id, message)
       await message.react('◀')
       await message.react('▶')
       this.createReactionCollector(message)

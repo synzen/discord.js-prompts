@@ -30,6 +30,11 @@ const createMockMessage = (authorID: string, content = ''): Message => ({
   author: {
     id: authorID
   } as User,
+  channel: {
+    messages: {
+      cache: new Map()
+    }
+  },
   edit: jest.fn(),
   react: jest.fn(),
   createReactionCollector: jest.fn()

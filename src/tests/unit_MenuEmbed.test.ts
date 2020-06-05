@@ -344,7 +344,12 @@ describe('Unit::MenuEmbed', () => {
         .mockReturnValue()
       const react = jest.fn()
       const message = {
-        react
+        react,
+        channel: {
+          messages: {
+            cache: new Map()
+          }
+        }
       } as unknown as Message
       await menuEmbed.setUpPagination(message)
       expect(react).toHaveBeenNthCalledWith(1, '◀')
@@ -360,10 +365,35 @@ describe('Unit::MenuEmbed', () => {
       const react = jest.fn()
         .mockRejectedValue(reactError)
       const message = {
-        react
+        react,
+        channel: {
+          messages: {
+            cache: new Map()
+          }
+        }
       } as unknown as Message
       await menuEmbed.setUpPagination(message)
       expect(errorHandler).toHaveBeenCalledWith(reactError, message)
+    })
+    it('adds the message to cache', async () => {
+      menuEmbed.paginationErrorHandler = jest.fn()
+      jest.spyOn(menuEmbed, 'createReactionCollector')
+        .mockReturnValue()
+      const react = jest.fn()
+      const set = jest.fn()
+      const message = {
+        id: 'abc123',
+        react,
+        channel: {
+          messages: {
+            cache: {
+              set
+            }
+          }
+        }
+      } as unknown as Message
+      await menuEmbed.setUpPagination(message)
+      expect(set).toHaveBeenCalledWith(message.id, message)
     })
   })
   describe('createReactionCollector', () => {
