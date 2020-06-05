@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^12.2.0",
-    "prompt-anything": "^2.0.1"
+    "prompt-anything": "^3.0.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
