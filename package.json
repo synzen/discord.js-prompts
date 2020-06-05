@@ -26,15 +26,15 @@
     "prompt-anything": "^2.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.1",
-    "@types/ws": "^7.2.4",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^13.13.10",
+    "@types/ws": "^7.2.5",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
-    "jest": "^25.4.0",
-    "ts-jest": "^25.4.0",
-    "typescript": "^3.8.3"
+    "jest": "^25.5.4",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.5"
   },
   "keywords": [
     "prompts",
