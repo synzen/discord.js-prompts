@@ -99,7 +99,7 @@ describe('Int::DiscordPrompt', () => {
       } as Message
       createdCollector.emit('collect', message)
       await flushPromises()
-      expect(emit).toHaveBeenCalledWith('reject', message, new Rejection('That is an invalid option. Try again.'))
+      expect(emit).toHaveBeenCalledWith('reject', message, new Rejection('That is not a valid selection. Try again.'))
     })
   })
 })
