@@ -65,6 +65,56 @@ describe('Unit::MenuEmbed', () => {
       // expect(menuEmbed.multiSelect).toEqual(multiSelect)
     })
   })
+  describe('static getMultiSelectOptionRange', () => {
+    it('returns correctly', () => {
+      const str = '1-4'
+      expect(MenuEmbed.getMultiSelectOptionRange(str))
+        .toEqual([1,2,3,4])
+    })
+    it('returns an empty array if invalid start or end', () => {
+      const str = 'a-4'
+      expect(MenuEmbed.getMultiSelectOptionRange(str))
+        .toEqual([])
+      const str2 = '1-b'
+      expect(MenuEmbed.getMultiSelectOptionRange(str2))
+        .toEqual([])
+    })
+  })
+  describe('static getMultiSelectOptions', () => {
+    beforeEach(() => {
+      jest.spyOn(MenuEmbed, 'getMultiSelectOptionRange')
+        .mockReturnValue([])
+    })
+    it('returns correctly', () => {
+      const str = '1,2-3,4,6-8,10'
+      jest.spyOn(MenuEmbed, 'getMultiSelectOptionRange')
+        .mockReturnValueOnce([1])
+        .mockReturnValueOnce([2,3])
+        .mockReturnValueOnce([4])
+        .mockReturnValueOnce([6,7,8])
+        .mockReturnValueOnce([10])
+      expect(MenuEmbed.getMultiSelectOptions(str))
+        .toEqual([1,2,3,4,6,7,8,10])
+    })
+    it('removes duplicates', () => {
+      const str = '1-4,3-5'
+      jest.spyOn(MenuEmbed, 'getMultiSelectOptionRange')
+        .mockReturnValueOnce([1,2,3,4])
+        .mockReturnValueOnce([3,4,5])
+      expect(MenuEmbed.getMultiSelectOptions(str))
+        .toEqual([1,2,3,4,5])
+    })
+    it('works with spaces', () => {
+      const str = '1, 2-4, 5'
+      jest.spyOn(MenuEmbed, 'getMultiSelectOptionRange')
+        .mockReturnValueOnce([1])
+        .mockReturnValueOnce([2,3,4])
+        .mockReturnValueOnce([5])
+      expect(MenuEmbed.getMultiSelectOptions(str))
+        .toEqual([1,2,3,4,5])
+    })
+
+  })
   describe('enablePagination', () => {
     it('defines the error handler', () => {
       const func = jest.fn()

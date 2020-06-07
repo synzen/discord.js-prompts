@@ -59,6 +59,36 @@ export class MenuEmbed  {
     }
   }
 
+/**
+   * Get array of numbers of a range, separated by "-"
+   * 
+   * @param string
+   */
+  static getMultiSelectOptionRange (string: string): number[] {
+    const split = string.split('-')
+    const start = Number(split[0])
+    const end = Number(split[split.length - 1])
+    if (isNaN(start) || isNaN(end)) {
+      return []
+    }
+    const numbers = []
+    for (let i = start; i <= end; ++i) {
+      numbers.push(i)
+    }
+    return numbers
+  }
+
+  /**
+   * Get comma-separated values for multi-select.
+   * 
+   * @param string Input string
+   */
+  static getMultiSelectOptions (string: string): number[] {
+    const values = string.split(',').map(s => s.trim())
+    const ranges = values.map(v => this.getMultiSelectOptionRange(v)).flat(1)
+    return ranges.filter((val, index) => ranges.indexOf(val) === index)
+  }
+
   /**
    * Enable pagination by defining an error handler for
    * when the menu fails to set up pages (when message
@@ -133,7 +163,7 @@ export class MenuEmbed  {
     if (!this.multiSelect) {
       return this.isValidOption(Number(content))
     } else {
-      const numbers = content.split(',').map(val => Number(val))
+      const numbers = MenuEmbed.getMultiSelectOptions(content)
       return numbers.every(val => this.isValidOption(val))
     }
   }

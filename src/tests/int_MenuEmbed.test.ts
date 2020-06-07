@@ -28,6 +28,25 @@ describe('Int::MenuEmbed', () => {
       expect(menu.isValidSelection('1'))
         .toEqual(true)
     })
+    it('works with ranges', () => {
+      const menu = new MenuEmbed(undefined, {
+        multiSelect: true
+      })
+      menu
+        .addOption('a')
+        .addOption('b')
+        .addOption('c')
+        .addOption('d')
+        .addOption('e')
+      expect(menu.isValidSelection('1,2-4'))
+        .toEqual(true)
+      expect(menu.isValidSelection('2-4,1'))
+        .toEqual(true)
+      expect(menu.isValidSelection('2-9, 1'))
+        .toEqual(false)
+      expect(menu.isValidSelection('2-4, 9'))
+        .toEqual(false)
+    })
   })
   describe('spansMultiplePages', () => {
     it('returns correctly for custom maxPerpage', () => {
