@@ -1,6 +1,6 @@
 {
   "name": "discord.js-prompts",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Create prompts in Discord, just like you would in console!",
   "main": "build/index.js",
   "types": "build/index.d.ts",
