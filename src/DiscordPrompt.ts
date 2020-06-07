@@ -41,7 +41,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
        * This will store only user input (because of the above filter)
        * Bot messages are stored within DiscordChannel send method
        */
-      channel.storeMessage(message)
+      channel.storeMessages(message)
       this.handleMessage(message, data, emitter)
     });
     emitter.once('stop', () => {

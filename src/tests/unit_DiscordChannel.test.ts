@@ -171,11 +171,11 @@ describe('Unit::DiscordChannel', () => {
       } as Message
       jest.spyOn(discordChannel, 'sendMessageVisual')
         .mockResolvedValue(createdMessage)
-      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+      const storeMessages = jest.spyOn(discordChannel, 'storeMessages')
         .mockImplementation()
       // Send
       await discordChannel.send(visual)
-      expect(storeMessage).toHaveBeenCalledWith(createdMessage)
+      expect(storeMessages).toHaveBeenCalledWith(createdMessage)
     })
     it('saves each message if an array of messages is sent', async () => {
       const visual = new MessageVisual('aedsgrf')
@@ -187,12 +187,11 @@ describe('Unit::DiscordChannel', () => {
       }] as Message[]
       jest.spyOn(discordChannel, 'sendMessageVisual')
         .mockResolvedValue(createdMessages)
-      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+      const storeMessages = jest.spyOn(discordChannel, 'storeMessages')
         .mockImplementation()
       // Send
       await discordChannel.send(visual)
-      expect(storeMessage).toHaveBeenCalledWith(createdMessages[0])
-      expect(storeMessage).toHaveBeenCalledWith(createdMessages[1])
+      expect(storeMessages).toHaveBeenCalledWith(createdMessages)
     })
     it('saves the message for sendMenuVisual', async () => {
       const visual = new MenuVisual(new MenuEmbed())
@@ -204,11 +203,11 @@ describe('Unit::DiscordChannel', () => {
       // Mock the method
       jest.spyOn(discordChannel, 'sendMenuVisual')
         .mockResolvedValue(createdMessage)
-      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+      const storeMessages = jest.spyOn(discordChannel, 'storeMessages')
         .mockImplementation()
       // Send
       await discordChannel.send(visual)
-      expect(storeMessage).toHaveBeenCalledWith(createdMessage)
+      expect(storeMessages).toHaveBeenCalledWith(createdMessage)
     })
   })
 })

@@ -42,7 +42,7 @@ describe('Unit::DiscordPrompt', () => {
       channel: {
         createMessageCollector: jest.fn()
       },
-      storeMessage: jest.fn()
+      storeMessages: jest.fn()
     } as unknown as DiscordChannel
     beforeEach(() => {
       createdCollector = new MockCollector()
@@ -84,7 +84,7 @@ describe('Unit::DiscordPrompt', () => {
       prompt.createCollector(discordChannel, data)
       const message = {} as Message
       createdCollector.emit('collect', message)
-      expect(discordChannel.storeMessage)
+      expect(discordChannel.storeMessages)
         .toHaveBeenCalledWith(message)
     })
   })

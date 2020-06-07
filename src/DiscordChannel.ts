@@ -24,8 +24,12 @@ export class DiscordChannel implements ChannelInterface<Message> {
    * Store all messages sent within this channel
    * @param message Message to store
    */
-  storeMessage (message: Message): void {
-    this.messages.push(message)
+  storeMessages (message: Message|Message[]): void {
+    if (Array.isArray(message)) {
+      message.forEach(m => this.messages.push(m))
+    } else {
+      this.messages.push(message)
+    }
   }
 
   async sendMenuVisual (visual: MenuVisual): Promise<Message> {
@@ -56,15 +60,11 @@ export class DiscordChannel implements ChannelInterface<Message> {
   async send (visual: DiscordVisual): Promise<Message|Message[]> {
     if (visual instanceof MenuVisual) {
       const sent = await this.sendMenuVisual(visual)
-      this.storeMessage(sent)
+      this.storeMessages(sent)
       return sent
     } else if (visual instanceof MessageVisual) {
       const sent = await this.sendMessageVisual(visual)
-      if (Array.isArray(sent)) {
-        sent.forEach(m => this.storeMessage(m))
-      } else {
-        this.storeMessage(sent)
-      }
+      this.storeMessages(sent)
       return sent
     } else {
       throw new TypeError('Invalid visual format, must be MenuVisual or MessageVisual')

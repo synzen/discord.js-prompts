@@ -33,7 +33,7 @@ describe('Int::DiscordPrompt', () => {
       channel: {
         createMessageCollector: jest.fn()
       },
-      storeMessage: jest.fn()
+      storeMessages: jest.fn()
     } as unknown as DiscordChannel
     beforeEach(() => {
       createdCollector = new MockCollector()
