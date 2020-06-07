@@ -177,6 +177,23 @@ describe('Unit::DiscordChannel', () => {
       await discordChannel.send(visual)
       expect(storeMessage).toHaveBeenCalledWith(createdMessage)
     })
+    it('saves each message if an array of messages is sent', async () => {
+      const visual = new MessageVisual('aedsgrf')
+      const discordChannel = new DiscordChannel({} as TextChannel)
+      const createdMessages = [{
+        content: 'a'
+      }, {
+        content: 'b'
+      }] as Message[]
+      jest.spyOn(discordChannel, 'sendMessageVisual')
+        .mockResolvedValue(createdMessages)
+      const storeMessage = jest.spyOn(discordChannel, 'storeMessage')
+        .mockImplementation()
+      // Send
+      await discordChannel.send(visual)
+      expect(storeMessage).toHaveBeenCalledWith(createdMessages[0])
+      expect(storeMessage).toHaveBeenCalledWith(createdMessages[1])
+    })
     it('saves the message for sendMenuVisual', async () => {
       const visual = new MenuVisual(new MenuEmbed())
       // Create the channel
