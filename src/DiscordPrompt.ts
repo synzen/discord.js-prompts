@@ -19,7 +19,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static createMenuRejection<DataType> (message?: Message, data?: DataType, menu?: MenuEmbed): Rejection {
-    return new Rejection('That is an invalid option. Try again.')
+    return new Rejection('That is not a valid selection. Try again.')
   }
 
   // Override event
