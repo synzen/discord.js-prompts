@@ -37,6 +37,31 @@ describe('Unit::DiscordChannel', () => {
       })
     })
   })
+  describe('storeMessages', () => {
+    it('stores a message', () => {
+      const message = {
+        foo: 'bar'
+      } as unknown as Message
+      const textChannel = {} as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.messages.push({a: 'b'} as unknown as Message)
+      discordChannel.storeMessages(message)
+      expect(discordChannel.messages[1]).toEqual(message)
+    })
+    it('stores an array of messages', () => {
+      const messages = [{
+        foo: 'bar'
+      }, {
+        foo: 'baz'
+      }] as unknown as Message[]
+      const textChannel = {} as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.messages.push({a: 'b'} as unknown as Message)
+      discordChannel.storeMessages(messages)
+      expect(discordChannel.messages[1]).toEqual(messages[0])
+      expect(discordChannel.messages[2]).toEqual(messages[1])
+    })
+  })
   describe('sendMenuVisual', () => {
     it('sends correctly', async () => {
       const menuEmbed = new MenuEmbed()

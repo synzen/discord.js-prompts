@@ -5,9 +5,13 @@ import { MessageVisual } from '../visuals/MessageVisual';
 import { PromptCollector, Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
+import { DiscordRejection } from '../types/DiscordRejection';
+import { mocked } from 'ts-jest'
 
 jest.mock('../visuals/MessageVisual')
+
+const mockedMessageVisual = mocked(MessageVisual)
 
 class MockCollector extends EventEmitter {
   stop = jest.fn()
@@ -18,16 +22,29 @@ describe('Unit::DiscordPrompt', () => {
   let prompt: DiscordPrompt<{}>
   afterEach(function () {
     jest.resetAllMocks()
+    mockedMessageVisual.mockReset()
   })
   beforeEach(() => {
     visual = new MessageVisual('aedsg')
     prompt = new DiscordPrompt(visual)
   })
   describe('static getRejectVisual', () => {
-    it('returns correctly', async () => {
-      const rejection = new Rejection('wse34ry75')
+    it('returns correctly for regular rejection', async () => {
+      const text = 'err text'
+      const rejection = new Rejection(text)
       const result = await DiscordPrompt.getRejectVisual(rejection)
       expect(result).toBeInstanceOf(MessageVisual)
+      expect(mockedMessageVisual).toHaveBeenCalledWith(text)
+    })
+    it('returns correctly for DiscordRejection', async () => {
+      const text = 'error text'
+      const embed = new MessageEmbed()
+      const rejection = new DiscordRejection(text, embed)
+      const visual = await DiscordPrompt.getRejectVisual(rejection)
+      expect(visual).toBeInstanceOf(MessageVisual)
+      expect(mockedMessageVisual).toHaveBeenCalledWith(text, {
+        embed,
+      })
     })
   })
   describe('static createMenuRejection', () => {
