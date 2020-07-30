@@ -5,6 +5,7 @@ import { MessageVisual } from "./visuals/MessageVisual";
 import { MenuVisual } from './visuals/MenuVisual';
 import { MenuEmbed } from './MenuEmbed';
 import { Message } from 'discord.js'
+import { DiscordRejection } from "./types/DiscordRejection";
 
 export type BaseData = {
   __authorID: string;
@@ -15,8 +16,15 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   // Visuals
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
-    return new MessageVisual(error.message)
+    if (error instanceof DiscordRejection) {
+      return new MessageVisual(error.text, {
+        embed: error.embed
+      })
+    } else {
+      return new MessageVisual(error.message)
+    }
   }
+  
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static createMenuRejection<DataType> (message?: Message, data?: DataType, menu?: MenuEmbed): Rejection {
     return new Rejection('That is not a valid selection. Try again.')
