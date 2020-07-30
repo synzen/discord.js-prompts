@@ -3,7 +3,7 @@ import {
   DiscordPromptFunction,
   DiscordPrompt,
   VisualGenerator,
-  Rejection
+  Rejection,
 } from "../../../../src/index"
 import { Message } from "discord.js"
 import { PersonDetails } from './types'
@@ -17,6 +17,14 @@ export const askAgeFn: DiscordPromptFunction<PersonDetails> = async (m: Message,
   const age = Number(m.content)
   if (isNaN(age)) {
     throw new Rejection(`That's not a valid number. Try again.`)
+    /**
+     * You can also throw a DiscordRejection. The MessageEmbed
+     * is directly from discord.js
+     * 
+     * throw new DiscordRejection('Text', new Discord.MessageEmbed({
+     *  description: 'Silly you!'
+     * }))
+     */
   }
   return {
     ...data,
