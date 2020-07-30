@@ -16,15 +16,13 @@ For full documentation, see [prompt-anything#usage](https://github.com/synzen/pr
 ### Table of Contents
 
 - [Example](#example)
-  - [JavaScript](#javascript)
-  - [TypeScript](#typescript)
 - [Using Menus](#using-menus)
   - [Pagination](#pagination)
 - [Channel Tracking](#channel-tracking)
 
 ## Example
 
-See the src/examples folder. Both TypeScript and JavaScript are provided.
+See the ./examples folder. Both TypeScript and JavaScript are provided.
 
 This will cause the bot application (with discord.js) to ask the user for their name and age. The bot will then send the collected results back. An image of the interaction is provided at the bottom.
 
