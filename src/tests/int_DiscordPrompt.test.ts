@@ -19,7 +19,7 @@ class MockCollector extends EventEmitter {
 
 describe('Int::DiscordPrompt', () => {
   let visual: MessageVisual
-  let prompt: DiscordPrompt<{}>
+  let prompt: DiscordPrompt<Record<string, unknown>>
   afterEach(function () {
     jest.resetAllMocks()
   })

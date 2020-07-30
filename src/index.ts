@@ -1,5 +1,3 @@
-import { createRequireFromPath } from 'module'
-
 export * from 'prompt-anything'
 export * from './DiscordChannel'
 export * from './DiscordPromptRunner'

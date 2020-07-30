@@ -200,7 +200,7 @@ describe('E2E tests', () => {
     textChannelSend.mockResolvedValue(reactableMessage)
 
     // Run
-    runner.run(selectOptionNode, textChannel)
+    const run = runner.run(selectOptionNode, textChannel)
     await flushPromises()
 
     // React
@@ -225,5 +225,6 @@ describe('E2E tests', () => {
     // Clean up
     reactCollector.removeAllListeners()
     emitter.emit('exit')
+    await expect(run).rejects.toThrow(Errors.UserVoluntaryExitError)
   })
 })

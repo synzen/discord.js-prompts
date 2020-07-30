@@ -74,7 +74,7 @@ describe('Unit::DiscordPromptRunner', () => {
   })
   describe('run', () => {
     it('accepts a DiscordChannel', () => {
-      type DataType = {}
+      type DataType = Record<string, unknown>
       const textChannel = {} as TextChannel
       const discordChannel = new DiscordChannel(textChannel)
       const runner = new DiscordPromptRunner({} as User, {})
@@ -86,7 +86,7 @@ describe('Unit::DiscordPromptRunner', () => {
       expect(superRun).toHaveBeenCalledWith(node, discordChannel)
     })
     it('accepts a TextChannel', () => {
-      type DataType = {}
+      type DataType = Record<string, unknown>
       const textChannel = {} as TextChannel
       const runner = new DiscordPromptRunner({} as User, {})
       const prompt = new DiscordPrompt<DataType>({ text: '' })

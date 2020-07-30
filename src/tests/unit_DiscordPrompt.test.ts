@@ -7,7 +7,7 @@ import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
 import { Message, MessageEmbed } from 'discord.js'
 import { DiscordRejection } from '../types/DiscordRejection';
-import { mocked } from 'ts-jest'
+import { mocked } from 'ts-jest/utils'
 
 jest.mock('../visuals/MessageVisual')
 
@@ -19,7 +19,7 @@ class MockCollector extends EventEmitter {
 
 describe('Unit::DiscordPrompt', () => {
   let visual: MessageVisual
-  let prompt: DiscordPrompt<{}>
+  let prompt: DiscordPrompt<Record<string, unknown>>
   afterEach(function () {
     jest.resetAllMocks()
     mockedMessageVisual.mockReset()
@@ -107,7 +107,7 @@ describe('Unit::DiscordPrompt', () => {
   })
   describe('handleMessage', () => {
     it('emits exit when message content is exit', async () => {
-      const emitter: PromptCollector<{}, Message> = {
+      const emitter: PromptCollector<Record<string, unknown>, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -120,7 +120,7 @@ describe('Unit::DiscordPrompt', () => {
       const messageVisual = new MessageVisual('dh')
       jest.spyOn(prompt, 'getVisual')
         .mockResolvedValue(messageVisual)
-      const emitter: PromptCollector<{}, Message> = {
+      const emitter: PromptCollector<Record<string, unknown>, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -134,7 +134,7 @@ describe('Unit::DiscordPrompt', () => {
       jest.spyOn(prompt, 'getVisual').mockResolvedValue(messageVisual)
       const handleMenuMessage = jest.spyOn(prompt, 'handleMenuMessage')
         .mockImplementation()
-      const emitter: PromptCollector<{}, Message> = {
+      const emitter: PromptCollector<Record<string, unknown>, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -148,7 +148,7 @@ describe('Unit::DiscordPrompt', () => {
       const error = new Error('awstgedr')
       jest.spyOn(prompt, 'getVisual')
         .mockRejectedValue(error)
-      const emitter: PromptCollector<{}, Message> = {
+      const emitter: PromptCollector<Record<string, unknown>, Message> = {
         emit: jest.fn()
       } as unknown as EventEmitter
       const message = {
@@ -167,7 +167,7 @@ describe('Unit::DiscordPrompt', () => {
         .mockReturnValue(createdRejection)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}, Message>
+      } as unknown as PromptCollector<Record<string, unknown>, Message>
       const message = {
         content: 'dfht'
       } as Message
@@ -179,7 +179,7 @@ describe('Unit::DiscordPrompt', () => {
       menuEmbed.isValidSelection = jest.fn().mockReturnValue(true)
       const emitter = {
         emit: jest.fn()
-      } as unknown as PromptCollector<{}, Message>
+      } as unknown as PromptCollector<Record<string, unknown>, Message>
       const message = {
         content: 'dfht'
       } as Message
