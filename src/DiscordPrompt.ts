@@ -14,6 +14,15 @@ export type BaseData = {
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   duration = 90000
   // Visuals
+
+  /**
+   * Generate a MessageVisual to send based on the rejection thrown
+   * 
+   * @param error The rejection thrown
+   * @param message The message that triggered the rejection
+   * @param channel The channel this rejection is to be sent to
+   * @param data The data from the prompt
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     if (error instanceof DiscordRejection) {
@@ -25,6 +34,13 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
     }
   }
   
+  /**
+   * Auto-generate the rejection on an invalid menu selection
+   * 
+   * @param message The message that triggered this rejection
+   * @param data The data from the prompt
+   * @param menu The MenuEmbed that this prompt's visual component was created with
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static createMenuRejection<DataType> (message?: Message, data?: DataType, menu?: MenuEmbed): Rejection {
     return new Rejection('That is not a valid selection. Try again.')
