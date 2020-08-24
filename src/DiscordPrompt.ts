@@ -1,4 +1,4 @@
-import { Prompt, PromptCollector, Rejection } from "prompt-anything";
+import { Prompt, PromptCollector, Rejection, VisualGenerator, VisualInterface, PromptFunction } from "prompt-anything";
 import { EventEmitter } from 'events'
 import { DiscordChannel } from "./DiscordChannel";
 import { MessageVisual } from "./visuals/MessageVisual";
@@ -12,8 +12,10 @@ export type BaseData = {
 }
 
 export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
-  duration = 90000
   // Visuals
+  constructor(visualGenerator: VisualGenerator<DataType> | VisualInterface, f?: PromptFunction<DataType, Message>, duration = 90000) {
+    super(visualGenerator, f, duration);
+  }
 
   /**
    * Generate a MessageVisual to send based on the rejection thrown

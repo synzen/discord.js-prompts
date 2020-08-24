@@ -28,6 +28,16 @@ describe('Unit::DiscordPrompt', () => {
     visual = new MessageVisual('aedsg')
     prompt = new DiscordPrompt(visual)
   })
+  describe('constructor', () => {
+    it('sets the default duration', () => {
+      const prompt = new DiscordPrompt(visual)
+      expect(prompt.duration).toEqual(90000)
+    })
+    it('sets the passed in duration', () => {
+      const prompt = new DiscordPrompt(visual, undefined, 5)
+      expect(prompt.duration).toEqual(5)
+    })
+  })
   describe('static getRejectVisual', () => {
     it('returns correctly for regular rejection', async () => {
       const text = 'err text'
