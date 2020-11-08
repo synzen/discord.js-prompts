@@ -1,47 +1,48 @@
+# Eamples
 Examples are provided in this section. They are all listed here, separated by difficulty.
 
 Every example works if you use the index file that responds with the relevant example according to user input (ts/index.ts or js/index.js).
 
-### Table of Contents
+#### Table of Contents
 1. Beginner
     - [askPersonDetails](#askPersonDetails)
 2. Intermediate
 3. Advanced
   - [askFriendNames](#askFriendNames)
 
-# Beginner
-## [askPersonDetails](ts/askPersonDetails.ts)
+## Beginner
+### [askPersonDetails](ts/askPersonDetails.ts)
 
-### Purpose
+#### Purpose
 Ask for the name and age of the user, then summarizing what they said.
 
-### Description
+#### Description
 
 The simplest possible dialogue you can create with the user with a linear flow.
 
-### Demonstrates
+#### Demonstrates
 - Basic setup a linear dialogue.
 
-### Conceptual Flow
+#### Conceptual Flow
 1. Ask the user for their name
 2. Ask the user for their age
 3. Respond with the user's name and age
 
-# Intermediate
-# Advanced
-## [askFriendNames](ts/askFriendNames.ts)
-### Purpose
+## Intermediate
+## Advanced
+### [askFriendNames](ts/askFriendNames.ts)
+#### Purpose
 Asking for N names of multiple friends, then summarizing what they said.
 
-### Description
+#### Description
 
 You may sometimes want to use the same prompt within the same dialogue with the user. You can accomplish this by setting the child of a node to itself. To break out of the loop, you have to have more than 2 children for the node.
 
-### Demonstrates
+#### Demonstrates
 - Conditional prompt nodes
 - Recursive patterns
 
-### Conceptual Flow
+#### Conceptual Flow
 
 1. Ask for number of friends
     - User responds with `n`
