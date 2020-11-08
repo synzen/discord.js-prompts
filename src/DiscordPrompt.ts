@@ -57,6 +57,9 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   }
 
   createCollector(channel: DiscordChannel, data: DataType&BaseData): PromptCollector<DataType, Message> {
+    if (!data.__authorID) {
+      throw new Error('__authorID is missing from data details. It may have been deleted within a prompt function. Make sure it is always returned in every function.')
+    }
     const discordChannel = channel
     const emitter: PromptCollector<DataType, Message> = this.createEmitter()
     const collector = discordChannel.channel.createMessageCollector(m => m.author.id === data.__authorID);
