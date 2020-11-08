@@ -13,7 +13,8 @@ Every example works if you use the index file that responds with the relevant ex
     - [askFriendNames](#askFriendNames)
 
 ## Beginner
-### [askPersonDetails](ts/askPersonDetails.ts)
+### askPersonDetails 
+Code: [ts](ts/askPersonDetails.ts), [js](js/askPersonDetails.js)
 
 #### Purpose
 Ask for the name and age of the user, then summarizing what they said.
@@ -32,7 +33,9 @@ The simplest possible dialogue you can create with the user with a linear flow.
 
 ## Intermediate
 ## Advanced
-### [askFriendNames](ts/askFriendNames.ts)
+### askFriendNames 
+Code: [ts](ts/askFriendNames.ts)
+
 #### Purpose
 Asking for N names of multiple friends, then summarizing what they said.
 
