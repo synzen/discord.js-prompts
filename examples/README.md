@@ -8,7 +8,7 @@ Every example works if you use the index file that responds with the relevant ex
     - [askPersonDetails](#askPersonDetails)
 2. Intermediate
 3. Advanced
-  - [askFriendNames](#askFriendNames)
+    - [askFriendNames](#askFriendNames)
 
 ## Beginner
 ### [askPersonDetails](ts/askPersonDetails.ts)
