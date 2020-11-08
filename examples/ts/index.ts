@@ -12,7 +12,7 @@ const client = new Client()
 
 client.on('ready', () => console.log('Ready'))
 
-// Now pass the root node, askName, to a PromptRunner, as done below
+// Now pass the root node, askPersonDetails, to a PromptRunner, as done below
 client.on('message', async (message) => {
   try {
     switch (message.content) {

@@ -1,7 +1,7 @@
 # Eamples
 Examples are provided in this section. They are all listed here, separated by difficulty.
 
-Every example works if you use the index file that responds with the relevant example according to user input (ts/index.ts or js/index.js).
+Every example works if you use the index file that responds with the relevant example according to user input (ts/index.ts or js/index.js). To run it, you'll need to set up the env variable `BOT_TOKEN`.
 
 #### Table of Contents
 1. Beginner
