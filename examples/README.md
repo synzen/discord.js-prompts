@@ -5,9 +5,11 @@ Every example works if you use the index file that responds with the relevant ex
 
 #### Table of Contents
 1. Beginner
+
     - [askPersonDetails](#askPersonDetails)
 2. Intermediate
 3. Advanced
+
     - [askFriendNames](#askFriendNames)
 
 ## Beginner
