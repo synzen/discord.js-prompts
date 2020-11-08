@@ -20,7 +20,7 @@ client.on('message', async (message) => {
         console.log('Running ask person details prompt', new Date())
         const runner = new DiscordPromptRunner<PersonDetails>(message.author, {})
         const data = await runner.run(askPersonDetails, message.channel as TextChannel)
-        // Data from the last prompt (askAge)
+        // Data from the last prompt function (askAge)
         console.log(data)
         // data.age
         // data.name
@@ -33,7 +33,7 @@ client.on('message', async (message) => {
         })
         const data = await runner.run(askFriendNames, message.channel as TextChannel)
         console.log(data)
-        // data.names contains all the friend names
+        // data.names - array of friend names
       }
       default: {
         return
