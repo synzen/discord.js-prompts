@@ -1,7 +1,7 @@
 # Eamples
 Examples are provided in this section. They are all listed here, separated by difficulty.
 
-If you'd like to see how all the examples work with a bot, see the relevant [`index.js`](js/index.js) or [`index.ts`](ts/index.ts). Note that you must set the env var `BOT_TOKEN` for them to work.
+If you'd like to see how all the examples work with a bot, see the relevant [`js/index.js`](js/index.js) or [`ts/index.ts`](ts/index.ts). Note that you must set the env var `BOT_TOKEN` for them to work.
 
 #### Table of Contents
 1. Beginner
@@ -14,7 +14,7 @@ If you'd like to see how all the examples work with a bot, see the relevant [`in
 
 ## Beginner
 ### askPersonDetails 
-Code: [ts](ts/askPersonDetails.ts), [js](js/askPersonDetails.js)
+Code: [ts/askPersonDetails.ts](ts/askPersonDetails.ts), [js/askPersonDetails.js](js/askPersonDetails.js)
 
 #### Purpose
 Ask for the name and age of the user, then summarizing what they said.
@@ -34,7 +34,7 @@ The simplest possible dialogue you can create with the user with a linear flow.
 ## Intermediate
 ## Advanced
 ### askFriendNames 
-Code: [ts](ts/askFriendNames.ts)
+Code: [ts/askFriendNames.ts](ts/askFriendNames.ts)
 
 #### Purpose
 Asking for N names of multiple friends, then summarizing what they said.
