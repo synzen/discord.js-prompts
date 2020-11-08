@@ -125,6 +125,45 @@ describe('Unit::DiscordChannel', () => {
       await discordChannel.sendMenuVisual(menuVisual)
       expect(setUpPagination).not.toHaveBeenCalled()
     })
+    it('throws when pagination is enabled but multiple messages were sent', async () => {
+      const menuEmbed = new MenuEmbed()
+      jest.spyOn(menuEmbed, 'canPaginate').mockReturnValue(true)
+      jest.spyOn(menuEmbed, 'setUpPagination')
+        .mockImplementation()
+      // Create the visual
+      const menuVisual = new MenuVisual(menuEmbed)
+      menuVisual.menu = menuEmbed
+      // Create the channel
+      const textChannel = {
+        send: jest.fn().mockResolvedValue([{}, {}] as Message[])
+      } as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.channel = textChannel
+      // Send it
+      expect(discordChannel.sendMenuVisual(menuVisual))
+        .rejects.toThrowError()
+    })
+    it('uses the first message if array of messages is returned by discordjs', async () => {
+      const menuEmbed = new MenuEmbed()
+      jest.spyOn(menuEmbed, 'canPaginate').mockReturnValue(true)
+      const setUpPagination = jest.spyOn(menuEmbed, 'setUpPagination')
+        .mockImplementation()
+      // Create the visual
+      const menuVisual = new MenuVisual(menuEmbed)
+      menuVisual.menu = menuEmbed
+      // Create the channel
+      const messageSent = {
+        foo: 'bar'
+      } as unknown as Message
+      const textChannel = {
+        send: jest.fn().mockResolvedValue([messageSent])
+      } as unknown as TextChannel
+      const discordChannel = new DiscordChannel(textChannel)
+      discordChannel.channel = textChannel
+      // Send it
+      await discordChannel.sendMenuVisual(menuVisual)
+      expect(setUpPagination).toHaveBeenCalledWith(messageSent)
+    })
   })
   describe('sendMessageVisual', () => {
     it('sends correctly', async () => {

@@ -3,6 +3,7 @@ import { DiscordVisual } from "./visuals/DiscordVisual";
 import { MenuVisual } from "./visuals/MenuVisual";
 import { MessageVisual } from "./visuals/MessageVisual";
 import { Message, MessageOptions, TextChannel } from 'discord.js'
+import { MenuEmbed } from "./MenuEmbed";
 
 export class DiscordChannel implements ChannelInterface<Message> {
   id: string;
@@ -32,7 +33,20 @@ export class DiscordChannel implements ChannelInterface<Message> {
     }
   }
 
-  async sendMenuVisual (visual: MenuVisual): Promise<Message> {
+  /**
+   * Set up a menu embed on a message response
+   * @param menuEmbed What menu to set up
+   * @param messageResponse The message to set the menu up on
+   */
+  private async trySetupPagination (menuEmbed: MenuEmbed, messageResponse: Message|Message[]) {
+    if (Array.isArray(messageResponse) && messageResponse.length > 1) {
+      throw new Error('Pagination with multiple messages sent with one call. Disabling message splitting may resolve this.')
+    }
+    const toPaginate = Array.isArray(messageResponse) ? messageResponse[0] : messageResponse
+    await menuEmbed.setUpPagination(toPaginate)
+  }
+
+  async sendMenuVisual (visual: MenuVisual): Promise<Message|Message[]> {
     let options: MessageOptions = {
       ...DiscordChannel.DEFAULT_OPTIONS
     }
@@ -44,7 +58,7 @@ export class DiscordChannel implements ChannelInterface<Message> {
     options.embed = visual.menu.getEmbedOfPage(0)
     const sent = await this.channel.send('', options)
     if (visual.menu.canPaginate()) {
-      await visual.menu.setUpPagination(sent)
+      await this.trySetupPagination(visual.menu, sent)
     }
     return sent
   }
