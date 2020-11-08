@@ -18,12 +18,14 @@ export const askAgeFn: DiscordPromptFunction<PersonDetails> = async (m: Message,
   if (isNaN(age)) {
     throw new Rejection(`That's not a valid number. Try again.`)
     /**
-     * You can also throw a DiscordRejection. The MessageEmbed
-     * is directly from discord.js
+     * You can also throw a DiscordRejection. The second argument is the same options object you
+     * pass as the second argument to message.channel.send() for discord.js
      * 
-     * throw new DiscordRejection('Text', new Discord.MessageEmbed({
-     *  description: 'Silly you!'
-     * }))
+     * throw new DiscordRejection('Text', {
+     *    embed: new Discord.MessageEmbed({
+     *      description: 'Silly you!'
+     *    }
+     * ))
      */
   }
   return {
