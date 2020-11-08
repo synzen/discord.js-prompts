@@ -28,15 +28,6 @@ describe('Unit::DiscordChannel', () => {
       expect(channel.id).toEqual(textChannel.id)
     })
   })
-  describe('DEFAULT OPTIONS', () => {
-    it('returns correctly', () => {
-      expect(DiscordChannel.DEFAULT_OPTIONS).toEqual({
-        allowedMentions: {
-          parse: []
-        }
-      })
-    })
-  })
   describe('storeMessages', () => {
     it('stores a message', () => {
       const message = {
@@ -66,7 +57,6 @@ describe('Unit::DiscordChannel', () => {
     it('sends correctly', async () => {
       const menuEmbed = new MenuEmbed()
       const options = {
-        ...DiscordChannel.DEFAULT_OPTIONS,
         foo: 'bar',
         ho: 'dunk'
       } as MessageOptions
@@ -169,7 +159,6 @@ describe('Unit::DiscordChannel', () => {
     it('sends correctly', async () => {
       const text = 'aedgts'
       const options = {
-        ...DiscordChannel.DEFAULT_OPTIONS,
         foo: 'bar',
         a: 1
       } as MessageOptions

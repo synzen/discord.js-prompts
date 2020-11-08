@@ -15,12 +15,6 @@ export class DiscordChannel implements ChannelInterface<Message> {
     this.channel = channel
   }
 
-  static DEFAULT_OPTIONS: MessageOptions = {
-    allowedMentions: {
-      parse: []
-    }
-  }
-
   /**
    * Store all messages sent within this channel
    * @param message Message to store
@@ -47,9 +41,7 @@ export class DiscordChannel implements ChannelInterface<Message> {
   }
 
   async sendMenuVisual (visual: MenuVisual): Promise<Message|Message[]> {
-    let options: MessageOptions = {
-      ...DiscordChannel.DEFAULT_OPTIONS
-    }
+    let options: MessageOptions = {}
     if (visual.options) {
       options = {
         ...visual.options
@@ -65,7 +57,6 @@ export class DiscordChannel implements ChannelInterface<Message> {
 
   async sendMessageVisual (visual: MessageVisual): Promise<Message|Message[]> {
     const options = {
-      ...DiscordChannel.DEFAULT_OPTIONS,
       ...visual.options
     }
     return this.channel.send(visual.text, options)
