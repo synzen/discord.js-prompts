@@ -18,7 +18,6 @@ export const askFriendNameFn: DiscordPromptFunction<FriendsNameData> = async (m:
   return {
     ...data,
     names: [...data.names, name],
-    count: (data.count as number) - 1
   }
 }
 

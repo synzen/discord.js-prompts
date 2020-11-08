@@ -20,11 +20,13 @@ import { summaryPrompt } from './prompts/askFriendNames/summary'
 const askFriendCount = new PromptNode(askFriendCountPrompt)
 // Ask for the friend's name
 const askFriendName = new PromptNode(askFriendNamePrompt, async (data) => {
-  return typeof data.count === 'number' && data.count > 0
+  // Run this ask friend prompt when we haven't asked+inserted enough names into data.names
+  return typeof data.count === 'number' && data.names.length < data.count
 })
 // Say how many friends the user has, and the names they input
 const summary = new PromptNode(summaryPrompt, async (data) => {
-  return typeof data.count === 'number' && data.count === 0
+  // Run this summary prompt node when we've asked "count" times, storing a new name each time
+  return typeof data.count === 'number' && data.names.length === data.count
 })
 
 /**
