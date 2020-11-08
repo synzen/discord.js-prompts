@@ -17,7 +17,8 @@
     "lint": "eslint \"./src/**/*\"",
     "test": "jest",
     "test-coverage": "jest ./src --coverage",
-    "test-watch": "jest --watch"
+    "test-watch": "jest --watch",
+    "example-ts": "ts-node examples/ts/index.ts"
   },
   "author": "synzen",
   "license": "MIT",
