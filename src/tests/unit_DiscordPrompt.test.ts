@@ -5,7 +5,7 @@ import { MessageVisual } from '../visuals/MessageVisual';
 import { PromptCollector, Rejection } from 'prompt-anything';
 import { MenuVisual } from '../visuals/MenuVisual';
 import { MenuEmbed } from '../MenuEmbed';
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, MessageOptions } from 'discord.js'
 import { DiscordRejection } from '../types/DiscordRejection';
 import { mocked } from 'ts-jest/utils'
 
@@ -48,13 +48,13 @@ describe('Unit::DiscordPrompt', () => {
     })
     it('returns correctly for DiscordRejection', async () => {
       const text = 'error text'
-      const embed = new MessageEmbed()
-      const rejection = new DiscordRejection(text, embed)
+      const options: MessageOptions = {
+        embed: new MessageEmbed()
+      }
+      const rejection = new DiscordRejection(text, options)
       const visual = await DiscordPrompt.getRejectVisual(rejection)
       expect(visual).toBeInstanceOf(MessageVisual)
-      expect(mockedMessageVisual).toHaveBeenCalledWith(text, {
-        embed,
-      })
+      expect(mockedMessageVisual).toHaveBeenCalledWith(text, options)
     })
   })
   describe('static createMenuRejection', () => {

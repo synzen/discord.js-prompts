@@ -1,17 +1,17 @@
-import { MessageEmbed } from "discord.js";
+import { MessageOptions } from "discord.js";
 import { Rejection } from "prompt-anything";
 
 export class DiscordRejection extends Rejection {
-  embed?: MessageEmbed;
+  options?: MessageOptions;
   text: string;
 
   /**
    * @param text Text to send
-   * @param embed Embed to send
+   * @param options Message options which can include an embed
    */
-  constructor(text: string, embed?: MessageEmbed) {
+  constructor(text: string, options?: MessageOptions) {
     super()
-    this.embed = embed;
+    this.options = options;
     this.text = text;
   }
 }

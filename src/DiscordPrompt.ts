@@ -28,9 +28,7 @@ export class DiscordPrompt<DataType> extends Prompt<DataType, Message> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async getRejectVisual<DataType> (error: Rejection, message?: Message, channel?: DiscordChannel, data?: DataType): Promise<MessageVisual> {
     if (error instanceof DiscordRejection) {
-      return new MessageVisual(error.text, {
-        embed: error.embed
-      })
+      return new MessageVisual(error.text, error.options)
     } else {
       return new MessageVisual(error.message)
     }
